@@ -593,7 +593,7 @@ QListView::item {
          <item>
           <widget class="QCheckBox" name="checkBoxLang">
            <property name="text">
-            <string>Interface in local language</string>
+            <string>Use local language for the UI</string>
            </property>
           </widget>
          </item>

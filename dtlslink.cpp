@@ -164,7 +164,6 @@ void DtlsLink::getVPNStatus()
             ui->labelDNS->setText(status["DNS"].toVariant().toStringList().join(","));
 
             ui->buttonDetails->setEnabled(true);
-            detailDialog->setTunName(status["TunName"].toString());
             detailDialog->setRoutes(status["SplitExclude"].toArray(), status["SplitInclude"].toArray());
         }
     });

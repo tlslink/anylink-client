@@ -2,17 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
-    <name>QWidgetTextControl</name>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>复制(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Select All</source>
-        <translation>全选</translation>
-    </message>
-</context>
-<context>
     <name>ConfigManager</name>
     <message>
         <location filename="../configmanager.cpp" line="+23"/>
@@ -40,7 +29,7 @@
     </message>
     <message>
         <location line="+50"/>
-        <source>Bytes Recived:</source>
+        <source>Bytes Received:</source>
         <translation>接收字节：</translation>
     </message>
     <message>
@@ -54,7 +43,7 @@
         <translation>安全路由</translation>
     </message>
     <message>
-        <location filename="../detaildialog.cpp" line="+13"/>
+        <location filename="../detaildialog.cpp" line="+16"/>
         <source>Destination</source>
         <translation>地址</translation>
     </message>
@@ -189,7 +178,7 @@
     </message>
     <message>
         <location line="+7"/>
-        <source>Interface in local language</source>
+        <source>Use local language for the UI</source>
         <translation>界面使用本地语言</translation>
     </message>
     <message>
@@ -198,12 +187,7 @@
         <translation>关于</translation>
     </message>
     <message>
-        <location line="+36"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;h3 style=&quot; margin-top:14px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:large; font-weight:700; color:#888a85;&quot;&gt;DtlsLink&lt;/span&gt;&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location line="+37"/>
+        <location line="+73"/>
         <source>Version:</source>
         <translation>版本：</translation>
     </message>
@@ -274,7 +258,7 @@
         <translation>Profile 管理</translation>
     </message>
     <message>
-        <location line="+18"/>
+        <location line="+21"/>
         <source>Name:</source>
         <translation>名称：</translation>
     </message>
@@ -338,6 +322,17 @@
         <location line="+1"/>
         <source>OK</source>
         <translation>确定</translation>
+    </message>
+</context>
+<context>
+    <name>QWidgetTextControl</name>
+    <message>
+        <source>&amp;Copy</source>
+        <translation type="vanished">复制(&amp;C)</translation>
+    </message>
+    <message>
+        <source>Select All</source>
+        <translation type="vanished">全选</translation>
     </message>
 </context>
 </TS>

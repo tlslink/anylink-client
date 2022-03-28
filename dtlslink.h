@@ -21,11 +21,14 @@ class QJsonObject;
 class DtlsLink : public QWidget
 {
     Q_OBJECT
-    enum { STATUS, CONFIG, CONNECT, DISCONNECT, RECONNECT, INTERFACE, ABORT };
 
 public:
+    enum { STATUS, CONFIG, CONNECT, DISCONNECT, RECONNECT, INTERFACE, ABORT, STAT };
+
     DtlsLink(QWidget *parent = nullptr);
     ~DtlsLink();
+
+    JsonRpcWebSocketClient *rpc = nullptr;
 
 signals:
     void vpnConnected();
@@ -54,7 +57,6 @@ private:
     QIcon iconNotConnected = QIcon(":/images/notconnected.png");
     QIcon iconConnecting = QIcon(":/images/connecting.png");
 
-    JsonRpcWebSocketClient *rpc = nullptr;
     ProfileManager *profileManager;
     bool m_vpnConnected;
     DetailDialog *detailDialog = nullptr;

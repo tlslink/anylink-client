@@ -94,12 +94,12 @@
         <item>
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Bytes Recived:</string>
+           <string>Bytes Received:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="labelBytesRecived">
+         <widget class="QLabel" name="labelBytesReceived">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>

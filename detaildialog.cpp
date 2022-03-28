@@ -1,10 +1,13 @@
 #include "detaildialog.h"
 #include "ui_detaildialog.h"
+#include "dtlslink.h"
+#include "jsonrpcwebsocketclient.h"
 #include <QHostAddress>
+#include <QJsonObject>
 
-DetailDialog::DetailDialog(QWidget *parent) :
+DetailDialog::DetailDialog(DtlsLink *parent) :
     QDialog(parent),
-    ui(new Ui::DetailDialog)
+    ui(new Ui::DetailDialog), dtlsLink(parent)
 {
     ui->setupUi(this);
     ui->tableExcluded->setColumnCount(2);
@@ -66,18 +69,12 @@ void DetailDialog::clear()
     ui->tableSecured->clearContents();
 
     ui->labelBytesSent->clear();
-    ui->labelBytesRecived->clear();
+    ui->labelBytesReceived->clear();
 }
 
-void DetailDialog::setTunName(const QString &tunName)
-{
-    m_tunName = tunName;
-}
-
-QString DetailDialog::format(const uint &bytesTotal)
+QString DetailDialog::format(double bytes)
 {
     QString unit;
-    double bytes = bytesTotal;
     // use 1000 not 1024 same as ip -h -s link show dev tun0
     if(bytes < 1000) {
         unit = "B";
@@ -99,26 +96,16 @@ void DetailDialog::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
     connect(&timer, &QTimer::timeout, [this]() {
-#if defined(Q_OS_LINUX)
-        tx_bytes_file.seek(0);
-        rx_bytes_file.seek(0);
-        QByteArray tx_bytes = tx_bytes_file.readAll().trimmed();
-        QByteArray rx_bytes = rx_bytes_file.readAll().trimmed();
-        ui->labelBytesSent->setText(format(tx_bytes.toUInt()));
-        ui->labelBytesRecived->setText(format(rx_bytes.toUInt()));
-#endif
+        if(dtlsLink->rpc->isConnected()) {
+            dtlsLink->rpc->callAsync("stat", DtlsLink::STAT, [this](const QJsonValue & result) {
+                const QJsonObject &stat = result.toObject();
+                if(!stat.contains("code")) {
+                    ui->labelBytesSent->setText(format(stat["bytesSent"].toDouble()));
+                    ui->labelBytesReceived->setText(format(stat["bytesReceived"].toDouble()));
+                }
+            });
+        }
     });
-
-#if defined(Q_OS_LINUX)
-    tx_bytes_file.setFileName(QString("/sys/class/net/%1/statistics/tx_bytes").arg(m_tunName));
-    rx_bytes_file.setFileName(QString("/sys/class/net/%1/statistics/rx_bytes").arg(m_tunName));
-    if(!tx_bytes_file.open(QIODevice::ReadOnly)) {
-        return;
-    }
-    if(!rx_bytes_file.open(QIODevice::ReadOnly)) {
-        return;
-    }
-#endif
 
     timer.start(1000);
 }
@@ -128,9 +115,4 @@ void DetailDialog::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event)
     timer.stop();
-
-#if defined(Q_OS_LINUX)
-    rx_bytes_file.close();
-    rx_bytes_file.close();
-#endif
 }

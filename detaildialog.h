@@ -4,38 +4,28 @@
 #include <QDialog>
 #include <QJsonArray>
 #include <QTimer>
-#if defined(Q_OS_LINUX)
-#include <QFile>
-#endif
 
 namespace Ui {
 class DetailDialog;
 }
 
+class DtlsLink;
 class DetailDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit DetailDialog(QWidget *parent = nullptr);
+    explicit DetailDialog(DtlsLink *parent);
     ~DetailDialog();
 
     void setRoutes(const QJsonArray &excludes, const QJsonArray &includes);
     void clear();
-
-    void setTunName(const QString &tunName);
-
 private:
     Ui::DetailDialog *ui;
-    QString m_tunName;
     QTimer timer;
+    DtlsLink *dtlsLink;
 
-#if defined(Q_OS_LINUX)
-    QFile tx_bytes_file;
-    QFile rx_bytes_file;
-#endif
-
-    QString format(const uint &bytesTotal);
+    QString format(double bytes);  // typedef quint64 qulonglong;
     // QWidget interface
 protected:
     void showEvent(QShowEvent *event) override;
