@@ -1,0 +1,7 @@
+out
+*.user
+.autosave
+*.7z
+*.tar.gz
+*.run
+*.exe

@@ -1,0 +1,13 @@
+[Unit] 
+Description=DtlsLink Secure Client Agent 
+
+[Service] 
+Type=simple
+Restart=on-failure
+ExecStart=/opt/dtlslink/bin/vpnagent
+ExecReload=/bin/kill -HUP $MAINPID 
+PIDFile=/var/run/vpnagent.pid
+KillMode=process
+
+[Install] 
+WantedBy=multi-user.target

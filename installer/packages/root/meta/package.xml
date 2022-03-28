@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>DtlsLink</DisplayName>
+    <Version>0.1</Version>
+    <ReleaseDate>2022-03-15</ReleaseDate>
+    <Default>script</Default>
+    <Script>installscript.js</Script>
+    <ForcedInstallation>true</ForcedInstallation>
+    <RequiresAdminRights>true</RequiresAdminRights>
+    <UserInterfaces>
+        <UserInterface>runcheckboxform.ui</UserInterface>
+    </UserInterfaces>
+</Package>
