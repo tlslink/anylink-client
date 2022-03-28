@@ -25,16 +25,19 @@ QTabBar::tab {
 }
 QTabBar::tab:hover {
 		font: 15px;
-        border-bottom: 2px solid rgb(155, 155, 155);
-        color: black;
+       border-bottom: 2px solid rgb(155, 155, 155);
+       color: black;
 		height: 25px;
 		margin-right: 10px;
 		margin-left: 10px;
 }
 QTabBar::tab:selected {
-		font: 15px solid;
-		color: black;
+		font: 15px;
 		border-bottom: 2px solid rgb(45, 105, 65);
+       color: black;
+		height: 25px;
+		margin-right: 10px;
+		margin-left: 10px;
 }
 QTabWidget#tabWidget::pane {
 		border: 1px solid rgb(220, 220, 220);

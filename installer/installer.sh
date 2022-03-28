@@ -1,4 +1,6 @@
 #!/bin/bash
 
 rm -f *.run
-binarycreator --offline-only -c config/config.xml -p packages dtlslink-0.1-linux.run
+rm -f *.gz
+
+binarycreator --offline-only -c config/config.xml -p packages dtlslink-linux-amd64.run
