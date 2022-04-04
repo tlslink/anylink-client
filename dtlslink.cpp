@@ -129,6 +129,9 @@ void DtlsLink::connectVPN(bool reconnect)
             if(result.isObject()) {  // error object
                 // dialog
 //                ui->statusBar->setText(result.toObject().value("message").toString());
+                if(isHidden()) {
+                    show();
+                }
                 error(result.toObject().value("message").toString(), this);
             } else {
                 ui->statusBar->setText(result.toString());
@@ -144,6 +147,7 @@ void DtlsLink::disconnectVPN()
         ui->progressBar->start();
         // because on_buttonConnect_clicked, must check m_vpnConnected outside
         rpc->callAsync("disconnect", DISCONNECT);
+        activeDisconnect = true;
     }
 }
 
@@ -226,7 +230,8 @@ void DtlsLink::initConfig()
     });
     connect(ui->checkBoxDebug, &QCheckBox::toggled, [this](bool checked) {
         // do not save debug state
-        Q_UNUSED(checked)
+        Q_UNUSED(checked);
+//        configManager->config["debug"] = checked;
         configVPN();
     });
     connect(ui->checkBoxLang, &QCheckBox::toggled, [this](bool checked) {
@@ -245,6 +250,7 @@ void DtlsLink::afterShowOneTime()
     connect(this, &DtlsLink::vpnConnected, [this]() {
         getVPNStatus();
         m_vpnConnected = true;
+        activeDisconnect = false;
         trayIcon->setIcon(iconConnected);
         ui->buttonConnect->setText(tr("Disconnect"));
         ui->comboBoxHost->setEnabled(false);
@@ -287,10 +293,10 @@ void DtlsLink::afterShowOneTime()
         Q_UNUSED(error)
         ui->statusBar->setText(tr("Failed to connect to vpnagent, please reinstall the software!"));
         ui->buttonConnect->setEnabled(false);
+        emit vpnClosed();
         if(isHidden()) {
             show();
         }
-        emit vpnClosed();
     });
     connect(rpc, &JsonRpcWebSocketClient::connected, [this]() {
         configVPN();
@@ -301,18 +307,22 @@ void DtlsLink::afterShowOneTime()
             }
         }
     });
-    // may be exited normally by other clients
+    // may be exited normally by other clients, do not automatically reconnect
     rpc->registerCallback(DISCONNECT, [this](const QJsonValue & result) {
         ui->progressBar->stop();
         ui->statusBar->setText(result.toString());
         emit vpnClosed();
+        if(!activeDisconnect && isHidden()) {
+            show();
+        }
     });
     // unusual exited
     rpc->registerCallback(ABORT, [this](const QJsonValue & result) {
         ui->statusBar->setText(result.toString());
         emit vpnClosed();
-        if(isHidden()) {
-            show();
+        // the server side offline will lose its effect
+        if(!activeDisconnect) {
+            connectVPN(true);
         }
     });
     rpc->connectToServer(QUrl("ws://127.0.0.1:6210/rpc"));

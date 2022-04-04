@@ -59,6 +59,7 @@ private:
 
     ProfileManager *profileManager;
     bool m_vpnConnected;
+    bool activeDisconnect = false;
     DetailDialog *detailDialog = nullptr;
 
     void createTrayActions();
