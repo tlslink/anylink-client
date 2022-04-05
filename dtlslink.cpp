@@ -284,6 +284,8 @@ void DtlsLink::afterShowOneTime()
         if(m_vpnConnected) {
             disconnectVPN();
         }
+        configManager->config["x"] = x();
+        configManager->config["y"] = y();
         profileManager->saveProfile(Json);
         configManager->saveConfig(Json);
     });
@@ -353,8 +355,6 @@ void DtlsLink::closeEvent(QCloseEvent *event)
             trayIcon->show();
         }
     } else {
-        configManager->config["x"] = x();
-        configManager->config["y"] = y();
         qApp->quit();
     }
 }
