@@ -101,12 +101,12 @@
     </message>
     <message>
         <location line="+21"/>
-        <source>Connect to the last used VPN when DtlsLink is started</source>
+        <source>Connect to the last used VPN when AnyLink is started</source>
         <translation>启动应用后自动连接最近使用的 VPN</translation>
     </message>
     <message>
         <location line="+7"/>
-        <source>Minimize DtlsLink on VPN connect</source>
+        <source>Minimize AnyLink on VPN connect</source>
         <translation>VPN 连接成功后最小化当前窗口</translation>
     </message>
     <message>
@@ -140,25 +140,17 @@
         <translation>版本：</translation>
     </message>
     <message>
-        <location line="+31"/>
+        <location line="+44"/>
         <source>&lt;a href=&quot;https://github.com/tlslink/anylink-client/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Getting Help&lt;/span&gt;&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://github.com/tlslink/anylink-client/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;获取帮助&lt;/span&gt;&lt;/a&gt;</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+26"/>
         <source>&lt;a href=&quot;https://github.com/tlslink/anylink-client/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Check Updates&lt;/span&gt;&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://github.com/tlslink/anylink-client/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;检查更新&lt;/span&gt;&lt;/a&gt;</translation>
     </message>
     <message>
-        <source>&lt;a href=&quot;https://github.com/dtlslink/feedback/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Getting Help&lt;/span&gt;&lt;/a&gt;</source>
-        <translation type="obsolete">&lt;a href=&quot;https://www.tlslink.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;获取帮助&lt;/span&gt;&lt;/a&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&quot;https://github.com/dtlslink/feedback/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Check Updates&lt;/span&gt;&lt;/a&gt;</source>
-        <translation type="obsolete">&lt;a href=&quot;https://github.com/dtlslink/feedback/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;检查更新&lt;/span&gt;&lt;/a&gt;</translation>
-    </message>
-    <message>
-        <location line="+60"/>
+        <location line="+73"/>
         <source>View connection logs</source>
         <translation>查看连接日志</translation>
     </message>
@@ -250,7 +242,6 @@
         <translation>前缀</translation>
     </message>
 </context>
-
 <context>
     <name>LogViewer</name>
     <message>

@@ -561,14 +561,14 @@ QListView::item {
          <item>
           <widget class="QCheckBox" name="checkBoxAutoLogin">
            <property name="text">
-            <string>Connect to the last used VPN when DtlsLink is started</string>
+            <string>Connect to the last used VPN when AnyLink is started</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QCheckBox" name="checkBoxMinimize">
            <property name="text">
-            <string>Minimize DtlsLink on VPN connect</string>
+            <string>Minimize AnyLink on VPN connect</string>
            </property>
           </widget>
          </item>

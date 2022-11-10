@@ -13,6 +13,9 @@
 int main(int argc, char *argv[])
 {
     qSetMessagePattern("%{type}:[%{file}:%{line}]  %{message}");
+#if QT_VERSION <= QT_VERSION_CHECK(6, 2, 0)
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     QApplication::setApplicationName("AnyLink");
     configLocation = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
     tempLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
