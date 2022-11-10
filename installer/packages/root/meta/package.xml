@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package>
-    <DisplayName>DtlsLink</DisplayName>
-    <Version>0.1</Version>
-    <ReleaseDate>2022-03-15</ReleaseDate>
+    <DisplayName>AnyLink</DisplayName>
+    <Version>0.2</Version>
+    <ReleaseDate>2022-11-11</ReleaseDate>
     <Default>script</Default>
     <Script>installscript.js</Script>
     <ForcedInstallation>true</ForcedInstallation>

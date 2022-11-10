@@ -1,11 +1,11 @@
 #include "detaildialog.h"
 #include "ui_detaildialog.h"
-#include "dtlslink.h"
+#include "anylink.h"
 #include "jsonrpcwebsocketclient.h"
 #include <QHostAddress>
 #include <QJsonObject>
 
-DetailDialog::DetailDialog(DtlsLink *parent) :
+DetailDialog::DetailDialog(AnyLink *parent) :
     QDialog(parent),
     ui(new Ui::DetailDialog), dtlsLink(parent)
 {
@@ -97,7 +97,7 @@ void DetailDialog::showEvent(QShowEvent *event)
     Q_UNUSED(event)
     connect(&timer, &QTimer::timeout, [this]() {
         if(dtlsLink->rpc->isConnected()) {
-            dtlsLink->rpc->callAsync("stat", DtlsLink::STAT, [this](const QJsonValue & result) {
+            dtlsLink->rpc->callAsync("stat", AnyLink::STAT, [this](const QJsonValue & result) {
                 const QJsonObject &stat = result.toObject();
                 if(!stat.contains("code")) {
                     ui->labelBytesSent->setText(format(stat["bytesSent"].toDouble()));

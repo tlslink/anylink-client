@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=AnyLink
+Name[zh_CN]=AnyLink
+Comment=AnyLink Secure Client
+Terminal=false
+Icon=/opt/anylink/logo.png
+Exec=/opt/anylink/bin/anylink
+StartupNotify=false

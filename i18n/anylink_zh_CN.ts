@@ -2,66 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
-    <name>ConfigManager</name>
+    <name>AnyLink</name>
     <message>
-        <location filename="../configmanager.cpp" line="+23"/>
-        <location line="+25"/>
-        <source>Couldn&apos;t open config file</source>
-        <translation>未能打开配置文件</translation>
-    </message>
-</context>
-<context>
-    <name>DetailDialog</name>
-    <message>
-        <location filename="../detaildialog.ui" line="+14"/>
-        <source>Statistics and Route Details</source>
-        <translation>流量统计和路由详情</translation>
+        <location filename="../anylink.ui" line="+14"/>
+        <source>AnyLink Secure Client</source>
+        <translation>AnyLink 安全客户端</translation>
     </message>
     <message>
-        <location line="+12"/>
-        <source>Statistics</source>
-        <translation>统计</translation>
-    </message>
-    <message>
-        <location line="+21"/>
-        <source>Bytes Sent:</source>
-        <translation>发送字节：</translation>
-    </message>
-    <message>
-        <location line="+50"/>
-        <source>Bytes Received:</source>
-        <translation>接收字节：</translation>
-    </message>
-    <message>
-        <location line="+38"/>
-        <source>Excluded Routes</source>
-        <translation>排除路由</translation>
-    </message>
-    <message>
-        <location line="+64"/>
-        <source>Secured Routes</source>
-        <translation>安全路由</translation>
-    </message>
-    <message>
-        <location filename="../detaildialog.cpp" line="+16"/>
-        <source>Destination</source>
-        <translation>地址</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Prefix</source>
-        <translation>前缀</translation>
-    </message>
-</context>
-<context>
-    <name>DtlsLink</name>
-    <message>
-        <location filename="../dtlslink.ui" line="+14"/>
-        <source>DtlsLink Secure Client</source>
-        <translation>DtlsLink 客户端</translation>
-    </message>
-    <message>
-        <location line="+58"/>
+        <location line="+61"/>
         <source>Gateway</source>
         <translation>网关</translation>
     </message>
@@ -87,7 +35,7 @@
     </message>
     <message>
         <location line="+65"/>
-        <location filename="../dtlslink.cpp" line="+266"/>
+        <location filename="../anylink.cpp" line="+272"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
@@ -193,13 +141,21 @@
     </message>
     <message>
         <location line="+31"/>
-        <source>&lt;a href=&quot;https://github.com/dtlslink/feedback/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Getting Help&lt;/span&gt;&lt;/a&gt;</source>
-        <translation>&lt;a href=&quot;https://github.com/dtlslink/feedback/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;获取帮助&lt;/span&gt;&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;https://github.com/tlslink/anylink-client/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Getting Help&lt;/span&gt;&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;https://github.com/tlslink/anylink-client/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;获取帮助&lt;/span&gt;&lt;/a&gt;</translation>
     </message>
     <message>
         <location line="+13"/>
+        <source>&lt;a href=&quot;https://github.com/tlslink/anylink-client/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Check Updates&lt;/span&gt;&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;https://github.com/tlslink/anylink-client/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;检查更新&lt;/span&gt;&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;a href=&quot;https://github.com/dtlslink/feedback/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Getting Help&lt;/span&gt;&lt;/a&gt;</source>
+        <translation type="obsolete">&lt;a href=&quot;https://www.tlslink.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;获取帮助&lt;/span&gt;&lt;/a&gt;</translation>
+    </message>
+    <message>
         <source>&lt;a href=&quot;https://github.com/dtlslink/feedback/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Check Updates&lt;/span&gt;&lt;/a&gt;</source>
-        <translation>&lt;a href=&quot;https://github.com/dtlslink/feedback/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;检查更新&lt;/span&gt;&lt;/a&gt;</translation>
+        <translation type="obsolete">&lt;a href=&quot;https://github.com/dtlslink/feedback/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;检查更新&lt;/span&gt;&lt;/a&gt;</translation>
     </message>
     <message>
         <location line="+60"/>
@@ -207,12 +163,12 @@
         <translation>查看连接日志</translation>
     </message>
     <message>
-        <location filename="../dtlslink.cpp" line="-193"/>
+        <location filename="../anylink.cpp" line="-199"/>
         <source>Couldn&apos;t open log file</source>
         <translation>未能打开日志文件</translation>
     </message>
     <message>
-        <location line="+101"/>
+        <location line="+105"/>
         <source>Connect Gateway</source>
         <translation>连接网关</translation>
     </message>
@@ -232,16 +188,69 @@
         <translation>退出应用</translation>
     </message>
     <message>
-        <location line="+65"/>
+        <location line="+67"/>
         <source>Disconnect</source>
         <translation>断开</translation>
     </message>
     <message>
-        <location line="+39"/>
+        <location line="+41"/>
         <source>Failed to connect to vpnagent, please reinstall the software!</source>
         <translation>未能连接到 vpnagent 服务，请重新安装本软件！</translation>
     </message>
 </context>
+<context>
+    <name>ConfigManager</name>
+    <message>
+        <location filename="../configmanager.cpp" line="+23"/>
+        <location line="+25"/>
+        <source>Couldn&apos;t open config file</source>
+        <translation>未能打开配置文件</translation>
+    </message>
+</context>
+<context>
+    <name>DetailDialog</name>
+    <message>
+        <location filename="../detaildialog.ui" line="+14"/>
+        <source>Statistics and Route Details</source>
+        <translation>流量统计和路由详情</translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Statistics</source>
+        <translation>统计</translation>
+    </message>
+    <message>
+        <location line="+21"/>
+        <source>Bytes Sent:</source>
+        <translation>发送字节：</translation>
+    </message>
+    <message>
+        <location line="+50"/>
+        <source>Bytes Received:</source>
+        <translation>接收字节：</translation>
+    </message>
+    <message>
+        <location line="+38"/>
+        <source>Excluded Routes</source>
+        <translation>排除路由</translation>
+    </message>
+    <message>
+        <location line="+64"/>
+        <source>Secured Routes</source>
+        <translation>安全路由</translation>
+    </message>
+    <message>
+        <location filename="../detaildialog.cpp" line="+16"/>
+        <source>Destination</source>
+        <translation>地址</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Prefix</source>
+        <translation>前缀</translation>
+    </message>
+</context>
+
 <context>
     <name>LogViewer</name>
     <message>

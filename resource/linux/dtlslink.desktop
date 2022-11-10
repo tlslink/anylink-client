@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=DtlsLink
-Name[zh_CN]=远程办公
-Comment=DtlsLink Secure Client
-Terminal=false
-Icon=/opt/dtlslink/logo.png
-Exec=/opt/dtlslink/bin/dtlslink
-StartupNotify=false

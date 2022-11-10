@@ -1,12 +1,12 @@
-#ifndef DTLSLINK_H
-#define DTLSLINK_H
+#ifndef ANYLINK_H
+#define ANYLINK_H
 
 #include <QWidget>
 #include <QIcon>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class DtlsLink;
+class AnyLink;
 }
 QT_END_NAMESPACE
 
@@ -18,15 +18,15 @@ class QMenu;
 class QComboBox;
 class QJsonObject;
 
-class DtlsLink : public QWidget
+class AnyLink : public QWidget
 {
     Q_OBJECT
 
 public:
     enum { STATUS, CONFIG, CONNECT, DISCONNECT, RECONNECT, INTERFACE, ABORT, STAT };
 
-    DtlsLink(QWidget *parent = nullptr);
-    ~DtlsLink();
+    AnyLink(QWidget *parent = nullptr);
+    ~AnyLink();
 
     JsonRpcWebSocketClient *rpc = nullptr;
 
@@ -47,7 +47,7 @@ private slots:
     void getVPNStatus();
 
 private:
-    Ui::DtlsLink *ui;
+    Ui::AnyLink *ui;
     QSystemTrayIcon *trayIcon = nullptr;
     QMenu *trayIconMenu;
     QComboBox *iconComboBox;
@@ -74,4 +74,4 @@ protected:
     void closeEvent(QCloseEvent *event) override;
     void showEvent(QShowEvent *event) override;
 };
-#endif // DTLSLINK_H
+#endif // ANYLINK_H

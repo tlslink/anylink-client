@@ -1,5 +1,5 @@
-#include "dtlslink.h"
-#include "ui_dtlslink.h"
+#include "anylink.h"
+#include "ui_anylink.h"
 #include "jsonrpcwebsocketclient.h"
 #include "configmanager.h"
 #include "profilemanager.h"
@@ -9,9 +9,9 @@
 #include <QCloseEvent>
 #include <QJsonValue>
 
-DtlsLink::DtlsLink(QWidget *parent)
+AnyLink::AnyLink(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::DtlsLink), m_vpnConnected(false)
+    , ui(new Ui::AnyLink), m_vpnConnected(false)
 {
     ui->setupUi(this);
 #if defined(Q_OS_LINUX)
@@ -48,9 +48,9 @@ DtlsLink::DtlsLink(QWidget *parent)
     // exit
 }
 
-DtlsLink::~DtlsLink() { delete ui; }
+AnyLink::~AnyLink() { delete ui; }
 
-void DtlsLink::on_buttonConnect_clicked()
+void AnyLink::on_buttonConnect_clicked()
 {
     if(rpc->isConnected()) {
         if(m_vpnConnected) {
@@ -61,14 +61,14 @@ void DtlsLink::on_buttonConnect_clicked()
     }
 }
 
-void DtlsLink::on_buttonProfile_clicked()
+void AnyLink::on_buttonProfile_clicked()
 {
     profileManager->exec();
 }
 
-void DtlsLink::on_buttonViewLog_clicked()
+void AnyLink::on_buttonViewLog_clicked()
 {
-    QFile loadFile(tempLocation + "/dtlslink.log");
+    QFile loadFile(tempLocation + "/vpnagent.log");
     if(!loadFile.open(QIODevice::ReadOnly)) {
         error(tr("Couldn't open log file"), this);
         return;
@@ -79,7 +79,7 @@ void DtlsLink::on_buttonViewLog_clicked()
     logViewer.exec();
 }
 
-void DtlsLink::on_buttonDetails_clicked()
+void AnyLink::on_buttonDetails_clicked()
 {
     detailDialog->exec();
 }
@@ -87,7 +87,7 @@ void DtlsLink::on_buttonDetails_clicked()
 /**
  * called by JsonRpcWebSocketClient::connected and every time setting changed
  */
-void DtlsLink::configVPN()
+void AnyLink::configVPN()
 {
     if(rpc->isConnected()) {
         QJsonObject args {
@@ -103,7 +103,7 @@ void DtlsLink::configVPN()
     }
 }
 
-void DtlsLink::connectVPN(bool reconnect)
+void AnyLink::connectVPN(bool reconnect)
 {
     if(rpc->isConnected()) {
         ui->progressBar->start();
@@ -141,7 +141,7 @@ void DtlsLink::connectVPN(bool reconnect)
     }
 }
 
-void DtlsLink::disconnectVPN()
+void AnyLink::disconnectVPN()
 {
     if(rpc->isConnected()) {
         ui->progressBar->start();
@@ -151,7 +151,7 @@ void DtlsLink::disconnectVPN()
     }
 }
 
-void DtlsLink::getVPNStatus()
+void AnyLink::getVPNStatus()
 {
     // 不考虑 DTLS 中途关闭情形
     rpc->callAsync("status", STATUS, [this](const QJsonValue & result) {
@@ -173,23 +173,23 @@ void DtlsLink::getVPNStatus()
     });
 }
 
-void DtlsLink::createTrayActions()
+void AnyLink::createTrayActions()
 {
     actionConnect = new QAction(tr("Connect Gateway"), this);
     // not lambda must have this
-    connect(actionConnect, &QAction::triggered, this, &DtlsLink::connectVPN);
+    connect(actionConnect, &QAction::triggered, this, &AnyLink::connectVPN);
 
     actionDisconnect = new QAction(tr("Disconnect Gateway"), this);
-    connect(actionDisconnect, &QAction::triggered, this, &DtlsLink::disconnectVPN);
+    connect(actionDisconnect, &QAction::triggered, this, &AnyLink::disconnectVPN);
 
     actionConfig = new QAction(tr("Show Panel"), this);
-    connect(actionConfig, &QAction::triggered, this, &DtlsLink::show);
+    connect(actionConfig, &QAction::triggered, this, &AnyLink::show);
 
     actionQuit = new QAction(tr("Quit"), this);
     connect(actionQuit, &QAction::triggered, qApp, &QApplication::quit, Qt::QueuedConnection);
 }
 
-void DtlsLink::createTrayIcon()
+void AnyLink::createTrayIcon()
 {
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(actionConnect);
@@ -204,7 +204,7 @@ void DtlsLink::createTrayIcon()
     trayIcon->setIcon(iconNotConnected);
 }
 
-void DtlsLink::initConfig()
+void AnyLink::initConfig()
 {
     ui->checkBoxAutoLogin->setChecked(configManager->config["autoLogin"].toBool());
     ui->checkBoxMinimize->setChecked(configManager->config["minimize"].toBool());
@@ -214,10 +214,10 @@ void DtlsLink::initConfig()
     ui->checkBoxDebug->setChecked(configManager->config["debug"].toBool());
     ui->checkBoxLang->setChecked(configManager->config["local"].toBool());
 
-    connect(ui->checkBoxAutoLogin, &QCheckBox::toggled, [this](bool checked) {
+    connect(ui->checkBoxAutoLogin, &QCheckBox::toggled, [](bool checked) {
         configManager->config["autoLogin"] = checked;
     });
-    connect(ui->checkBoxMinimize, &QCheckBox::toggled, [this](bool checked) {
+    connect(ui->checkBoxMinimize, &QCheckBox::toggled, [](bool checked) {
         configManager->config["minimize"] = checked;
     });
     connect(ui->checkBoxAllowLAN, &QCheckBox::toggled, [this](bool checked) {
@@ -234,12 +234,12 @@ void DtlsLink::initConfig()
 //        configManager->config["debug"] = checked;
         configVPN();
     });
-    connect(ui->checkBoxLang, &QCheckBox::toggled, [this](bool checked) {
+    connect(ui->checkBoxLang, &QCheckBox::toggled, [](bool checked) {
         configManager->config["local"] = checked;
     });
 }
 
-void DtlsLink::afterShowOneTime()
+void AnyLink::afterShowOneTime()
 {
     createTrayActions();
     createTrayIcon();
@@ -247,7 +247,7 @@ void DtlsLink::afterShowOneTime()
     profileManager->afterShowOneTime();
     detailDialog = new DetailDialog(this);
 
-    connect(this, &DtlsLink::vpnConnected, [this]() {
+    connect(this, &AnyLink::vpnConnected, [this]() {
         getVPNStatus();
         m_vpnConnected = true;
         activeDisconnect = false;
@@ -266,7 +266,7 @@ void DtlsLink::afterShowOneTime()
         configManager->config["lastProfile"] = ui->comboBoxHost->currentText();
     });
 
-    connect(this, &DtlsLink::vpnClosed, [this]() {
+    connect(this, &AnyLink::vpnClosed, [this]() {
         m_vpnConnected = false;
         trayIcon->setIcon(iconNotConnected);
         ui->buttonConnect->setText(tr("Connect"));
@@ -330,7 +330,7 @@ void DtlsLink::afterShowOneTime()
     rpc->connectToServer(QUrl("ws://127.0.0.1:6210/rpc"));
 }
 
-void DtlsLink::resetVPNStatus()
+void AnyLink::resetVPNStatus()
 {
     ui->labelChannelType->clear();
     ui->labelTlsCipherSuite->clear();
@@ -346,7 +346,7 @@ void DtlsLink::resetVPNStatus()
     detailDialog->clear();
 }
 
-void DtlsLink::closeEvent(QCloseEvent *event)
+void AnyLink::closeEvent(QCloseEvent *event)
 {
     if(m_vpnConnected) {
         hide();
@@ -359,7 +359,7 @@ void DtlsLink::closeEvent(QCloseEvent *event)
     }
 }
 
-void DtlsLink::showEvent(QShowEvent *event)
+void AnyLink::showEvent(QShowEvent *event)
 {
     if(trayIcon == nullptr) {
         QTimer::singleShot(50, [this]() {

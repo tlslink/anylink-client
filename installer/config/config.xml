@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
-    <Name>DtlsLink</Name>
-    <Version>0.1</Version>
-    <Title>DtlsLink Secure Client</Title>
-    <Publisher>https://dtlslink.com</Publisher>
-    <StartMenuDir>DtlsLink Secure Client</StartMenuDir>
-    <TargetDir>@ApplicationsDir@/dtlslink</TargetDir>
+    <Name>AnyLink</Name>
+    <Version>0.2</Version>
+    <Title>AnyLink Secure Client</Title>
+    <Publisher>https://tlslink.com</Publisher>
+    <StartMenuDir>AnyLink Secure Client</StartMenuDir>
+    <TargetDir>@ApplicationsDir@/anylink</TargetDir>
     <RemoveTargetDir>true</RemoveTargetDir>
     <WizardShowPageList>false</WizardShowPageList>
     <SupportsModify>false</SupportsModify>

@@ -3,7 +3,7 @@ QT       += core gui websockets
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++14
-TRANSLATIONS = i18n/dtlslink_zh_CN.ts
+TRANSLATIONS = i18n/anylink_zh_CN.ts
 
 win32|macx|linux:!android {
     include(3rdparty/SingleApplication/singleapplication.pri)
@@ -37,17 +37,17 @@ defineTest(copyToDestDir) {
 
 #    RC_FILE = resource.rc
 #    VERSION = 0.1
-#    RC_ICONS = dtlslink.ico
+#    RC_ICONS = anylink.ico
 #    RC_LANG = 0x0804
-#    QMAKE_TARGET_PRODUCT = "DtlsLink"
-#    QMAKE_TARGET_COMPANY = "dtlslink.com"
+#    QMAKE_TARGET_PRODUCT = "AnyLink Secure Client"
+#    QMAKE_TARGET_COMPANY = "tlslink.com"
 #    QMAKE_TARGET_DESCRIPTION = ""
-#    QMAKE_TARGET_COPYRIGHT = "Copyright 2021-2022 dtlslink.com. All rights reserved."
+#    QMAKE_TARGET_COPYRIGHT = "Copyright 2021-2022 tlslink.com. All rights reserved."
 #}
 
 linux:!android {
-    DESTDIR = $$PWD/out/opt/dtlslink/bin
-    copyToDestDir(images/logo.png resource/linux/dtlslink.desktop resource/linux/vpnagent.service)
+    DESTDIR = $$PWD/out/opt/anylink/bin
+    copyToDestDir(images/logo.png resource/linux/anylink.desktop resource/linux/vpnagent.service)
 }
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -55,6 +55,7 @@ linux:!android {
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    anylink.cpp \
     common.cpp \
     configmanager.cpp \
     detaildialog.cpp \
@@ -62,22 +63,21 @@ SOURCES += \
     loading.cpp \
     logviewer.cpp \
     main.cpp \
-    dtlslink.cpp \
     profilemanager.cpp
 
 HEADERS += \
+    anylink.h \
     common.h \
     configmanager.h \
     detaildialog.h \
-    dtlslink.h \
     jsonrpcwebsocketclient.h \
     loading.h \
     logviewer.h \
     profilemanager.h
 
 FORMS += \
+    anylink.ui \
     detaildialog.ui \
-    dtlslink.ui \
     logviewer.ui \
     profilemanager.ui
 

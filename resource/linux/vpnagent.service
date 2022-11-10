@@ -1,10 +1,10 @@
 [Unit] 
-Description=DtlsLink Secure Client Agent 
+Description=AnyLink Secure Client Agent 
 
 [Service] 
 Type=simple
 Restart=on-failure
-ExecStart=/opt/dtlslink/bin/vpnagent
+ExecStart=/opt/anylink/bin/vpnagent
 ExecReload=/bin/kill -HUP $MAINPID 
 PIDFile=/var/run/vpnagent.pid
 KillMode=process

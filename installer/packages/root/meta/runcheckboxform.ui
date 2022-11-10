@@ -17,7 +17,7 @@
    <item>
     <widget class="QCheckBox" name="runAppCheckBox">
      <property name="text">
-      <string>运行 DtlsLink</string>
+      <string>Start AnyLink Secure Client</string>
      </property>
      <property name="checked">
       <bool>true</bool>

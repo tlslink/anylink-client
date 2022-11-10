@@ -1,4 +1,4 @@
-#include "dtlslink.h"
+#include "anylink.h"
 #include "common.h"
 #include "configmanager.h"
 #include <QApplication>
@@ -13,7 +13,7 @@
 int main(int argc, char *argv[])
 {
     qSetMessagePattern("%{type}:[%{file}:%{line}]  %{message}");
-    QApplication::setApplicationName("DtlsLink");
+    QApplication::setApplicationName("AnyLink");
     configLocation = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
     tempLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
     QDir().mkpath(configLocation);
@@ -30,19 +30,19 @@ int main(int argc, char *argv[])
 
     if(configManager->loadConfig(Json)) {
         if(configManager->config["local"].toBool()) {
-            // when debug mode,always en_US
 //            qDebug() << QLocale::system().name();
-            if(myTranslator.load(QLocale(), QLatin1String("dtlslink"), QLatin1String("_"), QLatin1String(":/i18n"))) {
+            // embeded in qrc
+            if(myTranslator.load(QLocale(), QLatin1String("anylink"), QLatin1String("_"), QLatin1String(":/i18n"))) {
                 app.installTranslator(&myTranslator);
             }
         }
     }
 
-    DtlsLink w;
+    AnyLink w;
     w.show();
 
     QApplication::setQuitOnLastWindowClosed(false);
-    QObject::connect(&app, &SingleApplication::instanceStarted, &w, &DtlsLink::show);
+    QObject::connect(&app, &SingleApplication::instanceStarted, &w, &AnyLink::show);
 
     return app.exec();
 }
