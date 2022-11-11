@@ -869,7 +869,7 @@ QListView::item {
   <customwidget>
    <class>Loading</class>
    <extends>QWidget</extends>
-   <header location="global">loading.h</header>
+   <header location="global">src/loading.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

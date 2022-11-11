@@ -1,6 +1,6 @@
 ## AnyLink Secure Client
 
-This is an SSL VPN client that supports OpenConnect or Cisco's AnyConnect [SSL VPN Protocol](https://datatracker.ietf.org/doc/html/draft-mavrogiannopoulos-openconnect-03). 
+This is an SSL VPN client that supports OpenConnect or Cisco's AnyConnect [SSL VPN Protocol](https://datatracker.ietf.org/doc/html/draft-mavrogiannopoulos-openconnect-03).  It use [vpnagent](https://github.com/tlslink/vpnagent) as the core to communicate with the server.
 
 Currently the following servers are supported,
 

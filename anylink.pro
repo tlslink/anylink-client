@@ -55,31 +55,31 @@ linux:!android {
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    anylink.cpp \
-    common.cpp \
-    configmanager.cpp \
-    detaildialog.cpp \
-    jsonrpcwebsocketclient.cpp \
-    loading.cpp \
-    logviewer.cpp \
-    main.cpp \
-    profilemanager.cpp
+    src/anylink.cpp \
+    src/common.cpp \
+    src/configmanager.cpp \
+    src/detaildialog.cpp \
+    src/jsonrpcwebsocketclient.cpp \
+    src/loading.cpp \
+    src/logviewer.cpp \
+    src/main.cpp \
+    src/profilemanager.cpp
 
 HEADERS += \
-    anylink.h \
-    common.h \
-    configmanager.h \
-    detaildialog.h \
-    jsonrpcwebsocketclient.h \
-    loading.h \
-    logviewer.h \
-    profilemanager.h
+    src/anylink.h \
+    src/common.h \
+    src/configmanager.h \
+    src/detaildialog.h \
+    src/jsonrpcwebsocketclient.h \
+    src/loading.h \
+    src/logviewer.h \
+    src/profilemanager.h
 
 FORMS += \
-    anylink.ui \
-    detaildialog.ui \
-    logviewer.ui \
-    profilemanager.ui
+    src/anylink.ui \
+    src/detaildialog.ui \
+    src/logviewer.ui \
+    src/profilemanager.ui
 
 RESOURCES += \
     i18n.qrc \
