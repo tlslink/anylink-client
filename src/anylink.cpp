@@ -26,7 +26,7 @@ AnyLink::AnyLink(QWidget *parent)
                 ));
     setFixedSize(geometry().width(), geometry().height());
     ui->lineEditOTP->setFocus();
-    ui->labelVersion->setText(appVersion);
+    ui->labelVersion->setText(uiVersion);
 
     profileManager = new ProfileManager(this);
 
@@ -247,6 +247,8 @@ void AnyLink::afterShowOneTime()
     profileManager->afterShowOneTime();
     detailDialog = new DetailDialog(this);
 
+    ui->labelVersionAgent->setText(getAgentVersion());
+
     connect(this, &AnyLink::vpnConnected, [this]() {
         getVPNStatus();
         m_vpnConnected = true;
@@ -344,6 +346,28 @@ void AnyLink::resetVPNStatus()
 
     ui->buttonDetails->setEnabled(false);
     detailDialog->clear();
+}
+
+QString AnyLink::getAgentVersion()
+{
+    QString version = "";
+    QString agentFile = QCoreApplication::applicationDirPath() + "/vpnagent";
+#if defined(Q_OS_WIN)
+    agentFile += ".exe";
+#endif
+    if (QFileInfo::exists(agentFile)) {
+        QProcess process;
+        // go print to stderr, fmt.Print to stdout
+        // process.setProcessChannelMode(QProcess::MergedChannels);
+        process.start(agentFile, QStringList() << "version");
+
+        if (!process.waitForFinished())
+            qDebug() << "getAgentVersion error:" << process.errorString();
+         else
+            version = process.readAll();
+            //qDebug() << "AgentVersion:" << version;
+    }
+    return version;
 }
 
 void AnyLink::closeEvent(QCloseEvent *event)

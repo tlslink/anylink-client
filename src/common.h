@@ -10,7 +10,7 @@ enum SaveFormat {
     Json, Binary
 };
 
-extern QString appVersion;
+extern QString uiVersion;
 extern QString configLocation;
 extern QString tempLocation;
 

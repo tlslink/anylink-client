@@ -4,7 +4,7 @@
 <context>
     <name>AnyLink</name>
     <message>
-        <location filename="../anylink.ui" line="+14"/>
+        <location filename="../src/anylink.ui" line="+14"/>
         <source>AnyLink Secure Client</source>
         <translation>AnyLink 安全客户端</translation>
     </message>
@@ -35,7 +35,7 @@
     </message>
     <message>
         <location line="+65"/>
-        <location filename="../anylink.cpp" line="+272"/>
+        <location filename="../src/anylink.cpp" line="+274"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
@@ -135,9 +135,18 @@
         <translation>关于</translation>
     </message>
     <message>
-        <location line="+73"/>
+        <location line="+86"/>
+        <source>UI Version:</source>
+        <translation>UI 版本：</translation>
+    </message>
+    <message>
+        <location line="+44"/>
+        <source>Agent Version:</source>
+        <translation>Agent 版本：</translation>
+    </message>
+    <message>
         <source>Version:</source>
-        <translation>版本：</translation>
+        <translation type="vanished">版本：</translation>
     </message>
     <message>
         <location line="+44"/>
@@ -150,12 +159,12 @@
         <translation>&lt;a href=&quot;https://github.com/tlslink/anylink-client/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;检查更新&lt;/span&gt;&lt;/a&gt;</translation>
     </message>
     <message>
-        <location line="+73"/>
+        <location line="+66"/>
         <source>View connection logs</source>
         <translation>查看连接日志</translation>
     </message>
     <message>
-        <location filename="../anylink.cpp" line="-199"/>
+        <location filename="../src/anylink.cpp" line="-201"/>
         <source>Couldn&apos;t open log file</source>
         <translation>未能打开日志文件</translation>
     </message>
@@ -180,7 +189,7 @@
         <translation>退出应用</translation>
     </message>
     <message>
-        <location line="+67"/>
+        <location line="+69"/>
         <source>Disconnect</source>
         <translation>断开</translation>
     </message>
@@ -193,7 +202,7 @@
 <context>
     <name>ConfigManager</name>
     <message>
-        <location filename="../configmanager.cpp" line="+23"/>
+        <location filename="../src/configmanager.cpp" line="+23"/>
         <location line="+25"/>
         <source>Couldn&apos;t open config file</source>
         <translation>未能打开配置文件</translation>
@@ -202,7 +211,7 @@
 <context>
     <name>DetailDialog</name>
     <message>
-        <location filename="../detaildialog.ui" line="+14"/>
+        <location filename="../src/detaildialog.ui" line="+14"/>
         <source>Statistics and Route Details</source>
         <translation>流量统计和路由详情</translation>
     </message>
@@ -232,7 +241,7 @@
         <translation>安全路由</translation>
     </message>
     <message>
-        <location filename="../detaildialog.cpp" line="+16"/>
+        <location filename="../src/detaildialog.cpp" line="+16"/>
         <source>Destination</source>
         <translation>地址</translation>
     </message>
@@ -245,7 +254,7 @@
 <context>
     <name>LogViewer</name>
     <message>
-        <location filename="../logviewer.ui" line="+14"/>
+        <location filename="../src/logviewer.ui" line="+14"/>
         <source>Log Viewer</source>
         <translation>日志</translation>
     </message>
@@ -253,7 +262,7 @@
 <context>
     <name>ProfileManager</name>
     <message>
-        <location filename="../profilemanager.ui" line="+14"/>
+        <location filename="../src/profilemanager.ui" line="+14"/>
         <source>Profile Manager</source>
         <translation>Profile 管理</translation>
     </message>
@@ -305,7 +314,7 @@
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../profilemanager.cpp" line="+40"/>
+        <location filename="../src/profilemanager.cpp" line="+40"/>
         <location line="+25"/>
         <source>Couldn&apos;t open profile file</source>
         <translation>未能打开 profile 文件</translation>
@@ -314,7 +323,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../common.cpp" line="+13"/>
+        <location filename="../src/common.cpp" line="+13"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
