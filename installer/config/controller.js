@@ -1,6 +1,13 @@
 function Controller()
-{ 
-    installer.setDefaultPageVisible(QInstaller.ComponentSelection,false)   
+{
+    if (systemInfo.kernelType === "linux") {
+        if (installer.fileExists("/opt/anylink")) {
+            installer.execute("/opt/anylink/uninstall");
+        }
+    }
+
+    installer.setDefaultPageVisible(QInstaller.ComponentSelection,false)
+    installer.finishButtonClicked.connect(this, Controller.prototype.onInstallationFinished);
 }
 
 Controller.prototype.IntroductionPageCallback = function()
@@ -19,5 +26,20 @@ Controller.prototype.TargetDirectoryPageCallback = function()
     var widget = gui.currentPageWidget()
     widget.TargetDirectoryLineEdit.setEnabled(false)
     widget.BrowseDirectoryButton.setEnabled(false)
-    
+}
+
+Controller.prototype.onInstallationFinished = function ()
+{
+    try {
+        if (installer.isInstaller() && installer.status === QInstaller.Success) {
+            var exeName = "anylink"
+            if (systemInfo.kernelType === "winnt") {
+                exeName += ".exe"
+            }
+            installer.executeDetached("@TargetDir@/bin/" + exeName);
+            // QDesktopServices.openUrl("file:///" + installer.value("TargetDir") + "/logo.png");
+        }
+    } catch(e) {
+        console.log(e);
+    }
 }

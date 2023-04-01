@@ -7,7 +7,4 @@
     <Script>installscript.js</Script>
     <ForcedInstallation>true</ForcedInstallation>
     <RequiresAdminRights>true</RequiresAdminRights>
-    <UserInterfaces>
-        <UserInterface>runcheckboxform.ui</UserInterface>
-    </UserInterfaces>
 </Package>
