@@ -3,6 +3,10 @@ function Component()
     if (systemInfo.kernelType === "linux") {
         component.addStopProcessForUpdateRequest("anylink");
         component.addStopProcessForUpdateRequest("vpnui");
+
+        if (installer.fileExists("/opt/anylink")) {
+            installer.executeDetached("/opt/anylink/uninstall");
+        }
     }
 }
 

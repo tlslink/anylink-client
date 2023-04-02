@@ -1,11 +1,5 @@
 function Controller()
 {
-    if (systemInfo.kernelType === "linux") {
-        if (installer.fileExists("/opt/anylink")) {
-            installer.execute("/opt/anylink/uninstall");
-        }
-    }
-
     installer.setDefaultPageVisible(QInstaller.ComponentSelection,false)
     installer.finishButtonClicked.connect(this, Controller.prototype.onInstallationFinished);
 }
