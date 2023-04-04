@@ -5,6 +5,7 @@ TRANSLATIONS = i18n/anylink_zh_CN.ts
 
 win32|macx|linux:!android {
     include(3rdparty/SingleApplication/singleapplication.pri)
+    include(3rdparty/qtkeychain/qtkeychain.pri)
     # used by SingleApplication
     DEFINES += QAPPLICATION_CLASS=QApplication
 }
@@ -58,6 +59,7 @@ SOURCES += \
     src/configmanager.cpp \
     src/detaildialog.cpp \
     src/jsonrpcwebsocketclient.cpp \
+    src/keychainclass.cpp \
     src/loading.cpp \
     src/logviewer.cpp \
     src/main.cpp \
@@ -69,6 +71,7 @@ HEADERS += \
     src/configmanager.h \
     src/detaildialog.h \
     src/jsonrpcwebsocketclient.h \
+    src/keychainclass.h \
     src/loading.h \
     src/logviewer.h \
     src/profilemanager.h

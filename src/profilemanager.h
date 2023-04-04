@@ -2,6 +2,7 @@
 #define PROFILEMANAGER_H
 
 #include "common.h"
+#include "keychainclass.h"
 #include <QDialog>
 #include <QJsonObject>
 
@@ -31,8 +32,12 @@ public:
 private:
     Ui::ProfileManager *ui;
     bool m_modified = false;
+    KeyChainClass keyChain;
 
     void resetForm();
+
+    void readKeys();
+    void writeKeys();
 };
 
 #endif // PROFILEMANAGER_H

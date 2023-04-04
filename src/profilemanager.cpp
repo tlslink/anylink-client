@@ -20,6 +20,20 @@ ProfileManager::ProfileManager(QWidget *parent) :
     ui->listProfile->setModel(model);
 
     setFixedSize(geometry().width(), geometry().height());
+
+    connect(&keyChain,&KeyChainClass::keyRestored,[this](const QString& key, const QString& password){
+        QJsonObject value = profiles.value(key).toObject();
+        value.insert("password",password);
+        profiles.insert(key, value);
+
+//        qDebug() << "keyRestored" << key << password << profiles;
+    });
+//    connect(&keyChain,&KeyChainClass::error,[](const QString& error){
+//        qDebug() << error;
+//    });
+//    connect(&keyChain,&KeyChainClass::keyStored,[](const QString& key){
+//        qDebug() << "keyStored" << key;
+//    });
 }
 
 ProfileManager::~ProfileManager()
@@ -50,6 +64,8 @@ bool ProfileManager::loadProfile(SaveFormat saveFormat)
                    : QJsonDocument(QCborValue::fromCbor(data).toMap().toJsonObject()));
         // Returns an empty object if the document contains an array
         profiles = loadDoc.object();
+
+        readKeys();
     }
     return true;
 }
@@ -65,9 +81,18 @@ void ProfileManager::saveProfile(SaveFormat saveFormat)
             error(tr("Couldn't open profile file"), parentWidget());
             return;
         }
+
+        writeKeys();
+        QJsonObject saveProfiles = profiles;
+        for(auto it = saveProfiles.begin(); it != saveProfiles.end(); it++) {
+            const QString key = it.key();
+            QJsonObject value = it.value().toObject();
+            value.remove("password");
+            saveProfiles.insert(key, value);
+        }
         saveFile.write(saveFormat == Json
-                       ? QJsonDocument(profiles).toJson()
-                       : QCborValue::fromJsonValue(profiles).toCbor());
+                       ? QJsonDocument(saveProfiles).toJson()
+                       : QCborValue::fromJsonValue(saveProfiles).toCbor());
     }
 }
 
@@ -119,12 +144,15 @@ void ProfileManager::afterShowOneTime()
 
         m_modified = true;
         close();
+
+        saveProfile(Json);
     });
     connect(ui->buttonNew, &QPushButton::clicked, [this]() {
         resetForm();
     });
     connect(ui->buttonDelete, &QPushButton::clicked, [this]() {
-        profiles.remove(ui->lineEditName->text());
+        const QString name = ui->lineEditName->text();
+        profiles.remove(name);
         updateModel();
         if(profiles.size()) {
             ui->listProfile->setCurrentIndex(model->index(0));
@@ -132,6 +160,9 @@ void ProfileManager::afterShowOneTime()
             resetForm();
         }
         m_modified = true;
+
+        saveProfile(Json);
+        keyChain.deleteKey(name);
     });
 }
 
@@ -148,4 +179,22 @@ void ProfileManager::resetForm()
     ui->lineEditUsername->clear();
     ui->lineEditPassword->clear();
     ui->lineEditGroup->clear();
+}
+
+void ProfileManager::readKeys()
+{
+    for(auto it = profiles.begin(); it != profiles.end(); it++) {
+        const QString key = it.key();
+        keyChain.readKey(key);
+//        qDebug() << "readKey" << key;
+    }
+}
+
+void ProfileManager::writeKeys()
+{
+    const QString key = ui->lineEditName->text();
+    const QString password = ui->lineEditPassword->text();
+
+    // 不能在调用 aboutToQuit 后使用
+    keyChain.writeKey(key, password);
 }

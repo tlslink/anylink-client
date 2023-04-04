@@ -288,7 +288,7 @@ void AnyLink::afterShowOneTime()
         }
         configManager->config["x"] = x();
         configManager->config["y"] = y();
-        profileManager->saveProfile(Json);
+        //profileManager->saveProfile(Json);
         configManager->saveConfig(Json);
     });
 

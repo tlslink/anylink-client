@@ -1,0 +1,8 @@
+[submodule "3rdparty/SingleApplication"]
+	path = 3rdparty/SingleApplication
+	url = https://github.com/itay-grudev/SingleApplication.git
+	branch = master
+[submodule "3rdparty/qtkeychain"]
+	path = 3rdparty/qtkeychain
+	url = https://github.com/frankosterfeld/qtkeychain.git
+	branch = master
