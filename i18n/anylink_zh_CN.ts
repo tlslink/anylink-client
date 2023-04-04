@@ -156,7 +156,7 @@
     <message>
         <location line="+26"/>
         <source>&lt;a href=&quot;https://github.com/tlslink/anylink-client/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Check Updates&lt;/span&gt;&lt;/a&gt;</source>
-        <translation>&lt;a href=&quot;https://github.com/tlslink/anylink-client/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;检查更新&lt;/span&gt;&lt;/a&gt;</translation>
+        <translation>&lt;a href=&quot;https://anylink.pro&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;检查更新&lt;/span&gt;&lt;/a&gt;</translation>
     </message>
     <message>
         <location line="+66"/>

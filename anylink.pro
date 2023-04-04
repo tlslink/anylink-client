@@ -1,6 +1,4 @@
-QT       += core gui websockets
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core gui websockets widgets
 
 CONFIG += c++14
 TRANSLATIONS = i18n/anylink_zh_CN.ts
@@ -32,22 +30,22 @@ defineTest(copyToDestDir) {
 #    ICON = images/logo.png
 #}
 
-#win32 {
-#    QMAKE_CXXFLAGS += -utf-8
+win32 {
+    # https://doc.qt.io/qt-6/qmake-variable-reference.html#version
+    #RC_FILE = resource.rc
+    VERSION = 0.3
+    RC_ICONS = resource\windows\anylink.ico
+    QMAKE_TARGET_PRODUCT = "AnyLink Secure Client"
+    QMAKE_TARGET_COMPANY = "https://anylink.pro"
+    QMAKE_TARGET_DESCRIPTION = "AnyLink Secure Client"
+    QMAKE_TARGET_COPYRIGHT = "Copyright 2022-2023 https://anylink.pro. All rights reserved."
 
-#    RC_FILE = resource.rc
-#    VERSION = 0.1
-#    RC_ICONS = anylink.ico
-#    RC_LANG = 0x0804
-#    QMAKE_TARGET_PRODUCT = "AnyLink Secure Client"
-#    QMAKE_TARGET_COMPANY = "tlslink.com"
-#    QMAKE_TARGET_DESCRIPTION = ""
-#    QMAKE_TARGET_COPYRIGHT = "Copyright 2021-2022 tlslink.com. All rights reserved."
-#}
+    DESTDIR = $$PWD/out/bin
+}
 
 linux:!android {
     DESTDIR = $$PWD/out/opt/anylink/bin
-    copyToDestDir(images/logo.png resource/linux/anylink.desktop resource/linux/vpnagent.service)
+    copyToDestDir(images/logo.png resource/linux/anylink.desktop)
 }
 
 # You can make your code fail to compile if it uses deprecated APIs.

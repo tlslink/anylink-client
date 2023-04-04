@@ -5,7 +5,7 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <QTranslator>
-#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS) || defined(Q_OS_WIN64)
+#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS) || defined(Q_OS_WIN)
 #include "singleapplication.h"
 #endif
 
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     tempLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
     QDir().mkpath(configLocation);
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS) || defined(Q_OS_WIN64)
+#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS) || defined(Q_OS_WIN)
     SingleApplication app(argc, argv);
 #else
     QApplication app(argc, argv);
