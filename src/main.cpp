@@ -9,6 +9,13 @@
 #include "singleapplication.h"
 #endif
 
+void outdateCheck()
+{
+    if (QDate::currentDate().daysTo(QDate(2024,5,1)) < 0) {
+        error(QObject::tr("The current version of the software has expired, please install the latest version!"));
+        exit(0);
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -26,6 +33,7 @@ int main(int argc, char *argv[])
 #else
     QApplication app(argc, argv);
 #endif
+
     configManager = new ConfigManager();
     // Multiple translation files can be installed.
     // Translations are searched for in the reverse order in which they were installed
@@ -40,6 +48,8 @@ int main(int argc, char *argv[])
             }
         }
     }
+
+    outdateCheck();
 
     AnyLink w;
     w.show();
