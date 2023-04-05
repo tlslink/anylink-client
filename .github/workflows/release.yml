@@ -12,15 +12,48 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        build: [linux]
+        build: [linux-latest, linux, windows]
         include:
+        - build: linux-latest
+          os: ubuntu-22.04
+          qt: 6.5.0
+          qt-tools: "tools_ifw"
+          installer-name: anylink-linux-amd64.run
         - build: linux
           os: ubuntu-20.04
-          archive-name: anylink-linux-amd64.tar.gz
-    steps:    
-    - name: Install dependencies
+          qt: 6.2.4
+          qt-tools: "tools_ifw"
+          installer-name: anylink-linux-amd64.run
+        - build: windows
+          os: windows-2019
+          qt: 6.5.0
+          qt-tools: "tools_ifw tools_qtcreator"
+          installer-name: anylink-windows-amd64.exe
+    steps:
+    - if: startsWith(github.ref, 'refs/heads/')
+      shell: bash
       run: |
-        if [ "${{ matrix.build }}" = "linux" ]; then
+        if [ "${{ matrix.build }}" = "linux-latest" ]; then
+          echo "ARCHIVE_NAME=anylink-ubuntu22.04-amd64.tar.gz" >> $GITHUB_ENV
+        elif [ "${{ matrix.build }}" = "linux" ]; then
+          echo "ARCHIVE_NAME=anylink-ubuntu20.04-amd64.tar.gz" >> $GITHUB_ENV
+        elif [ "${{ matrix.build }}" = "windows" ]; then
+          echo "ARCHIVE_NAME=anylink-windows-amd64.zip" >> $GITHUB_ENV
+        fi
+    - if: startsWith(github.ref, 'refs/tags/')
+      shell: bash
+      run: |
+        if [ "${{ matrix.build }}" = "linux-latest" ]; then
+          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-ubuntu22.04-amd64.tar.gz" >> $GITHUB_ENV
+        elif [ "${{ matrix.build }}" = "linux" ]; then
+          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-ubuntu20.04-amd64.tar.gz" >> $GITHUB_ENV
+        elif [ "${{ matrix.build }}" = "windows" ]; then
+          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-windows-amd64.zip" >> $GITHUB_ENV
+        fi
+    - name: Install dependencies
+      shell: bash
+      run: |
+        if [ "${{ matrix.build }}" = "linux" -o "${{ matrix.build }}" = "linux-latest" ]; then
           sudo apt-get update
           sudo apt-get upgrade -y
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -y -q --force-yes \
@@ -33,61 +66,84 @@ jobs:
           libxcb-screensaver0 libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-util1 \
           libxkbcommon-x11-dev extra-cmake-modules fcitx-libs-dev
         fi
+    - if: matrix.build == 'windows'
+      name: Setup msvc
+      uses: ilammy/msvc-dev-cmd@v1
       
-    - name: install Qt
+    - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        version: '5.15.2' # https://download.qt.io/online/qtsdkrepository/
-        # modules: 'qtwebsockets'
-        tools: 'tools_ifw'
+        version: ${{ matrix.qt }} # https://download.qt.io/online/qtsdkrepository/
+        modules: 'qtwebsockets'
+        tools: ${{ matrix.qt-tools }}
         install-deps: false
-        cache: true
+        cache: false
     - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
     - name: Build
+      shell: bash
       run: |
-        qmake
-        make -j $(nproc)
-        wget -c -nv https://github.com/fcitx/fcitx-qt5/archive/refs/heads/master.zip
-        unzip master.zip
-        cd fcitx-qt5-master
-        cmake .
-        make -j $(nproc)
-        cd ..
+        if [ "${{ matrix.build }}" = "linux" -o "${{ matrix.build }}" = "linux-latest" ]; then
+          qmake
+          make -j $(nproc)
+          wget -c -nv https://github.com/fcitx/fcitx-qt5/archive/refs/heads/master.zip
+          unzip master.zip
+          cd fcitx-qt5-master
+          cmake -DENABLE_QT5=Off -DENABLE_QT6=On .
+          make -j $(nproc)
+          cd ..
+        elif [ "${{ matrix.build }}" = "windows" ]; then
+          rm "C:\Program Files\Git\usr\bin\link.exe"
+          qmake
+          "${IQTA_TOOLS}/QtCreator/bin/jom/jom.exe" -j $(nproc) -f Makefile.Release
+        fi
+
     - name: Build archive
       shell: bash
       run: |
         mkdir archive
         # ls -lR
-        if [ "${{ matrix.build }}" = "linux" ]; then
-          wget -c -nv "https://github.com/itviewer/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        if [ "${{ matrix.build }}" = "linux" -o "${{ matrix.build }}" = "linux-latest" ]; then
+          # probonopd
+          wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-          ./linuxdeployqt-continuous-x86_64.AppImage out/opt/anylink/bin/anylink -extra-plugins=platformthemes/libqgtk3.so -no-copy-copyright-files
-          cp fcitx-qt5-master/qt5/platforminputcontext/libfcitxplatforminputcontextplugin.so out/opt/anylink/plugins/platforminputcontexts/
+          ./linuxdeployqt-continuous-x86_64.AppImage out/opt/anylink/bin/anylink -extra-plugins=platformthemes/libqgtk3.so -no-copy-copyright-files -no-translations -unsupported-allow-new-glibc
+          cp fcitx-qt5-master/qt6/platforminputcontext/libfcitxplatforminputcontextplugin-qt6.so out/opt/anylink/plugins/platforminputcontexts/
           wget -c -nv https://github.com/tlslink/vpnagent/releases/download/continuous/vpnagent.tar.gz
           tar -zxvf vpnagent.tar.gz
           cp vpnagent out/opt/anylink/bin
           7z a installer/packages/root/data/anylink.7z ./out/opt/anylink/*
           cd installer
-          ${{ github.workspace }}/../Qt/Tools/QtInstallerFramework/4.5/bin/binarycreator --offline-only -c config/config.xml -p packages anylink-linux-amd64.run
-          tar -zcvf ${{ github.workspace }}/archive/${{ matrix.archive-name }} install.sh anylink-linux-amd64.run
+          "${IQTA_TOOLS}/QtInstallerFramework/4.5/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
+          tar -zcvf "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} install.sh ${{ matrix.installer-name }}
+        elif [ "${{ matrix.build }}" = "windows" ]; then
+          windeployqt out/bin/anylink.exe --no-translations --no-system-d3d-compiler --no-opengl-sw --no-svg
+          curl -k -L -O https://github.com/tlslink/vpnagent/releases/download/continuous/vpnagent.7z
+          7z x -y vpnagent.7z
+          cp vpnagent.exe wintun.dll out/bin
+          7z a installer/packages/root/data/anylink.7z ./out/bin/*
+          cd installer
+          "${IQTA_TOOLS}/QtInstallerFramework/4.5/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
+          7z a -tzip -r "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} ${{ matrix.installer-name }}
         fi
     - name: Upload archive
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ matrix.archive-name }}
-        path: archive/${{ matrix.archive-name }}
+        name: ${{ env.ARCHIVE_NAME }}
+        path: archive/${{ env.ARCHIVE_NAME }}
         
     - name: Continuous release
       uses: softprops/action-gh-release@v1
-      if: github.ref == 'refs/heads/main'
+      if: startsWith(github.ref, 'refs/heads/')
       with:
-        prerelease: false
-        files: archive/${{ matrix.archive-name }}
+        files: archive/${{ env.ARCHIVE_NAME }}
         tag_name: continuous
         
-    - if: (startsWith(github.ref, 'refs/tags/'))
+    - if: startsWith(github.ref, 'refs/tags/')
       name: Tagged release
       uses: softprops/action-gh-release@v1
       with:
-        files: archive/${{ matrix.archive-name }}
+        files: archive/${{ env.ARCHIVE_NAME }}
         name: Release build (${{ github.ref_name }})
