@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
     <Name>AnyLink Secure Client</Name>
-    <Version>0.2</Version>
+    <Version>0.3</Version>
     <Title>AnyLink Secure Client</Title>
-    <Publisher>https://tlslink.com</Publisher>
+    <Publisher>https://anylink.pro</Publisher>
+    <ProductUrl>https://anylink.pro</ProductUrl>
+    <InstallerWindowIcon>anylink</InstallerWindowIcon>
+    <InstallerApplicationIcon>anylink</InstallerApplicationIcon>
     <StartMenuDir>AnyLink Secure Client</StartMenuDir>
-    <TargetDir>@ApplicationsDir@/anylink</TargetDir>
+    <TargetDir>@ApplicationsDir@/AnyLink</TargetDir>
     <RemoveTargetDir>true</RemoveTargetDir>
     <WizardShowPageList>false</WizardShowPageList>
     <SupportsModify>false</SupportsModify>
     <RepositorySettingsPageVisible>false</RepositorySettingsPageVisible>
     <MaintenanceToolName>uninstall</MaintenanceToolName>
     <ControlScript>controller.js</ControlScript>
+    <DisableCommandLineInterface>true</DisableCommandLineInterface>
 </Installer>

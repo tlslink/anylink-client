@@ -26,11 +26,11 @@ Controller.prototype.onInstallationFinished = function ()
 {
     try {
         if (installer.isInstaller() && installer.status === QInstaller.Success) {
-            var exeName = "anylink"
-            if (systemInfo.kernelType === "winnt") {
-                exeName += ".exe"
+            if (systemInfo.kernelType === "linux") {
+                installer.executeDetached("@TargetDir@/bin/anylink");
+            } else if (systemInfo.kernelType === "winnt") {
+                installer.executeDetached("@TargetDir@/anylink.exe");
             }
-            installer.executeDetached("@TargetDir@/bin/" + exeName);
             // QDesktopServices.openUrl("file:///" + installer.value("TargetDir") + "/logo.png");
         }
     } catch(e) {

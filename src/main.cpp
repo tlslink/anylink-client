@@ -8,6 +8,7 @@
 #if defined(Q_OS_LINUX) || defined(Q_OS_MACOS) || defined(Q_OS_WIN)
 #include "singleapplication.h"
 #endif
+#include <QStyleFactory>
 
 void outdateCheck()
 {
@@ -20,6 +21,8 @@ void outdateCheck()
 int main(int argc, char *argv[])
 {
     qSetMessagePattern("%{type}:[%{file}:%{line}]  %{message}");
+//    qDebug() << QStyleFactory::keys();
+//    QApplication::setStyle(QStyleFactory::create("fusion"));
 #if QT_VERSION <= QT_VERSION_CHECK(6, 2, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif

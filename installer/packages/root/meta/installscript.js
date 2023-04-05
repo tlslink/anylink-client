@@ -4,8 +4,15 @@ function Component()
         component.addStopProcessForUpdateRequest("anylink");
         component.addStopProcessForUpdateRequest("vpnui");
 
-        if (installer.fileExists("/opt/anylink")) {
-            installer.executeDetached("/opt/anylink/uninstall");
+        if (installer.fileExists("@TargetDir@/@MaintenanceToolName@")) {
+            installer.executeDetached("@TargetDir@/@MaintenanceToolName@");
+        }
+    } else if (systemInfo.kernelType === "winnt") {
+        component.addStopProcessForUpdateRequest("anylink.exe");
+        component.addStopProcessForUpdateRequest("vpnui.exe");
+
+        if (installer.fileExists("@TargetDir@/@MaintenanceToolName@.exe")) {
+            installer.executeDetached("@TargetDir@/@MaintenanceToolName@.exe");
         }
     }
 }
@@ -19,8 +26,24 @@ Component.prototype.createOperations = function()
         // will be auto removed on uninstall
         component.addOperation("Copy", "@TargetDir@/anylink.desktop", "/usr/share/applications/anylink.desktop");
 
-        component.addOperation("Execute", "@TargetDir@/bin/vpnagent","install",
+        component.addElevatedOperation("Execute", "@TargetDir@/bin/vpnagent","install",
                                 "UNDOEXECUTE","@TargetDir@/bin/vpnagent","uninstall");
+    } else if (systemInfo.kernelType === "winnt") {
+        //开始菜单快捷方式
+        component.addOperation("CreateShortcut",
+                               "@TargetDir@/anylink.exe",
+                               "@StartMenuDir@/AnyLink Secure Client.lnk",
+                               "workingDirectory=@TargetDir@");
+
+        //桌面快捷方式
+        component.addOperation("CreateShortcut",
+                               "@TargetDir@/anylink.exe",
+                               "@DesktopDir@/AnyLink Secure Client.lnk",
+                               "workingDirectory=@TargetDir@");
+
+
+        component.addElevatedOperation("Execute", "@TargetDir@/vpnagent.exe","install",
+                                "UNDOEXECUTE","@TargetDir@/vpnagent.exe","uninstall");
     }
 }
 
