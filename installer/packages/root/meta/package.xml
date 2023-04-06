@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package>
     <DisplayName>AnyLink</DisplayName>
-    <Version>0.2</Version>
-    <ReleaseDate>2022-11-11</ReleaseDate>
+    <Version>0.0</Version>
+    <ReleaseDate>2023-02-06</ReleaseDate>
     <Default>script</Default>
-    <Script>installscript.js</Script>
+    <Script>component.js</Script>
     <ForcedInstallation>true</ForcedInstallation>
     <RequiresAdminRights>true</RequiresAdminRights>
 </Package>

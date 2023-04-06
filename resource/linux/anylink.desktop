@@ -1,9 +1,8 @@
 [Desktop Entry]
 Type=Application
 Name=AnyLink Secure Client
-Name[zh_CN]=AnyLink Secure Client
 Comment=A VPN client that utilizes TLS and DTLS for secure session establishment
 Terminal=false
-Icon=/opt/AnyLink/logo.png
-Exec=/opt/AnyLink/bin/anylink
+Icon=/opt/anylink/logo.png
+Exec=/opt/anylink/bin/anylink
 StartupNotify=false

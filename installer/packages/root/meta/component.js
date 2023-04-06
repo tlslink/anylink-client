@@ -1,19 +1,27 @@
 function Component()
 {
+    // end with "/" in config.xml
+    var targetDir = installer.value("TargetDir");
+    var uninstaller = installer.value("MaintenanceToolName");
+
     if (systemInfo.kernelType === "linux") {
+        installer.setValue("TargetDir", targetDir + "anylink");
+
         component.addStopProcessForUpdateRequest("anylink");
         component.addStopProcessForUpdateRequest("vpnui");
 
-        if (installer.fileExists("@TargetDir@/@MaintenanceToolName@")) {
-            installer.executeDetached("@TargetDir@/@MaintenanceToolName@");
-        }
+        uninstaller = installer.value("TargetDir") + "/" + uninstaller;
+
     } else if (systemInfo.kernelType === "winnt") {
+        installer.setValue("TargetDir", targetDir + "AnyLink");
+
         component.addStopProcessForUpdateRequest("anylink.exe");
         component.addStopProcessForUpdateRequest("vpnui.exe");
 
-        if (installer.fileExists("@TargetDir@/@MaintenanceToolName@.exe")) {
-            installer.executeDetached("@TargetDir@/@MaintenanceToolName@.exe");
-        }
+        uninstaller = installer.value("TargetDir") + "/" + uninstaller + ".exe";
+    }
+    if (installer.fileExists(uninstaller)) {
+        installer.executeDetached(uninstaller);
     }
 }
 
@@ -26,6 +34,7 @@ Component.prototype.createOperations = function()
         // will be auto removed on uninstall
         component.addOperation("Copy", "@TargetDir@/anylink.desktop", "/usr/share/applications/anylink.desktop");
 
+        // install and start the service or stop and remove the service
         component.addElevatedOperation("Execute", "@TargetDir@/bin/vpnagent","install",
                                 "UNDOEXECUTE","@TargetDir@/bin/vpnagent","uninstall");
     } else if (systemInfo.kernelType === "winnt") {
