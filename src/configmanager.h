@@ -15,7 +15,6 @@ public:
         {"lastProfile", ""},
         {"autoLogin", false},
         {"minimize", true},
-        {"allowLAN", true},
         {"block", false},
         {"debug", false},
         {"local", true},

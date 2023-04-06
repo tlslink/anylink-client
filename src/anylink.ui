@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>499</width>
-    <height>326</height>
+    <width>476</width>
+    <height>322</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -569,13 +569,6 @@ QListView::item {
           <widget class="QCheckBox" name="checkBoxMinimize">
            <property name="text">
             <string>Minimize AnyLink on VPN connect</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBoxAllowLAN">
-           <property name="text">
-            <string>Allow local area network(LAN) access</string>
            </property>
           </widget>
          </item>

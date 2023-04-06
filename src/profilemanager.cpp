@@ -126,17 +126,17 @@ void ProfileManager::afterShowOneTime()
         // only new not delete all will go here
     });
     connect(ui->buttonSave, &QPushButton::clicked, [this]() {
-        const QString name = ui->lineEditName->text();
-        const QString host = ui->lineEditHost->text();
-        const QString username = ui->lineEditUsername->text();
+        const QString name = ui->lineEditName->text().trimmed();
+        const QString host = ui->lineEditHost->text().trimmed();
+        const QString username = ui->lineEditUsername->text().trimmed();
         if(name.isEmpty() || host.isEmpty() || username.isEmpty()) {
             return;
         }
         QJsonObject newProfile {
             { "host", host },
             { "username", username },
-            { "password", ui->lineEditPassword->text() },
-            { "group", ui->lineEditGroup->text() }
+            { "password", ui->lineEditPassword->text().trimmed() },
+            { "group", ui->lineEditGroup->text().trimmed() }
         };
         profiles.insert(name, newProfile);
         updateModel();

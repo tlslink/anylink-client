@@ -15,7 +15,7 @@ AnyLink::AnyLink(QWidget *parent)
 {
     ui->setupUi(this);
 #if defined(Q_OS_LINUX)
-    setWindowIcon(QIcon(":/images/logo64.png"));
+    setWindowIcon(QIcon(":/images/anylink64.png"));
 #endif
     // avoid some people prefer to use minimize
     setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
@@ -94,7 +94,6 @@ void AnyLink::configVPN()
             { "log_level", ui->checkBoxDebug->isChecked() ? "Debug" : "Info" },
             { "log_path", tempLocation},
             { "skip_verify", !ui->checkBoxBlock->isChecked() },
-            { "allow_lan", ui->checkBoxAllowLAN->isChecked() },
             {"cisco_compat", true}
         };
         rpc->callAsync("config", CONFIG, args, [this](const QJsonValue & result) {
@@ -117,7 +116,11 @@ void AnyLink::connectVPN(bool reconnect)
             method = "reconnect";
             id = RECONNECT;
         } else {
-            currentProfile = profileManager->profiles[ui->comboBoxHost->currentText()].toObject();
+            const QString name = ui->comboBoxHost->currentText();
+            if (name.isEmpty()) {
+                return;
+            }
+            currentProfile = profileManager->profiles[name].toObject();
             const QString otp = ui->lineEditOTP->text();
             if(!otp.isEmpty()) {
                 currentProfile["password"] = otp;
@@ -214,8 +217,6 @@ void AnyLink::initConfig()
 {
     ui->checkBoxAutoLogin->setChecked(configManager->config["autoLogin"].toBool());
     ui->checkBoxMinimize->setChecked(configManager->config["minimize"].toBool());
-    ui->checkBoxAllowLAN->setChecked(configManager->config["allowLAN"].toBool());
-    ui->checkBoxAllowLAN->setEnabled(false);
     ui->checkBoxBlock->setChecked(configManager->config["block"].toBool());
     ui->checkBoxDebug->setChecked(configManager->config["debug"].toBool());
     ui->checkBoxLang->setChecked(configManager->config["local"].toBool());
@@ -225,10 +226,6 @@ void AnyLink::initConfig()
     });
     connect(ui->checkBoxMinimize, &QCheckBox::toggled, [](bool checked) {
         configManager->config["minimize"] = checked;
-    });
-    connect(ui->checkBoxAllowLAN, &QCheckBox::toggled, [this](bool checked) {
-        configManager->config["allowLAN"] = checked;
-        configVPN();
     });
     connect(ui->checkBoxBlock, &QCheckBox::toggled, [this](bool checked) {
         configManager->config["block"] = checked;
