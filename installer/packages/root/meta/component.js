@@ -1,5 +1,7 @@
 function Component()
 {
+    component.setUpdateAvailable(false);
+
     // end with "/" in config.xml
     var targetDir = installer.value("TargetDir");
     var uninstaller = installer.value("MaintenanceToolName");
@@ -7,16 +9,20 @@ function Component()
     if (systemInfo.kernelType === "linux") {
         installer.setValue("TargetDir", targetDir + "anylink");
 
-        component.addStopProcessForUpdateRequest("anylink");
-        component.addStopProcessForUpdateRequest("vpnui");
+        if (installer.isInstaller()) {
+            component.addStopProcessForUpdateRequest("anylink");
+            component.addStopProcessForUpdateRequest("vpnui");
+        }
 
         uninstaller = installer.value("TargetDir") + "/" + uninstaller;
 
     } else if (systemInfo.kernelType === "winnt") {
         installer.setValue("TargetDir", targetDir + "AnyLink");
 
-        component.addStopProcessForUpdateRequest("anylink.exe");
-        component.addStopProcessForUpdateRequest("vpnui.exe");
+        if (installer.isInstaller()) {
+            component.addStopProcessForUpdateRequest("anylink.exe");
+            component.addStopProcessForUpdateRequest("vpnui.exe");
+        }
 
         uninstaller = installer.value("TargetDir") + "/" + uninstaller + ".exe";
     }
@@ -38,6 +44,9 @@ Component.prototype.createOperations = function()
         component.addElevatedOperation("Execute", "@TargetDir@/bin/vpnagent","install",
                                 "UNDOEXECUTE","@TargetDir@/bin/vpnagent","uninstall");
     } else if (systemInfo.kernelType === "winnt") {
+        // https://forum.qt.io/topic/87431/how-could-we-detect-users-vcredist-installed-when-using-qt-installer-framework/4
+        component.addElevatedOperation("Execute", "{0,3010,1638,5100}", "@TargetDir@/vc_redist.x64.exe", "/norestart", "/q");
+
         //开始菜单快捷方式
         component.addOperation("CreateShortcut",
                                "@TargetDir@/anylink.exe",

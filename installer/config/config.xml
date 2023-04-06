@@ -14,5 +14,8 @@
     <SupportsModify>false</SupportsModify>
     <RepositorySettingsPageVisible>false</RepositorySettingsPageVisible>
     <MaintenanceToolName>uninstall</MaintenanceToolName>
+    <PersistentLocalCache>false</PersistentLocalCache>
     <ControlScript>controller.js</ControlScript>
+    <DisableCommandLineInterface>true</DisableCommandLineInterface>
+    <SaveDefaultRepositories>false</SaveDefaultRepositories>
 </Installer>
