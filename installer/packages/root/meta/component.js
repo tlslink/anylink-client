@@ -9,23 +9,24 @@ function Component()
     if (systemInfo.kernelType === "linux") {
         installer.setValue("TargetDir", targetDir + "anylink");
 
-        if (installer.isInstaller()) {
-            component.addStopProcessForUpdateRequest("anylink");
-            component.addStopProcessForUpdateRequest("vpnui");
-        }
-
         uninstaller = installer.value("TargetDir") + "/" + uninstaller;
 
     } else if (systemInfo.kernelType === "winnt") {
         installer.setValue("TargetDir", targetDir + "AnyLink");
 
-        if (installer.isInstaller()) {
-            component.addStopProcessForUpdateRequest("anylink.exe");
-            component.addStopProcessForUpdateRequest("vpnui.exe");
-        }
-
         uninstaller = installer.value("TargetDir") + "/" + uninstaller + ".exe";
     }
+
+    if (installer.isInstaller()) {
+//         console.log("anylink running status: " + installer.isProcessRunning("anylink"))
+//         console.log("vpnui running status: " + installer.isProcessRunning("vpnui"))
+
+        // request when component really installing
+        component.addStopProcessForUpdateRequest("vpnui");
+    }
+    // kill self when install and uninstall
+    component.addStopProcessForUpdateRequest("anylink");
+
     if (installer.fileExists(uninstaller)) {
         installer.executeDetached(uninstaller);
     }
