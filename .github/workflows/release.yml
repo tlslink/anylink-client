@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        build: [linux-latest, linux, windows, windows7]
+        build: [linux-latest, linux, windows]
         include:
         - build: linux-latest
           os: ubuntu-22.04
@@ -31,37 +31,27 @@ jobs:
           qt: 6.5.0
           qt-modules: 'qtwebsockets'
           qt-tools: 'tools_ifw tools_qtcreator'
-          installer-name: anylink-windows-amd64.exe
-        - build: windows7
-          os: windows-2019
-          qt: 5.15.2
-          qt-modules: ''
-          qt-tools: 'tools_ifw tools_qtcreator'
-          installer-name: anylink-windows7-amd64.exe
+          installer-name: anylink-windows10-amd64.exe
     steps:
     - if: startsWith(github.ref, 'refs/heads/')
       shell: bash
       run: |
         if [ "${{ matrix.build }}" = "linux-latest" ]; then
-          echo "ARCHIVE_NAME=anylink-ubuntu22.04-amd64.tar.gz" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=anylink-linux_openssl3-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "linux" ]; then
-          echo "ARCHIVE_NAME=anylink-ubuntu20.04-amd64.tar.gz" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=anylink-linux_openssl1-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "windows" ]; then
-          echo "ARCHIVE_NAME=anylink-windows-amd64.zip" >> $GITHUB_ENV
-        elif [ "${{ matrix.build }}" = "windows7" ]; then
-          echo "ARCHIVE_NAME=anylink-windows7-amd64.zip" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=anylink-windows10-amd64.zip" >> $GITHUB_ENV
         fi
     - if: startsWith(github.ref, 'refs/tags/')
       shell: bash
       run: |
         if [ "${{ matrix.build }}" = "linux-latest" ]; then
-          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-ubuntu22.04-amd64.tar.gz" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-linux_openssl3-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "linux" ]; then
-          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-ubuntu20.04-amd64.tar.gz" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-linux_openssl1-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "windows" ]; then
-          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-windows-amd64.zip" >> $GITHUB_ENV
-        elif [ "${{ matrix.build }}" = "windows7" ]; then
-          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-windows7-amd64.zip" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-windows10-amd64.zip" >> $GITHUB_ENV
         fi
     - name: Install dependencies
       shell: bash
@@ -79,7 +69,7 @@ jobs:
           libxcb-screensaver0 libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-util1 \
           libxkbcommon-x11-dev extra-cmake-modules fcitx-libs-dev
         fi
-    - if: startsWith(matrix.build, 'windows')
+    - if: matrix.build == 'windows'
       name: Setup msvc
       uses: ilammy/msvc-dev-cmd@v1
       
@@ -90,7 +80,7 @@ jobs:
         modules: ${{ matrix.qt-modules }}
         tools: ${{ matrix.qt-tools }}
         install-deps: false
-        cache: false
+        cache: true
     - uses: actions/checkout@v3
       with:
         submodules: recursive
@@ -107,7 +97,7 @@ jobs:
           cmake -DENABLE_QT5=Off -DENABLE_QT6=On .
           make -j $(nproc)
           cd ..
-        elif [ "${{ matrix.build }}" = "windows" -o "${{ matrix.build }}" = "windows7" ]; then
+        elif [ "${{ matrix.build }}" = "windows" ]; then
           rm "C:\Program Files\Git\usr\bin\link.exe"
           qmake
           "${IQTA_TOOLS}/QtCreator/bin/jom/jom.exe" -j $(nproc) -f Makefile.Release
@@ -131,7 +121,7 @@ jobs:
           cd installer
           "${IQTA_TOOLS}/QtInstallerFramework/4.5/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           tar -zcvf "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} install.sh ${{ matrix.installer-name }}
-        elif [ "${{ matrix.build }}" = "windows" -o "${{ matrix.build }}" = "windows7" ]; then
+        elif [ "${{ matrix.build }}" = "windows" ]; then
           windeployqt out/bin/anylink.exe --no-translations --no-system-d3d-compiler --no-opengl-sw --no-svg
           curl -k -L -O https://github.com/tlslink/vpnagent/releases/download/continuous/vpnagent.7z
           7z x -y vpnagent.7z
