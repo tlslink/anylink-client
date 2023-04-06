@@ -5,3 +5,6 @@ out
 *.tar.gz
 *.run
 *.exe
+installer/config/*.png
+installer/config/*.ico
+installer/config/*.icns

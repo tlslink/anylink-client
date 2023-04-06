@@ -5,7 +5,7 @@
     <Title>AnyLink Secure Client</Title>
     <Publisher>https://anylink.pro</Publisher>
     <ProductUrl>https://anylink.pro</ProductUrl>
-    <InstallerWindowIcon>anylink</InstallerWindowIcon>
+    <InstallerWindowIcon>anylink64.png</InstallerWindowIcon>
     <InstallerApplicationIcon>anylink</InstallerApplicationIcon>
     <StartMenuDir>AnyLink Secure Client</StartMenuDir>
     <TargetDir>@ApplicationsDir@/</TargetDir>

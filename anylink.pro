@@ -27,6 +27,22 @@ defineTest(copyToDestDir) {
     export(QMAKE_POST_LINK)
 }
 
+defineTest(copyIcon) {
+    files = $$1
+    DDIR = $$PWD/installer/config
+
+    for(FILE, files) {
+        FILE = $$PWD/$$FILE
+        # Replace slashes in paths with backslashes for Windows
+        win32:FILE ~= s,/,\\,g
+        win32:DDIR ~= s,/,\\,g
+
+        QMAKE_POST_LINK += $$QMAKE_COPY $$quote($$FILE) $$quote($$DDIR) $$escape_expand(\\n\\t)
+    }
+
+    export(QMAKE_POST_LINK)
+}
+
 #macx {
 #    ICON = images/logo.png
 #}
@@ -42,11 +58,13 @@ win32 {
     QMAKE_TARGET_COPYRIGHT = "Copyright 2022-2023 https://anylink.pro. All rights reserved."
 
     DESTDIR = $$PWD/out/bin
+    copyIcon(images/anylink64.png resource/windows/anylink.ico)
 }
 
 linux:!android {
     DESTDIR = $$PWD/out/opt/anylink/bin
-    copyToDestDir(images/logo.png resource/linux/anylink.desktop)
+    copyToDestDir(images/anylink.png resource/linux/anylink.desktop)
+    copyIcon(images/anylink64.png)
 }
 
 # You can make your code fail to compile if it uses deprecated APIs.

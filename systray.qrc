@@ -3,6 +3,6 @@
         <file>images/connected.png</file>
         <file>images/connecting.png</file>
         <file>images/notconnected.png</file>
-        <file>images/logo64.png</file>
+        <file>images/anylink64.png</file>
     </qresource>
 </RCC>
