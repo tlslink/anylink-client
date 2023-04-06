@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QIcon>
+#include <QJsonObject>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -16,7 +17,6 @@ class DetailDialog;
 class QSystemTrayIcon;
 class QMenu;
 class QComboBox;
-class QJsonObject;
 
 class AnyLink : public QWidget
 {
@@ -61,6 +61,7 @@ private:
     bool m_vpnConnected;
     bool activeDisconnect = false;
     DetailDialog *detailDialog = nullptr;
+    QJsonObject currentProfile = {};
 
     void createTrayActions();
     void createTrayIcon();

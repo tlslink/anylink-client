@@ -110,7 +110,7 @@ void AnyLink::connectVPN(bool reconnect)
         trayIcon->setIcon(iconConnecting);
         // profile may be modified, and may not emit currentTextChanged signal
         // must not affected by QComboBox::currentTextChanged
-        QJsonObject currentProfile = {};
+
         QString method = "connect";
         int id = CONNECT;
         if(reconnect) {
@@ -202,6 +202,12 @@ void AnyLink::createTrayIcon()
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->setIcon(iconNotConnected);
+
+    connect(trayIcon,&QSystemTrayIcon::activated,[this](QSystemTrayIcon::ActivationReason reason){
+        if (reason == QSystemTrayIcon::Trigger) {
+            show();
+        }
+    });
 }
 
 void AnyLink::initConfig()
@@ -264,6 +270,7 @@ void AnyLink::afterShowOneTime()
         actionDisconnect->setEnabled(true);
         if(ui->checkBoxMinimize->isChecked()) {
             close();
+            trayIcon->setToolTip(tr("Connected to: ") + currentProfile.value("host").toString());
         }
         configManager->config["lastProfile"] = ui->comboBoxHost->currentText();
     });
@@ -271,6 +278,8 @@ void AnyLink::afterShowOneTime()
     connect(this, &AnyLink::vpnClosed, [this]() {
         m_vpnConnected = false;
         trayIcon->setIcon(iconNotConnected);
+        trayIcon->setToolTip("");
+
         ui->buttonConnect->setText(tr("Connect"));
         ui->comboBoxHost->setEnabled(true);
         ui->lineEditOTP->setEnabled(true);

@@ -14,7 +14,7 @@ public:
     QJsonObject config {
         {"lastProfile", ""},
         {"autoLogin", false},
-        {"minimize", false},
+        {"minimize", true},
         {"allowLAN", true},
         {"block", false},
         {"debug", false},

@@ -35,7 +35,7 @@
     </message>
     <message>
         <location line="+65"/>
-        <location filename="../src/anylink.cpp" line="+274"/>
+        <location filename="../src/anylink.cpp" line="+283"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
@@ -145,10 +145,6 @@
         <translation>Agent 版本：</translation>
     </message>
     <message>
-        <source>Version:</source>
-        <translation type="vanished">版本：</translation>
-    </message>
-    <message>
         <location line="+44"/>
         <source>&lt;a href=&quot;https://github.com/tlslink/anylink-client/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Getting Help&lt;/span&gt;&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://github.com/tlslink/anylink-client/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;获取帮助&lt;/span&gt;&lt;/a&gt;</translation>
@@ -164,7 +160,7 @@
         <translation>查看连接日志</translation>
     </message>
     <message>
-        <location filename="../src/anylink.cpp" line="-201"/>
+        <location filename="../src/anylink.cpp" line="-210"/>
         <source>Couldn&apos;t open log file</source>
         <translation>未能打开日志文件</translation>
     </message>
@@ -189,12 +185,17 @@
         <translation>退出应用</translation>
     </message>
     <message>
-        <location line="+69"/>
+        <location line="+75"/>
         <source>Disconnect</source>
         <translation>断开</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+10"/>
+        <source>Connected to: </source>
+        <translation>已连接到： </translation>
+    </message>
+    <message>
+        <location line="+34"/>
         <source>Failed to connect to vpnagent, please reinstall the software!</source>
         <translation>未能连接到 vpnagent 服务，请重新安装本软件！</translation>
     </message>
@@ -626,7 +627,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="+15"/>
+        <location filename="../src/main.cpp" line="+16"/>
         <source>The current version of the software has expired, please install the latest version!</source>
         <translation>软件当前版本已过期，请安装最新版本！</translation>
     </message>
