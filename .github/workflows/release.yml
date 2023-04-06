@@ -26,7 +26,7 @@ jobs:
           installer-name: anylink-linux-amd64.run
         - build: windows
           os: windows-2019
-          qt: 6.5.0
+          qt: 6.2.4
           qt-tools: "tools_ifw tools_qtcreator"
           installer-name: anylink-windows-amd64.exe
     steps:
