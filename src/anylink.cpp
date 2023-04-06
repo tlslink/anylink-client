@@ -105,8 +105,6 @@ void AnyLink::configVPN()
 void AnyLink::connectVPN(bool reconnect)
 {
     if(rpc->isConnected()) {
-        ui->progressBar->start();
-        trayIcon->setIcon(iconConnecting);
         // profile may be modified, and may not emit currentTextChanged signal
         // must not affected by QComboBox::currentTextChanged
 
@@ -126,6 +124,8 @@ void AnyLink::connectVPN(bool reconnect)
                 currentProfile["password"] = otp;
             }
         }
+        ui->progressBar->start();
+        trayIcon->setIcon(iconConnecting);
 
         rpc->callAsync(method, id, currentProfile, [this](const QJsonValue & result) {
             ui->progressBar->stop();
