@@ -126,6 +126,7 @@ jobs:
           7z a installer/packages/root/data/anylink.7z ./out/bin/*
           cd installer
           "${IQTA_TOOLS}/QtInstallerFramework/4.5/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
+          editbin /subsystem:windows ${{ matrix.installer-name }}
           7z a -tzip -r "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} ${{ matrix.installer-name }}
         fi
     - name: Upload archive
