@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        build: [linux-latest, linux, windows]
+        build: [linux, linux-latest, windows]
         include:
         - build: linux-latest
           os: ubuntu-22.04
@@ -114,8 +114,8 @@ jobs:
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
           ./linuxdeployqt-continuous-x86_64.AppImage out/opt/anylink/bin/anylink -extra-plugins=platformthemes/libqgtk3.so -no-copy-copyright-files -no-translations -unsupported-allow-new-glibc
           cp fcitx-qt5-master/qt6/platforminputcontext/libfcitxplatforminputcontextplugin-qt6.so out/opt/anylink/plugins/platforminputcontexts/
-          wget -c -nv https://github.com/tlslink/vpnagent/releases/download/continuous/vpnagent.tar.gz
-          tar -zxvf vpnagent.tar.gz
+          wget -c -nv https://github.com/tlslink/vpnagent/releases/download/continuous/vpnagent-linux-amd64.tar.gz
+          tar -zxvf vpnagent-*.tar.gz
           cp vpnagent out/opt/anylink/bin
           7z a installer/packages/root/data/anylink.7z ./out/opt/anylink/*
           cd installer
@@ -123,8 +123,8 @@ jobs:
           tar -zcvf "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} install.sh ${{ matrix.installer-name }}
         elif [ "${{ matrix.build }}" = "windows" ]; then
           windeployqt out/bin/anylink.exe --no-translations --no-system-d3d-compiler --no-opengl-sw --no-svg
-          curl -k -L -O https://github.com/tlslink/vpnagent/releases/download/continuous/vpnagent.7z
-          7z x -y vpnagent.7z
+          curl -k -L -O https://github.com/tlslink/vpnagent/releases/download/continuous/vpnagent-windows10-amd64.7z
+          7z x -y vpnagent-*.7z
           cp vpnagent.exe wintun.dll out/bin
           7z a installer/packages/root/data/anylink.7z ./out/bin/*
           cd installer
@@ -139,14 +139,24 @@ jobs:
         name: ${{ env.ARCHIVE_NAME }}
         path: archive/${{ env.ARCHIVE_NAME }}
         
-    - name: Continuous release
+    - if: startsWith(github.ref, 'refs/heads/')
+      name: Continuous release
       uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/heads/')
       with:
+        prerelease: false
         files: archive/${{ env.ARCHIVE_NAME }}
         tag_name: continuous
         
-    - if: startsWith(github.ref, 'refs/tags/')
+    - if: startsWith(github.ref, 'refs/tags/') && (matrix.build == 'windows')
+      name: Tagged release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: archive/${{ env.ARCHIVE_NAME }}
+        name: Release build (${{ github.ref_name }})
+        token: ${{ secrets.CI_TOKEN }}
+        body: 'See [README](https://github.com/tlslink/anylink-client) for more details.'
+        generate_release_notes: true
+    - if: startsWith(github.ref, 'refs/tags/') && (matrix.build != 'windows')
       name: Tagged release
       uses: softprops/action-gh-release@v1
       with:
