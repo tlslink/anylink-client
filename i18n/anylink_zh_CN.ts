@@ -35,7 +35,7 @@
     </message>
     <message>
         <location line="+65"/>
-        <location filename="../src/anylink.cpp" line="+283"/>
+        <location filename="../src/anylink.cpp" line="+284"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
@@ -110,9 +110,8 @@
         <translation>VPN 连接成功后最小化当前窗口</translation>
     </message>
     <message>
-        <location line="+7"/>
         <source>Allow local area network(LAN) access</source>
-        <translation>允许访问本地局域网</translation>
+        <translation type="vanished">允许访问本地局域网</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -123,6 +122,11 @@
         <location line="+7"/>
         <source>Enable Debug logging</source>
         <translation>开启调试日志</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Cisco Protocol Compatibility</source>
+        <translation>兼容思科协议</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -160,12 +164,12 @@
         <translation>查看连接日志</translation>
     </message>
     <message>
-        <location filename="../src/anylink.cpp" line="-210"/>
+        <location filename="../src/anylink.cpp" line="-211"/>
         <source>Couldn&apos;t open log file</source>
         <translation>未能打开日志文件</translation>
     </message>
     <message>
-        <location line="+105"/>
+        <location line="+108"/>
         <source>Connect Gateway</source>
         <translation>连接网关</translation>
     </message>
@@ -185,7 +189,7 @@
         <translation>退出应用</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+73"/>
         <source>Disconnect</source>
         <translation>断开</translation>
     </message>

@@ -18,6 +18,7 @@ public:
         {"block", false},
         {"debug", false},
         {"local", true},
+        {"cisco_compat", false},
         {"x", 0},
         {"y", 0}
     };

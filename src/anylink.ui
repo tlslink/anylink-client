@@ -587,6 +587,13 @@ QListView::item {
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="checkBoxCiscoCompat">
+           <property name="text">
+            <string>Cisco Protocol Compatibility</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QCheckBox" name="checkBoxLang">
            <property name="text">
             <string>Use local language for the UI</string>

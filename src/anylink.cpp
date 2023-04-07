@@ -94,7 +94,7 @@ void AnyLink::configVPN()
             { "log_level", ui->checkBoxDebug->isChecked() ? "Debug" : "Info" },
             { "log_path", tempLocation},
             { "skip_verify", !ui->checkBoxBlock->isChecked() },
-            {"cisco_compat", true}
+            {"cisco_compat", ui->checkBoxCiscoCompat->isChecked()}
         };
         rpc->callAsync("config", CONFIG, args, [this](const QJsonValue & result) {
             ui->statusBar->setText(result.toString());
@@ -220,6 +220,7 @@ void AnyLink::initConfig()
     ui->checkBoxBlock->setChecked(configManager->config["block"].toBool());
     ui->checkBoxDebug->setChecked(configManager->config["debug"].toBool());
     ui->checkBoxLang->setChecked(configManager->config["local"].toBool());
+    ui->checkBoxCiscoCompat->setChecked(configManager->config["cisco_compat"].toBool());
 
     connect(ui->checkBoxAutoLogin, &QCheckBox::toggled, [](bool checked) {
         configManager->config["autoLogin"] = checked;
@@ -239,6 +240,9 @@ void AnyLink::initConfig()
     });
     connect(ui->checkBoxLang, &QCheckBox::toggled, [](bool checked) {
         configManager->config["local"] = checked;
+    });
+    connect(ui->checkBoxCiscoCompat, &QCheckBox::toggled, [](bool checked) {
+        configManager->config["cisco_compat"] = checked;
     });
 }
 
