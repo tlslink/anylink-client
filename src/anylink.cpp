@@ -222,27 +222,28 @@ void AnyLink::initConfig()
     ui->checkBoxLang->setChecked(configManager->config["local"].toBool());
     ui->checkBoxCiscoCompat->setChecked(configManager->config["cisco_compat"].toBool());
 
-    connect(ui->checkBoxAutoLogin, &QCheckBox::toggled, [](bool checked) {
+    connect(ui->checkBoxAutoLogin, &QCheckBox::toggled, this, [](bool checked) {
         configManager->config["autoLogin"] = checked;
     });
-    connect(ui->checkBoxMinimize, &QCheckBox::toggled, [](bool checked) {
+    connect(ui->checkBoxMinimize, &QCheckBox::toggled, this, [](bool checked) {
         configManager->config["minimize"] = checked;
     });
-    connect(ui->checkBoxBlock, &QCheckBox::toggled, [this](bool checked) {
+    connect(ui->checkBoxBlock, &QCheckBox::toggled, this, [this](bool checked) {
         configManager->config["block"] = checked;
         configVPN();
     });
-    connect(ui->checkBoxDebug, &QCheckBox::toggled, [this](bool checked) {
+    connect(ui->checkBoxDebug, &QCheckBox::toggled, this, [this](bool checked) {
         // do not save debug state
         Q_UNUSED(checked);
-//        configManager->config["debug"] = checked;
+        //        configManager->config["debug"] = checked;
         configVPN();
     });
-    connect(ui->checkBoxLang, &QCheckBox::toggled, [](bool checked) {
+    connect(ui->checkBoxLang, &QCheckBox::toggled, this, [](bool checked) {
         configManager->config["local"] = checked;
     });
-    connect(ui->checkBoxCiscoCompat, &QCheckBox::toggled, [](bool checked) {
+    connect(ui->checkBoxCiscoCompat, &QCheckBox::toggled, this, [this](bool checked) {
         configManager->config["cisco_compat"] = checked;
+        configVPN();
     });
 }
 
@@ -256,7 +257,7 @@ void AnyLink::afterShowOneTime()
 
     ui->labelVersionAgent->setText(getAgentVersion());
 
-    connect(this, &AnyLink::vpnConnected, [this]() {
+    connect(this, &AnyLink::vpnConnected, this, [this]() {
         getVPNStatus();
         m_vpnConnected = true;
         activeDisconnect = false;
@@ -292,7 +293,7 @@ void AnyLink::afterShowOneTime()
         resetVPNStatus();
     });
 
-    connect(qApp, &QApplication::aboutToQuit, [this]() {
+    connect(qApp, &QApplication::aboutToQuit, this, [this]() {
         if(m_vpnConnected) {
             disconnectVPN();
         }
@@ -303,7 +304,7 @@ void AnyLink::afterShowOneTime()
     });
 
     rpc = new JsonRpcWebSocketClient(this);
-    connect(rpc, &JsonRpcWebSocketClient::error, [this](const QString & error) {
+    connect(rpc, &JsonRpcWebSocketClient::error, this, [this](const QString &error) {
         Q_UNUSED(error)
         ui->statusBar->setText(tr("Failed to connect to vpnagent, please reinstall the software!"));
         ui->buttonConnect->setEnabled(false);
@@ -312,7 +313,7 @@ void AnyLink::afterShowOneTime()
             show();
         }
     });
-    connect(rpc, &JsonRpcWebSocketClient::connected, [this]() {
+    connect(rpc, &JsonRpcWebSocketClient::connected, this, [this]() {
         configVPN();
         if(configManager->config["autoLogin"].toBool()) {
             QString lastProfile = configManager->config["lastProfile"].toString();
@@ -396,9 +397,7 @@ void AnyLink::closeEvent(QCloseEvent *event)
 void AnyLink::showEvent(QShowEvent *event)
 {
     if(trayIcon == nullptr) {
-        QTimer::singleShot(50, [this]() {
-            afterShowOneTime();
-        });
+        QTimer::singleShot(50, this, [this]() { afterShowOneTime(); });
     }
     event->accept();
 }
