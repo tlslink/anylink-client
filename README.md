@@ -7,11 +7,13 @@ Currently the following servers are supported,
 - [ocserv](https://gitlab.com/openconnect/ocserv)
 - [anylink](https://github.com/bjdgyc/anylink)
 
-> **This software can save passwords in the Keychain of the operating system to avoid plaintext passwords, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks.**
+> This software can save passwords in the Keychain of the operating system to avoid plaintext passwords, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks.
 
 ## Download
 
-[Releases](https://github.com/tlslink/anylink-client/releases) or at https://anylink.pro
+Go to [Releases](https://github.com/tlslink/anylink-client/releases) or at https://anylink.pro
+
+The [Continuous release](https://github.com/tlslink/anylink-client/releases/tag/continuous) may contain quick fixes for some bugs!
 
 ## Install
 
@@ -34,3 +36,8 @@ tar -zxvf anylink-*.tar.gz
 
 The `.run` package is supposed to support other Linux distributions like RedHat, but you should check the `install.sh` file and install some dependencies.
 
+## Help
+
+|                     You may want to join in the QQ Group to get some help.                     |
+| :----------------------------------------------------------: |
+| ![](./images/qqgroup.png) |
