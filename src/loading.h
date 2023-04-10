@@ -61,7 +61,7 @@ private:
     bool m_started = false;
 
     //计算
-    void caculate();
+    void calculate();
 
 protected:
     void paintEvent(QPaintEvent *event);
