@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
 #endif
     QApplication::setApplicationName("AnyLink");
     configLocation = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+//    qDebug() << configLocation;
     tempLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
     QDir().mkpath(configLocation);
 

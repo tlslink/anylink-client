@@ -63,6 +63,8 @@ private:
     DetailDialog *detailDialog = nullptr;
     QJsonObject currentProfile = {};
 
+    void loadStyleSheet(const QString &styleSheetFile);
+
     void createTrayActions();
     void createTrayIcon();
     void initConfig();

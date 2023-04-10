@@ -43,9 +43,10 @@ defineTest(copyIcon) {
     export(QMAKE_POST_LINK)
 }
 
-#macx {
-#    ICON = images/logo.png
-#}
+macx {
+    #ICON = images/logo.png
+    DESTDIR = $$PWD/out/bin
+}
 
 win32 {
     # https://doc.qt.io/qt-6/qmake-variable-reference.html#version
@@ -102,4 +103,8 @@ FORMS += \
 
 RESOURCES += \
     i18n.qrc \
+    resource.qrc \
     systray.qrc
+
+DISTFILES += \
+    style.qss

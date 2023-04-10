@@ -6,51 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>476</width>
-    <height>322</height>
+    <width>449</width>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>AnyLink Secure Client</string>
-  </property>
-  <property name="styleSheet">
-   <string notr="true">/********** QTabBar **********/
-QTabBar::tab {
-		height: 25px;
-       color: rgb(79, 79, 79);
-       background: transparent;
-		font: 14px;
-		margin-right: 10px;
-		margin-left: 10px;
-}
-QTabBar::tab:hover {
-		font: 15px;
-       border-bottom: 2px solid rgb(155, 155, 155);
-       color: black;
-		height: 25px;
-		margin-right: 10px;
-		margin-left: 10px;
-}
-QTabBar::tab:selected {
-		font: 15px;
-		border-bottom: 2px solid rgb(45, 105, 65);
-       color: black;
-		height: 25px;
-		margin-right: 10px;
-		margin-left: 10px;
-}
-QTabWidget#tabWidget::pane {
-		border: 1px solid rgb(220, 220, 220);
-       background: rgb(250, 250, 250);
-       margin-top: 12px;
-		color: black;
-		border-radius: 10px;
-}
-/********** QListView **********/
-QListView::item {
-		margin: 2px;
-		font: 18px;
-}</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_5">
    <property name="topMargin">

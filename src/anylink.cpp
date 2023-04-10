@@ -14,6 +14,10 @@ AnyLink::AnyLink(QWidget *parent)
     , ui(new Ui::AnyLink), m_vpnConnected(false)
 {
     ui->setupUi(this);
+
+#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
+    loadStyleSheet(":/resource/style.qss");
+#endif
 #if defined(Q_OS_LINUX)
     setWindowIcon(QIcon(":/images/anylink64.png"));
 #endif
@@ -49,6 +53,7 @@ AnyLink::AnyLink(QWidget *parent)
 }
 
 AnyLink::~AnyLink() { delete ui; }
+
 
 void AnyLink::on_buttonConnect_clicked()
 {
@@ -174,6 +179,30 @@ void AnyLink::getVPNStatus()
             detailDialog->setRoutes(status["SplitExclude"].toArray(), status["SplitInclude"].toArray());
         }
     });
+}
+
+void AnyLink::loadStyleSheet(const QString &styleSheetFile)
+
+{
+
+    QFile file(styleSheetFile);
+
+    file.open(QFile::ReadOnly);
+
+    if (file.isOpen())
+
+    {
+
+        QString styleSheet = this->styleSheet();
+
+        styleSheet += QLatin1String(file.readAll());//读取样式表文件
+
+        setStyleSheet(styleSheet);//把文件内容传参
+
+        file.close();
+
+    }
+
 }
 
 void AnyLink::createTrayActions()
