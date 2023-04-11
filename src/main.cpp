@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     if(configManager->loadConfig(Json)) {
         if(configManager->config["local"].toBool()) {
 //            qDebug() << QLocale::system().name();
-            // embeded in qrc
+            // embedded in qrc
             if(myTranslator.load(QLocale(), QLatin1String("anylink"), QLatin1String("_"), QLatin1String(":/i18n"))) {
                 app.installTranslator(&myTranslator);
             }

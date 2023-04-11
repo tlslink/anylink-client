@@ -1,6 +1,6 @@
 function Controller()
 {
-    // cann't use component!
+    // can't use component!
 
     installer.setDefaultPageVisible(QInstaller.ComponentSelection,false)
     installer.finishButtonClicked.connect(this, Controller.prototype.onInstallationFinished);

@@ -67,7 +67,7 @@ void Loading::refresh()
 void Loading::resizeEvent(QResizeEvent *event)
 {
     Q_UNUSED(event)
-    caculate();
+    calculate();
 }
 
 void Loading::paintEvent(QPaintEvent *event)
@@ -88,7 +88,7 @@ void Loading::paintEvent(QPaintEvent *event)
 }
 
 //计算绘制正方形区域
-void Loading::caculate()
+void Loading::calculate()
 {
     _squareWidth = qMin(this->width(), this->height());
     float half = _squareWidth / 2;
