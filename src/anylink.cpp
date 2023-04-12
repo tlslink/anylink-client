@@ -30,7 +30,13 @@ AnyLink::AnyLink(QWidget *parent)
                 ));
     setFixedSize(geometry().width(), geometry().height());
     ui->lineEditOTP->setFocus();
-    ui->labelVersion->setText(uiVersion);
+    connect(ui->lineEditOTP, &QLineEdit::returnPressed, this, [this]() {
+        if (!ui->lineEditOTP->text().isEmpty()) {
+            if (rpc->isConnected()) {
+                connectVPN();
+            }
+        }
+    });
 
     profileManager = new ProfileManager(this);
 
@@ -123,10 +129,11 @@ void AnyLink::connectVPN(bool reconnect)
             if (name.isEmpty()) {
                 return;
             }
-            currentProfile = profileManager->profiles[name].toObject();
+            QJsonObject profile = profileManager->profiles[name].toObject();
+            currentProfile = profile;
             const QString otp = ui->lineEditOTP->text();
             if(!otp.isEmpty()) {
-                currentProfile["password"] = otp;
+                currentProfile["password"] = profile["password"].toString() + otp;
             }
         }
         ui->progressBar->start();
@@ -235,7 +242,7 @@ void AnyLink::createTrayIcon()
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->setIcon(iconNotConnected);
 
-    connect(trayIcon,&QSystemTrayIcon::activated,[this](QSystemTrayIcon::ActivationReason reason){
+    connect(trayIcon, &QSystemTrayIcon::activated, [this](QSystemTrayIcon::ActivationReason reason) {
         if (reason == QSystemTrayIcon::Trigger) {
             show();
         }
@@ -263,8 +270,8 @@ void AnyLink::initConfig()
     });
     connect(ui->checkBoxDebug, &QCheckBox::toggled, this, [this](bool checked) {
         // do not save debug state
-        Q_UNUSED(checked);
-        //        configManager->config["debug"] = checked;
+        //        Q_UNUSED(checked);
+        configManager->config["debug"] = checked;
         configVPN();
     });
     connect(ui->checkBoxLang, &QCheckBox::toggled, this, [](bool checked) {
@@ -284,6 +291,7 @@ void AnyLink::afterShowOneTime()
     profileManager->afterShowOneTime();
     detailDialog = new DetailDialog(this);
 
+    ui->labelVersion->setText(uiVersion);
     ui->labelVersionAgent->setText(getAgentVersion());
 
     connect(this, &AnyLink::vpnConnected, this, [this]() {
@@ -386,6 +394,8 @@ void AnyLink::resetVPNStatus()
 
     ui->buttonDetails->setEnabled(false);
     detailDialog->clear();
+
+    ui->lineEditOTP->clear();
 }
 
 QString AnyLink::getAgentVersion()
