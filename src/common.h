@@ -17,5 +17,6 @@ extern QString tempLocation;
 extern ConfigManager *configManager;
 
 void error(const QString &message, QWidget *parent = nullptr);
+void info(const QString &message, QWidget *parent = nullptr);
 
 #endif // COMMON_H

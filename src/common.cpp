@@ -14,3 +14,10 @@ void error(const QString &message, QWidget *parent)
     msgBox.setButtonText(QMessageBox::Ok, QObject::tr("OK"));
     msgBox.exec();
 }
+
+void info(const QString &message, QWidget *parent)
+{
+    QMessageBox msgBox(QMessageBox::Information, QObject::tr("Tips"), message, QMessageBox::Ok, parent);
+    msgBox.setButtonText(QMessageBox::Ok, QObject::tr("OK"));
+    msgBox.exec();
+}

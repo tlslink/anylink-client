@@ -9,7 +9,7 @@
         <translation>AnyLink 安全客户端</translation>
     </message>
     <message>
-        <location line="+61"/>
+        <location line="+22"/>
         <source>Gateway</source>
         <translation>网关</translation>
     </message>
@@ -35,7 +35,7 @@
     </message>
     <message>
         <location line="+65"/>
-        <location filename="../src/anylink.cpp" line="+284"/>
+        <location filename="../src/anylink.cpp" line="+322"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
@@ -164,12 +164,12 @@
         <translation>查看连接日志</translation>
     </message>
     <message>
-        <location filename="../src/anylink.cpp" line="-211"/>
+        <location filename="../src/anylink.cpp" line="-238"/>
         <source>Couldn&apos;t open log file</source>
         <translation>未能打开日志文件</translation>
     </message>
     <message>
-        <location line="+108"/>
+        <location line="+133"/>
         <source>Connect Gateway</source>
         <translation>连接网关</translation>
     </message>
@@ -189,7 +189,7 @@
         <translation>退出应用</translation>
     </message>
     <message>
-        <location line="+73"/>
+        <location line="+75"/>
         <source>Disconnect</source>
         <translation>断开</translation>
     </message>
@@ -341,6 +341,11 @@
         <location line="+27"/>
         <source>Couldn&apos;t open profile file</source>
         <translation>未能打开 profile 文件</translation>
+    </message>
+    <message>
+        <location line="+56"/>
+        <source>This software can save passwords in the Keychain of the operating system to avoid plaintext passwords, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks.</source>
+        <translation type="unfinished">本软件具有可选的密码保存功能，其中密码将保存在操作系统的密钥串里。用户需要评估自己的使用环境是否允许保存密码以及设备丢失可能带来的潜在风险。请务必前往本软件官网 https://anylink.pro 下载和使用最新版本！</translation>
     </message>
 </context>
 <context>
@@ -572,8 +577,14 @@
     </message>
     <message>
         <location line="+1"/>
+        <location line="+7"/>
         <source>OK</source>
         <translation>确定</translation>
+    </message>
+    <message>
+        <location line="-1"/>
+        <source>Tips</source>
+        <translation>提示</translation>
     </message>
     <message>
         <location filename="../3rdparty/qtkeychain/keychain_unix.cpp" line="-243"/>
@@ -640,11 +651,11 @@
     <name>QWidgetTextControl</name>
     <message>
         <source>&amp;Copy</source>
-        <translation type="vanished">复制(&amp;C)</translation>
+        <translation>复制(&amp;C)</translation>
     </message>
     <message>
         <source>Select All</source>
-        <translation type="vanished">全选</translation>
+        <translation>全选</translation>
     </message>
 </context>
 </TS>
