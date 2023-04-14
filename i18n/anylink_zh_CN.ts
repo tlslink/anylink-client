@@ -345,7 +345,7 @@
     <message>
         <location line="+56"/>
         <source>This software can save passwords in the Keychain of the operating system to avoid plaintext passwords, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks.</source>
-        <translation type="unfinished">本软件具有可选的密码保存功能，其中密码将保存在操作系统的密钥串里。用户需要评估自己的使用环境是否允许保存密码以及设备丢失可能带来的潜在风险。请务必前往本软件官网 https://anylink.pro 下载和使用最新版本！</translation>
+        <translation>本软件具有可选的密码保存功能，其中密码将保存在操作系统的密钥串里。用户需要评估自己的使用环境是否允许保存密码以及设备丢失可能带来的潜在风险。请务必前往本软件官网 https://anylink.pro 下载和使用最新版本！</translation>
     </message>
 </context>
 <context>
