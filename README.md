@@ -38,6 +38,6 @@ The `.run` package is supposed to support other Linux distributions like RedHat,
 
 ## Help
 
-|                     You may want to join in the QQ Group to get some help.                     |
+|                     You may want to join in the QQ Group(66899589) to get some help.                     |
 | :----------------------------------------------------------: |
 | ![](./images/qqgroup.png) |
