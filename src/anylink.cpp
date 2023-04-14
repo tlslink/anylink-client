@@ -21,6 +21,12 @@ AnyLink::AnyLink(QWidget *parent)
 #if defined(Q_OS_LINUX)
     setWindowIcon(QIcon(":/images/anylink64.png"));
 #endif
+#if defined(Q_OS_WIN)
+    setFixedSize(480, 320);
+#else
+//    qDebug() << geometry().width() << geometry().height();
+    setFixedSize(geometry().width(), geometry().height());
+#endif
     // avoid some people prefer to use minimize
     setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
 //    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint /*| Qt::WindowMinimizeButtonHint*/ | Qt::WindowCloseButtonHint | Qt::WindowStaysOnTopHint);
@@ -28,7 +34,6 @@ AnyLink::AnyLink(QWidget *parent)
     setGeometry(QStyle::alignedRect(
                     Qt::LeftToRight, Qt::AlignCenter, size(), screen()->availableGeometry()
                 ));
-    setFixedSize(geometry().width(), geometry().height());
     ui->lineEditOTP->setFocus();
     connect(ui->lineEditOTP, &QLineEdit::returnPressed, this, [this]() {
         if (!ui->lineEditOTP->text().isEmpty()) {
