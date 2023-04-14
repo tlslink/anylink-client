@@ -40,3 +40,14 @@ Controller.prototype.onInstallationFinished = function ()
         console.log(e);
     }
 }
+
+//Controller.prototype.onUninstallationFinished = function ()
+//{
+//    try {
+//        if (installer.isUninstaller()) {
+//            QDesktopServices.openUrl("https://anylink.pro");
+//        }
+//    } catch(e) {
+//        console.log(e);
+//    }
+//}
