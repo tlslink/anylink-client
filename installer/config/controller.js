@@ -3,7 +3,8 @@ function Controller()
     // can't use component!
 
     installer.setDefaultPageVisible(QInstaller.ComponentSelection,false)
-    installer.finishButtonClicked.connect(this, Controller.prototype.onInstallationFinished);
+    installer.finishButtonClicked.connect(this, Controller.prototype.onInstallationFinished)
+    installer.cancelMetaInfoJob()
 }
 
 Controller.prototype.IntroductionPageCallback = function()
@@ -33,7 +34,7 @@ Controller.prototype.onInstallationFinished = function ()
             } else if (systemInfo.kernelType === "winnt") {
                 installer.executeDetached("@TargetDir@/anylink.exe");
             }
-            // QDesktopServices.openUrl("file:///" + installer.value("TargetDir") + "/logo.png");
+            // QDesktopServices.openUrl("https://anylink.pro");
         }
     } catch(e) {
         console.log(e);

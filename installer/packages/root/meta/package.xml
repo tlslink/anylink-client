@@ -6,5 +6,4 @@
     <Default>script</Default>
     <Script>component.js</Script>
     <ForcedInstallation>true</ForcedInstallation>
-    <RequiresAdminRights>true</RequiresAdminRights>
 </Package>
