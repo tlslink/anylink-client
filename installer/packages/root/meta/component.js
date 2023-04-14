@@ -28,11 +28,9 @@ function Component()
     component.addStopProcessForUpdateRequest("anylink");
 
 
-    if (installer.gainAdminRights()) {
-        console.log("gain admin rights succesed")
-        if (installer.fileExists(uninstaller)) {
-            installer.executeDetached(uninstaller);
-        }
+//    console.log("gain admin rights succeed")
+    if (installer.fileExists(uninstaller)) {
+        installer.executeDetached(uninstaller);
     }
 }
 

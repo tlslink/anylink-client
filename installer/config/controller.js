@@ -1,14 +1,14 @@
 function Controller()
 {
     // can't use component!
-
     installer.setDefaultPageVisible(QInstaller.ComponentSelection,false)
     installer.finishButtonClicked.connect(this, Controller.prototype.onInstallationFinished)
-    installer.cancelMetaInfoJob()
+//    installer.cancelMetaInfoJob()
 }
 
 Controller.prototype.IntroductionPageCallback = function()
 {
+//    gui.clickButton(buttons.NextButton);
     var widget = gui.currentPageWidget()
     if (installer.isUninstaller()) {
         var buttonManager = gui.findChild(widget,"PackageManagerRadioButton")
