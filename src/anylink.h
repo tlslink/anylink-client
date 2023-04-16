@@ -71,7 +71,6 @@ private:
     void afterShowOneTime();
 
     void resetVPNStatus();
-    QString getAgentVersion();
 
     // QWidget interface
 protected:

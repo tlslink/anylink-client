@@ -35,7 +35,7 @@
     </message>
     <message>
         <location line="+65"/>
-        <location filename="../src/anylink.cpp" line="+322"/>
+        <location filename="../src/anylink.cpp" line="+326"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
@@ -110,11 +110,12 @@
         <translation>VPN 连接成功后最小化当前窗口</translation>
     </message>
     <message>
-        <source>Allow local area network(LAN) access</source>
-        <translation type="vanished">允许访问本地局域网</translation>
+        <location line="+137"/>
+        <source>Version:</source>
+        <translation>版本：</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-130"/>
         <source>Block connections to untrusted servers</source>
         <translation>若服务器证书不可信，终止连接</translation>
     </message>
@@ -139,17 +140,7 @@
         <translation>关于</translation>
     </message>
     <message>
-        <location line="+86"/>
-        <source>UI Version:</source>
-        <translation>UI 版本：</translation>
-    </message>
-    <message>
-        <location line="+44"/>
-        <source>Agent Version:</source>
-        <translation>Agent 版本：</translation>
-    </message>
-    <message>
-        <location line="+44"/>
+        <location line="+130"/>
         <source>&lt;a href=&quot;https://github.com/tlslink/anylink-client/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Getting Help&lt;/span&gt;&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://github.com/tlslink/anylink-client/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;获取帮助&lt;/span&gt;&lt;/a&gt;</translation>
     </message>
@@ -164,7 +155,7 @@
         <translation>查看连接日志</translation>
     </message>
     <message>
-        <location filename="../src/anylink.cpp" line="-238"/>
+        <location filename="../src/anylink.cpp" line="-237"/>
         <source>Couldn&apos;t open log file</source>
         <translation>未能打开日志文件</translation>
     </message>
@@ -189,7 +180,7 @@
         <translation>退出应用</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+74"/>
         <source>Disconnect</source>
         <translation>断开</translation>
     </message>
@@ -345,7 +336,7 @@
     <message>
         <location line="+56"/>
         <source>This software can save passwords in the Keychain of the operating system to avoid plaintext passwords, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks.</source>
-        <translation>本软件具有可选的密码保存功能，其中密码将保存在操作系统的密钥串里。用户需要评估自己的使用环境是否允许保存密码以及设备丢失可能带来的潜在风险。请务必前往本软件官网 https://anylink.pro 下载和使用最新版本！</translation>
+        <translation>本软件具有可选的密码保存功能，其中密码将保存在操作系统的密钥串里。用户需评估自己的使用环境是否允许保存密码以及设备丢失可能带来的潜在风险。请务必前往本软件官网 https://anylink.pro 下载和使用最新版本！</translation>
     </message>
 </context>
 <context>
