@@ -34,7 +34,7 @@ Controller.prototype.onInstallationFinished = function ()
             } else if (systemInfo.kernelType === "winnt") {
                 installer.executeDetached("@TargetDir@/anylink.exe");
             }
-            // QDesktopServices.openUrl("https://anylink.pro");
+            QDesktopServices.openUrl("file:///" + installer.value("TargetDir") + "/README.html");
         }
     } catch(e) {
         console.log(e);
