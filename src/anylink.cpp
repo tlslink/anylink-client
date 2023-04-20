@@ -247,11 +247,14 @@ void AnyLink::createTrayIcon()
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->setIcon(iconNotConnected);
 
-    connect(trayIcon, &QSystemTrayIcon::activated, [this](QSystemTrayIcon::ActivationReason reason) {
-        if (reason == QSystemTrayIcon::Trigger) {
-            show();
-        }
-    });
+    connect(trayIcon,
+            &QSystemTrayIcon::activated,
+            this,
+            [this](QSystemTrayIcon::ActivationReason reason) {
+                if (reason == QSystemTrayIcon::Trigger) {
+                    show();
+                }
+            });
 }
 
 void AnyLink::initConfig()
@@ -274,8 +277,6 @@ void AnyLink::initConfig()
         configVPN();
     });
     connect(ui->checkBoxDebug, &QCheckBox::toggled, this, [this](bool checked) {
-        // do not save debug state
-        //        Q_UNUSED(checked);
         configManager->config["debug"] = checked;
         configVPN();
     });

@@ -95,7 +95,7 @@ QString DetailDialog::format(double bytes)
 void DetailDialog::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
-    connect(&timer, &QTimer::timeout, [this]() {
+    connect(&timer, &QTimer::timeout, this, [this]() {
         if(dtlsLink->rpc->isConnected()) {
             dtlsLink->rpc->callAsync("stat", AnyLink::STAT, [this](const QJsonValue & result) {
                 const QJsonObject &stat = result.toObject();

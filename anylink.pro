@@ -51,7 +51,7 @@ macx {
 win32 {
     # https://doc.qt.io/qt-6/qmake-variable-reference.html#version
     #RC_FILE = resource.rc
-    VERSION = 0.5
+    VERSION = 0.6
     RC_ICONS = resource\windows\anylink.ico
     QMAKE_TARGET_PRODUCT = "AnyLink Secure Client"
     QMAKE_TARGET_COMPANY = "https://anylink.pro"
