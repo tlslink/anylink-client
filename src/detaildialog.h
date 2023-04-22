@@ -23,7 +23,7 @@ public:
 private:
     Ui::DetailDialog *ui;
     QTimer timer;
-    AnyLink *dtlsLink;
+    AnyLink *anylink;
 
     QString format(double bytes);  // typedef quint64 qulonglong;
     // QWidget interface
