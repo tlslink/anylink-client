@@ -34,17 +34,12 @@ signals:
     void vpnConnected();
     void vpnClosed();
     void callEnd();
-private slots:
-    //  QMetaObject::connectSlotsByName
-    void on_buttonConnect_clicked();
-    void on_buttonProfile_clicked();
-    void on_buttonViewLog_clicked();
-    void on_buttonDetails_clicked();
 
-    void configVPN();
-    void connectVPN(bool reconnect = false);
-    void disconnectVPN();
-    void getVPNStatus();
+
+    // QWidget interface
+protected:
+    void closeEvent(QCloseEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
 private:
     Ui::AnyLink *ui;
@@ -72,9 +67,17 @@ private:
 
     void resetVPNStatus();
 
-    // QWidget interface
-protected:
-    void closeEvent(QCloseEvent *event) override;
-    void showEvent(QShowEvent *event) override;
+private slots:
+    void configVPN();
+    void connectVPN(bool reconnect = false);
+    void disconnectVPN();
+    void getVPNStatus();
+
+    //  QMetaObject::connectSlotsByName
+    void on_buttonConnect_clicked();
+    void on_buttonProfile_clicked();
+    void on_buttonViewLog_clicked();
+    void on_buttonDetails_clicked();
+    void on_buttonSecurityTips_clicked();
 };
 #endif // ANYLINK_H

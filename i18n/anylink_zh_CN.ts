@@ -35,7 +35,7 @@
     </message>
     <message>
         <location line="+65"/>
-        <location filename="../src/anylink.cpp" line="+326"/>
+        <location filename="../src/anylink.cpp" line="+220"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
@@ -110,12 +110,17 @@
         <translation>VPN 连接成功后最小化当前窗口</translation>
     </message>
     <message>
-        <location line="+137"/>
+        <location line="+86"/>
+        <source>Security tips</source>
+        <translation>安全提醒</translation>
+    </message>
+    <message>
+        <location line="+76"/>
         <source>Version:</source>
         <translation>版本：</translation>
     </message>
     <message>
-        <location line="-130"/>
+        <location line="-155"/>
         <source>Block connections to untrusted servers</source>
         <translation>若服务器证书不可信，终止连接</translation>
     </message>
@@ -140,7 +145,7 @@
         <translation>关于</translation>
     </message>
     <message>
-        <location line="+130"/>
+        <location line="+155"/>
         <source>&lt;a href=&quot;https://github.com/tlslink/anylink-client/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Getting Help&lt;/span&gt;&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://github.com/tlslink/anylink-client/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;获取帮助&lt;/span&gt;&lt;/a&gt;</translation>
     </message>
@@ -150,17 +155,17 @@
         <translation>&lt;a href=&quot;https://anylink.pro&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;检查更新&lt;/span&gt;&lt;/a&gt;</translation>
     </message>
     <message>
-        <location line="+66"/>
+        <location line="-153"/>
         <source>View connection logs</source>
         <translation>查看连接日志</translation>
     </message>
     <message>
-        <location filename="../src/anylink.cpp" line="-237"/>
+        <location filename="../src/anylink.cpp" line="+192"/>
         <source>Couldn&apos;t open log file</source>
         <translation>未能打开日志文件</translation>
     </message>
     <message>
-        <location line="+133"/>
+        <location line="-297"/>
         <source>Connect Gateway</source>
         <translation>连接网关</translation>
     </message>
@@ -180,7 +185,7 @@
         <translation>退出应用</translation>
     </message>
     <message>
-        <location line="+74"/>
+        <location line="+75"/>
         <source>Disconnect</source>
         <translation>断开</translation>
     </message>
@@ -193,6 +198,21 @@
         <location line="+34"/>
         <source>Failed to connect to vpnagent, please reinstall the software!</source>
         <translation>未能连接到 vpnagent 服务，请重新安装本软件！</translation>
+    </message>
+    <message>
+        <location line="+172"/>
+        <source>Log Viewer</source>
+        <translation>日志</translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>Couldn&apos;t open README.md</source>
+        <translation>未能打开 README.md 文件</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Security Tips</source>
+        <translation>安全提醒</translation>
     </message>
 </context>
 <context>
@@ -268,9 +288,8 @@
 <context>
     <name>LogViewer</name>
     <message>
-        <location filename="../src/logviewer.ui" line="+14"/>
         <source>Log Viewer</source>
-        <translation>日志</translation>
+        <translation type="vanished">日志</translation>
     </message>
 </context>
 <context>
@@ -643,6 +662,10 @@
     <message>
         <source>&amp;Copy</source>
         <translation>复制(&amp;C)</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Link Location</source>
+        <translation>复制链接(&amp;L)</translation>
     </message>
     <message>
         <source>Select All</source>

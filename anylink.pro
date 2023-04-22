@@ -80,9 +80,9 @@ SOURCES += \
     src/jsonrpcwebsocketclient.cpp \
     src/keychainclass.cpp \
     src/loading.cpp \
-    src/logviewer.cpp \
     src/main.cpp \
-    src/profilemanager.cpp
+    src/profilemanager.cpp \
+    src/textbrowser.cpp
 
 HEADERS += \
     src/anylink.h \
@@ -92,14 +92,14 @@ HEADERS += \
     src/jsonrpcwebsocketclient.h \
     src/keychainclass.h \
     src/loading.h \
-    src/logviewer.h \
-    src/profilemanager.h
+    src/profilemanager.h \
+    src/textbrowser.h
 
 FORMS += \
     src/anylink.ui \
     src/detaildialog.ui \
-    src/logviewer.ui \
-    src/profilemanager.ui
+    src/profilemanager.ui \
+    src/textbrowser.ui
 
 RESOURCES += \
     i18n.qrc \

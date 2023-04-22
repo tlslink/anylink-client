@@ -34,9 +34,9 @@ Controller.prototype.onInstallationFinished = function ()
             } else if (systemInfo.kernelType === "winnt") {
                 installer.executeDetached("@TargetDir@/anylink.exe");
             }
-            if (installer.value("UILanguage") === "zh_CN") {
-                QDesktopServices.openUrl("file:///" + installer.value("TargetDir") + "/README.html");
-            }
+//            if (installer.value("UILanguage") === "zh_CN") {
+//                QDesktopServices.openUrl("file:///" + installer.value("TargetDir") + "/README.html");
+//            }
         }
     } catch(e) {
         console.log(e);

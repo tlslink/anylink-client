@@ -3,7 +3,7 @@
 #include "jsonrpcwebsocketclient.h"
 #include "configmanager.h"
 #include "profilemanager.h"
-#include "logviewer.h"
+#include "textbrowser.h"
 #include "detaildialog.h"
 #include <QtWidgets>
 #include <QCloseEvent>
@@ -65,132 +65,25 @@ AnyLink::AnyLink(QWidget *parent)
 
 AnyLink::~AnyLink() { delete ui; }
 
-
-void AnyLink::on_buttonConnect_clicked()
+void AnyLink::closeEvent(QCloseEvent *event)
 {
-    if(rpc->isConnected()) {
-        if(m_vpnConnected) {
-            disconnectVPN();
-        } else {
-            connectVPN();
+    if(m_vpnConnected) {
+        hide();
+        event->accept();
+        if(!trayIcon->isVisible()) {
+            trayIcon->show();
         }
+    } else {
+        qApp->quit();
     }
 }
 
-void AnyLink::on_buttonProfile_clicked()
+void AnyLink::showEvent(QShowEvent *event)
 {
-    profileManager->exec();
-}
-
-void AnyLink::on_buttonViewLog_clicked()
-{
-    QFile loadFile(tempLocation + "/vpnagent.log");
-    if(!loadFile.open(QIODevice::ReadOnly)) {
-        error(tr("Couldn't open log file"), this);
-        return;
+    if(trayIcon == nullptr) {
+        QTimer::singleShot(50, this, [this]() { afterShowOneTime(); });
     }
-    QByteArray data = loadFile.readAll();
-    LogViewer logViewer(this);
-    logViewer.setLog(data);
-    logViewer.exec();
-}
-
-void AnyLink::on_buttonDetails_clicked()
-{
-    detailDialog->exec();
-}
-
-/**
- * called by JsonRpcWebSocketClient::connected and every time setting changed
- */
-void AnyLink::configVPN()
-{
-    if(rpc->isConnected()) {
-        QJsonObject args {
-            { "log_level", ui->checkBoxDebug->isChecked() ? "Debug" : "Info" },
-            { "log_path", tempLocation},
-            { "skip_verify", !ui->checkBoxBlock->isChecked() },
-            {"cisco_compat", ui->checkBoxCiscoCompat->isChecked()}
-        };
-        rpc->callAsync("config", CONFIG, args, [this](const QJsonValue & result) {
-            ui->statusBar->setText(result.toString());
-        });
-    }
-}
-
-void AnyLink::connectVPN(bool reconnect)
-{
-    if(rpc->isConnected()) {
-        // profile may be modified, and may not emit currentTextChanged signal
-        // must not affected by QComboBox::currentTextChanged
-
-        QString method = "connect";
-        int id = CONNECT;
-        if(reconnect) {
-            method = "reconnect";
-            id = RECONNECT;
-        } else {
-            const QString name = ui->comboBoxHost->currentText();
-            if (name.isEmpty()) {
-                return;
-            }
-            QJsonObject profile = profileManager->profiles[name].toObject();
-            currentProfile = profile;
-            const QString otp = ui->lineEditOTP->text();
-            if(!otp.isEmpty()) {
-                currentProfile["password"] = profile["password"].toString() + otp;
-            }
-        }
-        ui->progressBar->start();
-        trayIcon->setIcon(iconConnecting);
-
-        rpc->callAsync(method, id, currentProfile, [this](const QJsonValue & result) {
-            ui->progressBar->stop();
-            if(result.isObject()) {  // error object
-                // dialog
-//                ui->statusBar->setText(result.toObject().value("message").toString());
-                if(isHidden()) {
-                    show();
-                }
-                error(result.toObject().value("message").toString(), this);
-            } else {
-                ui->statusBar->setText(result.toString());
-                emit vpnConnected();
-            }
-        });
-    }
-}
-
-void AnyLink::disconnectVPN()
-{
-    if(rpc->isConnected()) {
-        ui->progressBar->start();
-        // because on_buttonConnect_clicked, must check m_vpnConnected outside
-        rpc->callAsync("disconnect", DISCONNECT);
-        activeDisconnect = true;
-    }
-}
-
-void AnyLink::getVPNStatus()
-{
-    // 不考虑 DTLS 中途关闭情形
-    rpc->callAsync("status", STATUS, [this](const QJsonValue & result) {
-        const QJsonObject &status = result.toObject();
-        if(!status.contains("code")) {
-            ui->labelChannelType->setText(status["DtlsConnected"].toBool() ? "DTLS" : "TLS");
-            ui->labelTlsCipherSuite->setText(status["TLSCipherSuite"].toString());
-            ui->labelDtlsCipherSuite->setText(status["DTLSCipherSuite"].toString());
-            ui->labelDTLSPort->setText(status["DTLSPort"].toString());
-            ui->labelServerAddress->setText(status["ServerAddress"].toString());
-            ui->labelLocalAddress->setText(status["LocalAddress"].toString());
-            ui->labelVPNAddress->setText(status["VPNAddress"].toString());
-            ui->labelMTU->setText(QString::number(status["MTU"].toInt()));
-            ui->labelDNS->setText(status["DNS"].toVariant().toStringList().join(","));
-
-            ui->buttonDetails->setEnabled(true);
-            detailDialog->setRoutes(status["SplitExclude"].toArray(), status["SplitInclude"].toArray());
-        }
-    });
+    event->accept();
 }
 
 void AnyLink::loadStyleSheet(const QString &styleSheetFile)
@@ -403,23 +296,146 @@ void AnyLink::resetVPNStatus()
     ui->lineEditOTP->clear();
 }
 
-void AnyLink::closeEvent(QCloseEvent *event)
+/**
+ * called by JsonRpcWebSocketClient::connected and every time setting changed
+ */
+void AnyLink::configVPN()
 {
-    if(m_vpnConnected) {
-        hide();
-        event->accept();
-        if(!trayIcon->isVisible()) {
-            trayIcon->show();
-        }
-    } else {
-        qApp->quit();
+    if(rpc->isConnected()) {
+        QJsonObject args {
+            { "log_level", ui->checkBoxDebug->isChecked() ? "Debug" : "Info" },
+            { "log_path", tempLocation},
+            { "skip_verify", !ui->checkBoxBlock->isChecked() },
+            {"cisco_compat", ui->checkBoxCiscoCompat->isChecked()}
+        };
+        rpc->callAsync("config", CONFIG, args, [this](const QJsonValue & result) {
+            ui->statusBar->setText(result.toString());
+        });
     }
 }
 
-void AnyLink::showEvent(QShowEvent *event)
+void AnyLink::connectVPN(bool reconnect)
 {
-    if(trayIcon == nullptr) {
-        QTimer::singleShot(50, this, [this]() { afterShowOneTime(); });
+    if(rpc->isConnected()) {
+        // profile may be modified, and may not emit currentTextChanged signal
+        // must not affected by QComboBox::currentTextChanged
+
+        QString method = "connect";
+        int id = CONNECT;
+        if(reconnect) {
+            method = "reconnect";
+            id = RECONNECT;
+        } else {
+            const QString name = ui->comboBoxHost->currentText();
+            if (name.isEmpty()) {
+                return;
+            }
+            QJsonObject profile = profileManager->profiles[name].toObject();
+            currentProfile = profile;
+            const QString otp = ui->lineEditOTP->text();
+            if(!otp.isEmpty()) {
+                currentProfile["password"] = profile["password"].toString() + otp;
+            }
+        }
+        ui->progressBar->start();
+        trayIcon->setIcon(iconConnecting);
+
+        rpc->callAsync(method, id, currentProfile, [this](const QJsonValue & result) {
+            ui->progressBar->stop();
+            if(result.isObject()) {  // error object
+                // dialog
+//                ui->statusBar->setText(result.toObject().value("message").toString());
+                if(isHidden()) {
+                    show();
+                }
+                error(result.toObject().value("message").toString(), this);
+            } else {
+                ui->statusBar->setText(result.toString());
+                emit vpnConnected();
+            }
+        });
     }
-    event->accept();
+}
+
+void AnyLink::disconnectVPN()
+{
+    if(rpc->isConnected()) {
+        ui->progressBar->start();
+        // because on_buttonConnect_clicked, must check m_vpnConnected outside
+        rpc->callAsync("disconnect", DISCONNECT);
+        activeDisconnect = true;
+    }
+}
+
+void AnyLink::getVPNStatus()
+{
+    // 不考虑 DTLS 中途关闭情形
+    rpc->callAsync("status", STATUS, [this](const QJsonValue & result) {
+        const QJsonObject &status = result.toObject();
+        if(!status.contains("code")) {
+            ui->labelChannelType->setText(status["DtlsConnected"].toBool() ? "DTLS" : "TLS");
+            ui->labelTlsCipherSuite->setText(status["TLSCipherSuite"].toString());
+            ui->labelDtlsCipherSuite->setText(status["DTLSCipherSuite"].toString());
+            ui->labelDTLSPort->setText(status["DTLSPort"].toString());
+            ui->labelServerAddress->setText(status["ServerAddress"].toString());
+            ui->labelLocalAddress->setText(status["LocalAddress"].toString());
+            ui->labelVPNAddress->setText(status["VPNAddress"].toString());
+            ui->labelMTU->setText(QString::number(status["MTU"].toInt()));
+            ui->labelDNS->setText(status["DNS"].toVariant().toStringList().join(","));
+
+            ui->buttonDetails->setEnabled(true);
+            detailDialog->setRoutes(status["SplitExclude"].toArray(), status["SplitInclude"].toArray());
+        }
+    });
+}
+
+void AnyLink::on_buttonConnect_clicked()
+{
+    if(rpc->isConnected()) {
+        if(m_vpnConnected) {
+            disconnectVPN();
+        } else {
+            connectVPN();
+        }
+    }
+}
+
+void AnyLink::on_buttonProfile_clicked()
+{
+    profileManager->exec();
+}
+
+void AnyLink::on_buttonViewLog_clicked()
+{
+    QFile loadFile(tempLocation + "/vpnagent.log");
+    if(!loadFile.open(QIODevice::ReadOnly)) {
+        error(tr("Couldn't open log file"), this);
+        return;
+    }
+    QByteArray data = loadFile.readAll();
+    TextBrowser textBrowser(tr("Log Viewer"),this);
+    textBrowser.setText(data);
+    textBrowser.exec();
+}
+
+void AnyLink::on_buttonDetails_clicked()
+{
+    detailDialog->exec();
+}
+
+void AnyLink::on_buttonSecurityTips_clicked()
+{
+    QString readme = "README.md";
+    if (QLocale::system().name() == "zh_CN") {
+        readme = "README_zh_CN.md";
+    }
+    QFile loadFile(":/resource/" + readme);
+    if(!loadFile.open(QIODevice::ReadOnly)) {
+        error(tr("Couldn't open README.md"), this);
+        return;
+    }
+    QByteArray data = loadFile.readAll();
+    TextBrowser textBrowser(tr("Security Tips"),this);
+    textBrowser.setMarkdown(data);
+    textBrowser.exec();
 }

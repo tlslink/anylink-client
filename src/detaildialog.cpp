@@ -7,7 +7,7 @@
 
 DetailDialog::DetailDialog(AnyLink *parent) :
     QDialog(parent),
-    ui(new Ui::DetailDialog), dtlsLink(parent)
+    ui(new Ui::DetailDialog), anylink(parent)
 {
     ui->setupUi(this);
     ui->tableExcluded->setColumnCount(2);
@@ -96,8 +96,8 @@ void DetailDialog::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
     connect(&timer, &QTimer::timeout, this, [this]() {
-        if(dtlsLink->rpc->isConnected()) {
-            dtlsLink->rpc->callAsync("stat", AnyLink::STAT, [this](const QJsonValue & result) {
+        if(anylink->rpc->isConnected()) {
+            anylink->rpc->callAsync("stat", AnyLink::STAT, [this](const QJsonValue & result) {
                 const QJsonObject &stat = result.toObject();
                 if(!stat.contains("code")) {
                     ui->labelBytesSent->setText(format(stat["bytesSent"].toDouble()));
