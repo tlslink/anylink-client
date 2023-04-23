@@ -22,7 +22,7 @@ jobs:
           installer-name: anylink-linux-amd64.run
         - build: linux
           os: ubuntu-20.04
-          qt: 6.2.4
+          qt: 6.4.3
           qt-modules: 'qtwebsockets'
           qt-tools: 'tools_ifw'
           installer-name: anylink-linux-amd64.run
@@ -162,3 +162,4 @@ jobs:
       with:
         files: archive/${{ env.ARCHIVE_NAME }}
         name: Release build (${{ github.ref_name }})
+        token: ${{ secrets.CI_TOKEN }}
