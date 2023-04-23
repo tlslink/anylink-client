@@ -9,6 +9,10 @@ Currently the following servers are supported,
 
 > This software can save passwords in the Keychain of the operating system to avoid plaintext passwords, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks.
 
+## Screenshot
+
+<img src="./assets/screenshot.png" alt="screenshot" width=70% />
+
 ## Download
 
 Go to [Releases](https://github.com/tlslink/anylink-client/releases) or at https://anylink.pro
@@ -53,4 +57,4 @@ The `.run` package is supposed to support other Linux distributions like RedHat,
 
 |                     You may want to join in the QQ Group(66899589) to get some help.                     |
 | :----------------------------------------------------------: |
-| ![](./images/qqgroup.png) |
+| ![](./assets/qqgroup.png) |
