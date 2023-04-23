@@ -14,7 +14,6 @@ void outdateCheck()
 {
     if (QDate::currentDate().daysTo(QDate(2024,5,1)) < 0) {
         error(QObject::tr("The current version of the software has expired, please install the latest version!"));
-        QDesktopServices::openUrl(QUrl("https://anylink.pro"));
     }
 }
 

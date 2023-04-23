@@ -5,6 +5,7 @@ out
 *.tar.gz
 *.run
 *.exe
+FLGupr.json
 installer/config/*.png
 installer/config/*.ico
 installer/config/*.icns
