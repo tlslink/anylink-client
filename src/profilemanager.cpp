@@ -112,6 +112,7 @@ void ProfileManager::afterShowOneTime()
             ui->buttonNew->setEnabled(true);
             ui->buttonDelete->setEnabled(true);
             ui->lineEditName->setEnabled(false);
+            ui->lineEditName->setClearButtonEnabled(false);
             // selection changed
             if(currentName != ui->lineEditName->text()) {
                 QJsonObject selectedProfile = profiles[currentName].toObject();
@@ -178,6 +179,8 @@ void ProfileManager::resetForm()
     ui->buttonDelete->setEnabled(false);
 
     ui->lineEditName->setEnabled(true);
+    ui->lineEditName->setClearButtonEnabled(true);
+
     ui->lineEditName->clear();
     ui->lineEditHost->clear();
     ui->lineEditUsername->clear();
