@@ -2,7 +2,7 @@
 #include "configmanager.h"
 #include <QMessageBox>
 
-QString uiVersion = "0.6";
+QString uiVersion = "0.7";
 
 QString configLocation = "";
 QString tempLocation = "";
