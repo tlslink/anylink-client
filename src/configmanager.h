@@ -11,17 +11,15 @@ class ConfigManager : public QObject
 public:
     explicit ConfigManager(QObject *parent = nullptr);
 
-    QJsonObject config {
-        {"lastProfile", ""},
-        {"autoLogin", false},
-        {"minimize", true},
-        {"block", false},
-        {"debug", false},
-        {"local", true},
-        {"cisco_compat", false},
-        {"x", 0},
-        {"y", 0}
-    };
+    QJsonObject config{{"lastProfile", ""},
+                       {"autoLogin", false},
+                       {"minimize", true},
+                       {"block", true},
+                       {"debug", false},
+                       {"local", true},
+                       {"cisco_compat", false}, // should be false
+                       {"x", 0},
+                       {"y", 0}};
     bool loadConfig(SaveFormat saveFormat);
     void saveConfig(SaveFormat saveFormat);
 };
