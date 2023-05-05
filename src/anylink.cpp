@@ -190,7 +190,7 @@ void AnyLink::afterShowOneTime()
     profileManager->afterShowOneTime();
     detailDialog = new DetailDialog(this);
 
-    ui->labelVersion->setText(uiVersion);
+    ui->labelVersion->setText(appVersion);
 
     connect(this, &AnyLink::vpnConnected, this, [this]() {
         getVPNStatus();
@@ -308,7 +308,7 @@ void AnyLink::configVPN()
             { "skip_verify", !ui->checkBoxBlock->isChecked() },
             {"cisco_compat", ui->checkBoxCiscoCompat->isChecked()},
             {"agent_name", agentName},
-            {"agent_version", agentVersion}
+            {"agent_version", appVersion}
         };
         rpc->callAsync("config", CONFIG, args, [this](const QJsonValue & result) {
             ui->statusBar->setText(result.toString());

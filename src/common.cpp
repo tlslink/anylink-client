@@ -3,9 +3,8 @@
 #include <QMessageBox>
 
 QString agentName = "AnyLink Secure Client";
-QString agentVersion = "0.7";
 
-QString uiVersion = "0.7";
+QString appVersion = "0.7";
 
 QString configLocation = "";
 QString tempLocation = "";
