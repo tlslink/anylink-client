@@ -10,6 +10,9 @@ enum SaveFormat {
     Json, Binary
 };
 
+extern QString agentName;
+extern QString agentVersion;
+
 extern QString uiVersion;
 extern QString configLocation;
 extern QString tempLocation;

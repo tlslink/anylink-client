@@ -2,6 +2,9 @@
 #include "configmanager.h"
 #include <QMessageBox>
 
+QString agentName = "AnyLink Secure Client";
+QString agentVersion = "0.7";
+
 QString uiVersion = "0.7";
 
 QString configLocation = "";

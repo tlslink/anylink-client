@@ -306,7 +306,9 @@ void AnyLink::configVPN()
             { "log_level", ui->checkBoxDebug->isChecked() ? "Debug" : "Info" },
             { "log_path", tempLocation},
             { "skip_verify", !ui->checkBoxBlock->isChecked() },
-            {"cisco_compat", ui->checkBoxCiscoCompat->isChecked()}
+            {"cisco_compat", ui->checkBoxCiscoCompat->isChecked()},
+            {"agent_name", agentName},
+            {"agent_version", agentVersion}
         };
         rpc->callAsync("config", CONFIG, args, [this](const QJsonValue & result) {
             ui->statusBar->setText(result.toString());
