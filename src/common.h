@@ -11,9 +11,8 @@ enum SaveFormat {
 };
 
 extern QString agentName;
-extern QString agentVersion;
 
-extern QString uiVersion;
+extern QString appVersion;
 extern QString configLocation;
 extern QString tempLocation;
 
