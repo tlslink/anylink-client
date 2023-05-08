@@ -37,24 +37,15 @@ void DetailDialog::setRoutes(const QJsonArray &excludes, const QJsonArray &inclu
         ui->tableExcluded->setItem(i, 0, ip);
         ui->tableExcluded->setItem(i, 1, mask);
     }
-    const int size = includes.size();
-    if(size) {
-        for(int i = 0; i < size; i++) {
-            QPair<QHostAddress, int> cidr = QHostAddress::parseSubnet(includes[i].toString());
-            QTableWidgetItem *ip = new QTableWidgetItem(static_cast<QHostAddress>(cidr.first).toString());
-            QTableWidgetItem *mask = new QTableWidgetItem(QString::number(cidr.second));
 
-            ui->tableSecured->insertRow(i);
-            ui->tableSecured->setItem(i, 0, ip);
-            ui->tableSecured->setItem(i, 1, mask);
-        }
-    } else {
-        QTableWidgetItem *ip = new QTableWidgetItem("0.0.0.0");
-        QTableWidgetItem *mask = new QTableWidgetItem("0");
+    for(int i = 0; i < includes.size(); i++) {
+        QPair<QHostAddress, int> cidr = QHostAddress::parseSubnet(includes[i].toString());
+        QTableWidgetItem *ip = new QTableWidgetItem(static_cast<QHostAddress>(cidr.first).toString());
+        QTableWidgetItem *mask = new QTableWidgetItem(QString::number(cidr.second));
 
-        ui->tableSecured->insertRow(0);
-        ui->tableSecured->setItem(0, 0, ip);
-        ui->tableSecured->setItem(0, 1, mask);
+        ui->tableSecured->insertRow(i);
+        ui->tableSecured->setItem(i, 0, ip);
+        ui->tableSecured->setItem(i, 1, mask);
     }
 
     ui->tableExcluded->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
