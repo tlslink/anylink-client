@@ -42,10 +42,6 @@ Please use Windows 10 or above!
 
 You should use `anylink-linux_openssl1-amd64.tar.gz` with Ubuntu 20.04 or above.
 
-For Ubuntu 22.04, you may need to manually install openssl1.1 package , as it only supports openssl3 by default.
-
-> Currently anylink-linux_openssl3-amd64.tar.gz is still in beta phase.
-
 ```bash
 tar -zxvf anylink-*.tar.gz
 ./install.sh
