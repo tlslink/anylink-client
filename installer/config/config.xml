@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
     <Name>AnyLink Secure Client</Name>
-    <Version>0.7</Version>
+    <Version>0.8.0</Version>
     <Title>AnyLink Secure Client</Title>
     <Publisher>https://anylink.pro</Publisher>
     <ProductUrl>https://anylink.pro</ProductUrl>
