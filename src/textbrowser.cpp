@@ -1,5 +1,6 @@
 #include "textbrowser.h"
 #include "ui_textbrowser.h"
+#include <QScrollBar>
 
 TextBrowser::TextBrowser(const QString &title, QWidget *parent) :
     QDialog(parent),
@@ -23,6 +24,8 @@ TextBrowser::~TextBrowser()
 void TextBrowser::setText(const QString &text)
 {
     ui->textBrowser->setPlainText(text);
+    QScrollBar* verticalScrollBar = ui->textBrowser->verticalScrollBar();
+    verticalScrollBar->setValue(verticalScrollBar->maximum());
 }
 
 void TextBrowser::setMarkdown(const QString &markdown)

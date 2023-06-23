@@ -8,6 +8,7 @@
 #include <QtWidgets>
 #include <QCloseEvent>
 #include <QJsonValue>
+#include <QFile>
 
 AnyLink::AnyLink(QWidget *parent)
     : QWidget(parent)
@@ -409,14 +410,34 @@ void AnyLink::on_buttonProfile_clicked()
 
 void AnyLink::on_buttonViewLog_clicked()
 {
-    QFile loadFile(tempLocation + "/vpnagent.log");
-    if(!loadFile.open(QIODevice::ReadOnly)) {
+    QString filePath = tempLocation + "/vpnagent.log";
+    QFile loadFile(filePath);
+    if(!loadFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         error(tr("Couldn't open log file"), this);
         return;
     }
-    QByteArray data = loadFile.readAll();
     TextBrowser textBrowser(tr("Log Viewer"),this);
+
+
+    QString data = loadFile.readAll();
     textBrowser.setText(data);
+    loadFile.close();
+
+    // 创建文件系统监视器
+    QFileSystemWatcher watcher;
+    watcher.addPath(filePath);
+
+    // 监视文件变化的信号槽连接
+    QObject::connect(&watcher, &QFileSystemWatcher::fileChanged, [&]() {
+        QFile updatedFile(filePath);
+        if (updatedFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            // 重新读取文件内容
+            data = updatedFile.readAll();
+            textBrowser.setText(data);
+            updatedFile.close();
+        }
+    });
+
     textBrowser.exec();
 }
 

@@ -86,6 +86,7 @@ QString DetailDialog::format(double bytes)
 void DetailDialog::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
+    // 每隔 1 秒获取流量统计
     connect(&timer, &QTimer::timeout, this, [this]() {
         if(anylink->rpc->isConnected()) {
             anylink->rpc->callAsync("stat", AnyLink::STAT, [this](const QJsonValue & result) {
