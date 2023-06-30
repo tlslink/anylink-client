@@ -119,7 +119,7 @@ jobs:
           cp vpnagent out/opt/anylink/bin
           7z a installer/packages/root/data/anylink.7z ./out/opt/anylink/*
           cd installer
-          "${IQTA_TOOLS}/QtInstallerFramework/4.5/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
+          "${IQTA_TOOLS}/QtInstallerFramework/4.6/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           tar -zcvf "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} install.sh ${{ matrix.installer-name }}
         elif [ "${{ matrix.build }}" = "windows" ]; then
           windeployqt out/bin/anylink.exe --no-translations --no-system-d3d-compiler --no-opengl-sw --no-svg
@@ -128,7 +128,7 @@ jobs:
           cp vpnagent.exe wintun.dll out/bin
           7z a installer/packages/root/data/anylink.7z ./out/bin/*
           cd installer
-          "${IQTA_TOOLS}/QtInstallerFramework/4.5/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
+          "${IQTA_TOOLS}/QtInstallerFramework/4.6/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           # https://bugreports.qt.io/browse/QTIFW-2295
           editbin /subsystem:windows ${{ matrix.installer-name }}
           7z a -tzip -r "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} ${{ matrix.installer-name }}
