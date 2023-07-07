@@ -17,11 +17,11 @@ public:
                        {"block", true},
                        {"debug", false},
                        {"local", true},
-                       {"cisco_compat", false}, // should be false
-                       {"x", 0},
-                       {"y", 0}};
+                       {"cisco_compat", false}
+                      };
     bool loadConfig(SaveFormat saveFormat);
     void saveConfig(SaveFormat saveFormat);
+    void saveConfig();
 };
 
 #endif // CONFIGMANAGER_H

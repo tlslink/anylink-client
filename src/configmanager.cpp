@@ -53,3 +53,8 @@ void ConfigManager::saveConfig(SaveFormat saveFormat)
                    : QCborValue::fromJsonValue(config).toCbor());
 
 }
+
+void ConfigManager::saveConfig()
+{
+    saveConfig(Json);
+}
