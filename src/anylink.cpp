@@ -22,19 +22,18 @@ AnyLink::AnyLink(QWidget *parent)
 #if defined(Q_OS_LINUX)
     setWindowIcon(QIcon(":/images/anylink64.png"));
 #endif
-#if defined(Q_OS_WIN)
-    setFixedSize(480, 320);
-#else
-//    qDebug() << geometry().width() << geometry().height();
-    setFixedSize(geometry().width(), geometry().height());
-#endif
-    // avoid some people prefer to use minimize
+//    qDebug() << screen()->devicePixelRatio() << geometry().width() << geometry().height() << QSysInfo::kernelType();
+    // 需要联合使用 QSysInfo::kernelType() 和  QSysInfo::productType()
+    if (screen()->devicePixelRatio() > 1.0 && QSysInfo::kernelType() == "linux") {
+        setFixedSize(geometry().width(), geometry().height());
+    } else {
+        setFixedSize(480, 320);
+    }
+
     setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
 //    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint /*| Qt::WindowMinimizeButtonHint*/ | Qt::WindowCloseButtonHint | Qt::WindowStaysOnTopHint);
 
-    setGeometry(QStyle::alignedRect(
-                    Qt::LeftToRight, Qt::AlignCenter, size(), screen()->availableGeometry()
-                ));
+    center();
     ui->lineEditOTP->setFocus();
     connect(ui->lineEditOTP, &QLineEdit::returnPressed, this, [this]() {
         if (!ui->lineEditOTP->text().isEmpty()) {
@@ -56,10 +55,6 @@ AnyLink::AnyLink(QWidget *parent)
         } else {
             ui->comboBoxHost->setCurrentIndex(0);
         }
-        int x = configManager->config["x"].toInt();
-        if(x > 0) {
-            move(x, configManager->config["y"].toInt());
-        }
     }
     // exit
 }
@@ -74,6 +69,8 @@ void AnyLink::closeEvent(QCloseEvent *event)
         if(!trayIcon->isVisible()) {
             trayIcon->show();
         }
+        // 避免直接关机不能保存状态
+        configManager->saveConfig();
     } else {
         qApp->quit();
     }
@@ -85,6 +82,18 @@ void AnyLink::showEvent(QShowEvent *event)
         QTimer::singleShot(50, this, [this]() { afterShowOneTime(); });
     }
     event->accept();
+}
+
+void AnyLink::center()
+{
+    QRect screenGeometry = screen()->geometry();
+    QRect windowGeometry = frameGeometry();
+    QPoint centerPoint = screenGeometry.center() - windowGeometry.center();
+    if (screen()->devicePixelRatio() > 1.0) {
+        centerPoint -= QPoint(0,120);
+    }
+    // 将窗口移动到居中位置
+    move(centerPoint);
 }
 
 void AnyLink::loadStyleSheet(const QString &styleSheetFile)
@@ -232,11 +241,7 @@ void AnyLink::afterShowOneTime()
     connect(qApp, &QApplication::aboutToQuit, this, [this]() {
         if(m_vpnConnected) {
             disconnectVPN();
-        }
-        configManager->config["x"] = x();
-        configManager->config["y"] = y();
-        //profileManager->saveProfile(Json);
-        configManager->saveConfig(Json);
+        }        
     });
 
     rpc = new JsonRpcWebSocketClient(this);
