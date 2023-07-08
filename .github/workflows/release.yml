@@ -74,13 +74,15 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v3.2.1
       with:
         version: ${{ matrix.qt }} # https://download.qt.io/online/qtsdkrepository/
         modules: ${{ matrix.qt-modules }}
         tools: ${{ matrix.qt-tools }}
         install-deps: false
-        cache: false
+        cache: true
+        cache-key-prefix: 'cache-qt'
+        aqtversion: '==3.1.*'
     - uses: actions/checkout@v3
       with:
         submodules: recursive
