@@ -11,7 +11,7 @@ Currently the following servers are supported,
 
 ## Screenshot
 
-<img src="./assets/screenshot.png" alt="screenshot" width=70% />
+<img src="./images/screenshot.png" alt="screenshot" width=70% />
 
 ## Download
 
@@ -51,6 +51,6 @@ The `.run` package is supposed to support other Linux distributions like RedHat,
 
 ## Help
 
-|                     You may want to join in the QQ Group(66899589) to get some help.                     |
+| You may want to join in the QQ Group(66899589) to get some help. |
 | :----------------------------------------------------------: |
-| ![](./assets/qqgroup.png) |
+|                  ![](./images/qqgroup.png)                   |
