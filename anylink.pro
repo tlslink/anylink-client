@@ -59,13 +59,13 @@ win32 {
     QMAKE_TARGET_COPYRIGHT = "Copyright 2022-2023 https://anylink.pro. All rights reserved."
 
     DESTDIR = $$PWD/out/bin
-    copyIcon(images/anylink64.png resource/windows/anylink.ico)
+    copyIcon(assets/anylink64.png resource/windows/anylink.ico)
 }
 
 linux:!android {
     DESTDIR = $$PWD/out/opt/anylink/bin
-    copyToDestDir(images/anylink.png resource/linux/anylink.desktop)
-    copyIcon(images/anylink64.png)
+    copyToDestDir(assets/anylink.png resource/linux/anylink.desktop)
+    copyIcon(assets/anylink64.png)
 }
 
 # You can make your code fail to compile if it uses deprecated APIs.

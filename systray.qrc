@@ -1,8 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/connected.png</file>
-        <file>images/connecting.png</file>
-        <file>images/notconnected.png</file>
-        <file>images/anylink64.png</file>
+        <file>assets/connected.png</file>
+        <file>assets/connecting.png</file>
+        <file>assets/notconnected.png</file>
+        <file>assets/anylink64.png</file>
     </qresource>
 </RCC>
