@@ -48,9 +48,9 @@ private:
     QComboBox *iconComboBox;
     QAction *actionConnect, *actionDisconnect, *actionQuit, *actionConfig;
 
-    QIcon iconConnected = QIcon(":/images/connected.png");
-    QIcon iconNotConnected = QIcon(":/images/notconnected.png");
-    QIcon iconConnecting = QIcon(":/images/connecting.png");
+    QIcon iconConnected = QIcon(":/assets/connected.png");
+    QIcon iconNotConnected = QIcon(":/assets/notconnected.png");
+    QIcon iconConnecting = QIcon(":/assets/connecting.png");
 
     ProfileManager *profileManager;
     bool m_vpnConnected;
