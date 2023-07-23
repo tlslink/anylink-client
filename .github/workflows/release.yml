@@ -16,7 +16,7 @@ jobs:
         include:
         - build: linux-latest
           os: ubuntu-22.04
-          qt: 6.5.1
+          qt: 6.5.2
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
           installer-name: anylink-linux-amd64.run
@@ -28,7 +28,7 @@ jobs:
           installer-name: anylink-linux-amd64.run
         - build: windows
           os: windows-2019
-          qt: 6.5.1
+          qt: 6.5.2
           qt-modules: 'qtwebsockets'
           qt-tools: 'tools_qtcreator'
           installer-name: anylink-windows10-amd64.exe
