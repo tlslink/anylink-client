@@ -20,8 +20,8 @@ void outdateCheck()
 int main(int argc, char *argv[])
 {
     qSetMessagePattern("%{type}:[%{file}:%{line}]  %{message}");
-//    qDebug() << QStyleFactory::keys();
-//    QApplication::setStyle(QStyleFactory::create("fusion"));
+    //    qDebug() << QStyleFactory::keys();
+    //    QApplication::setStyle("fusion");
     QApplication::setApplicationName("AnyLink");
     configLocation = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 //    qDebug() << configLocation;
