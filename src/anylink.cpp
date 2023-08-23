@@ -276,9 +276,9 @@ void AnyLink::afterShowOneTime()
     rpc->registerCallback(ABORT, [this](const QJsonValue & result) {
         ui->statusBar->setText(result.toString());
         emit vpnClosed();
-        // the server side offline will lose its effect
-        if(!activeDisconnect) {
-            connectVPN(true);
+        if (!activeDisconnect) {
+            // 快速重连，不需要再次进行用户认证
+            QTimer::singleShot(1500, this, [this]() { connectVPN(true); });
         }
     });
     rpc->connectToServer(QUrl("ws://127.0.0.1:6210/rpc"));
@@ -348,15 +348,20 @@ void AnyLink::connectVPN(bool reconnect)
         ui->progressBar->start();
         trayIcon->setIcon(iconConnecting);
 
-        rpc->callAsync(method, id, currentProfile, [this](const QJsonValue & result) {
+        rpc->callAsync(method, id, currentProfile, [this, reconnect](const QJsonValue &result) {
             ui->progressBar->stop();
             if(result.isObject()) {  // error object
                 // dialog
-//                ui->statusBar->setText(result.toObject().value("message").toString());
-                if(isHidden()) {
-                    show();
+                //                ui->statusBar->setText(result.toObject().value("message").toString());
+                if (reconnect) {
+                    // 当快速重连失败，再次尝试完全重新连接，用于服务端可能已经移除session的情况
+                    QTimer::singleShot(1500, this, [this]() { connectVPN(); });
+                } else {
+                    if (isHidden()) {
+                        show();
+                    }
+                    error(result.toObject().value("message").toString(), this);
                 }
-                error(result.toObject().value("message").toString(), this);
             } else {
                 ui->statusBar->setText(result.toString());
                 emit vpnConnected();
