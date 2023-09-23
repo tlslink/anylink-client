@@ -15,6 +15,7 @@ AnyLink::AnyLink(QWidget *parent)
     , ui(new Ui::AnyLink), m_vpnConnected(false)
 {
     ui->setupUi(this);
+    setWindowTitle(tr("AnyLink Secure Client") + " v" + appVersion);
 
 #if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
     loadStyleSheet(":/resource/style.qss");
