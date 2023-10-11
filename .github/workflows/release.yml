@@ -16,7 +16,7 @@ jobs:
         include:
         - build: linux-latest
           os: ubuntu-22.04
-          qt: 6.5.3
+          qt: 6.6.0
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
           installer-name: anylink-linux-amd64.run
@@ -58,7 +58,6 @@ jobs:
       run: |
         if [ "${{ matrix.build }}" = "linux" -o "${{ matrix.build }}" = "linux-latest" ]; then
           sudo apt-get update
-          sudo apt-get upgrade -y
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -y -q --force-yes \
           automake cmake git wget libfuse2 desktop-file-utils tree \
           build-essential libgl1-mesa-dev libxkbcommon-x11-0 libpulse-dev \
