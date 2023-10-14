@@ -70,9 +70,8 @@ void AnyLink::closeEvent(QCloseEvent *event)
         if(!trayIcon->isVisible()) {
             trayIcon->show();
         }
-        // 避免直接关机不能保存状态
-        configManager->saveConfig();
     } else {
+        configManager->saveConfig();
         qApp->quit();
     }
 }
