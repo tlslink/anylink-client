@@ -122,6 +122,7 @@ void ProfileManager::afterShowOneTime()
                 ui->lineEditUsername->setText(selectedProfile["username"].toString());
                 ui->lineEditPassword->setText(selectedProfile["password"].toString());
                 ui->lineEditGroup->setText(selectedProfile["group"].toString());
+                ui->lineEditSecretkey->setText(selectedProfile["secret"].toString());
             }
         }
         // only new not delete all will go here
@@ -137,11 +138,13 @@ void ProfileManager::afterShowOneTime()
         if (profiles.isEmpty()) {
             info(tr("This software can save passwords in the Keychain of the operating system to avoid plaintext passwords, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks."),this);
         }
+
         QJsonObject newProfile {
             { "host", host },
             { "username", username },
             { "password", password },
-            { "group", ui->lineEditGroup->text().trimmed() }
+            { "group", ui->lineEditGroup->text().trimmed() },
+            { "secret", ui->lineEditSecretkey->text().trimmed() }
         };
         profiles.insert(name, newProfile);
         updateModel();
@@ -186,6 +189,7 @@ void ProfileManager::resetForm()
     ui->lineEditUsername->clear();
     ui->lineEditPassword->clear();
     ui->lineEditGroup->clear();
+    ui->lineEditSecretkey->clear();
 }
 
 void ProfileManager::readKeys()

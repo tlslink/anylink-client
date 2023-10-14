@@ -100,25 +100,15 @@ void AnyLink::center()
 void AnyLink::loadStyleSheet(const QString &styleSheetFile)
 
 {
-
     QFile file(styleSheetFile);
-
     file.open(QFile::ReadOnly);
-
     if (file.isOpen())
-
     {
-
         QString styleSheet = this->styleSheet();
-
         styleSheet += QLatin1String(file.readAll());//读取样式表文件
-
         setStyleSheet(styleSheet);//把文件内容传参
-
         file.close();
-
     }
-
 }
 
 void AnyLink::createTrayActions()
