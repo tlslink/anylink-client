@@ -28,7 +28,7 @@ jobs:
           installer-name: anylink-linux-amd64.run
         - build: windows
           os: windows-2019
-          qt: 6.5.3
+          qt: 6.6.0
           qt-modules: 'qtwebsockets'
           qt-tools: 'tools_qtcreator'
           installer-name: anylink-windows10-amd64.exe
@@ -73,7 +73,7 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3.2.1
+      uses: jurplel/install-qt-action@v3
       with:
         version: ${{ matrix.qt }} # https://download.qt.io/online/qtsdkrepository/
         modules: ${{ matrix.qt-modules }}
@@ -81,7 +81,6 @@ jobs:
         install-deps: false
         cache: true
         cache-key-prefix: 'cache-qt'
-        aqtversion: '==3.1.*'
     - uses: actions/checkout@v3
       with:
         submodules: recursive
@@ -115,9 +114,9 @@ jobs:
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
           ./linuxdeployqt-continuous-x86_64.AppImage out/opt/anylink/bin/anylink -extra-plugins=platformthemes/libqgtk3.so -no-copy-copyright-files -no-translations -unsupported-allow-new-glibc
           cp fcitx-qt5-master/qt6/platforminputcontext/libfcitxplatforminputcontextplugin-qt6.so out/opt/anylink/plugins/platforminputcontexts/
-          wget -c -nv https://github.com/tlslink/vpnagent/releases/download/continuous/vpnagent-linux-amd64.tar.gz
-          tar -zxvf vpnagent-*.tar.gz
-          cp vpnagent out/opt/anylink/bin
+          wget -c -nv https://github.com/tlslink/sslcon/releases/download/continuous/sslcon-linux-amd64.tar.gz
+          tar -zxvf sslcon-*.tar.gz
+          cp vpnagent sslcon out/opt/anylink/bin
           7z a installer/packages/root/data/anylink.7z ./out/opt/anylink/*
           cd installer
           wget -c -nv https://download.qt.io/official_releases/qt-installer-framework/4.5.2/QtInstallerFramework-linux-x64-4.5.2.run
@@ -127,9 +126,9 @@ jobs:
           tar -zcvf "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} install.sh ${{ matrix.installer-name }}
         elif [ "${{ matrix.build }}" = "windows" ]; then
           windeployqt out/bin/anylink.exe --no-translations --no-system-d3d-compiler --no-opengl-sw --no-svg
-          curl -k -L -O https://github.com/tlslink/vpnagent/releases/download/continuous/vpnagent-windows10-amd64.7z
-          7z x -y vpnagent-*.7z
-          cp vpnagent.exe wintun.dll out/bin
+          curl -k -L -O https://github.com/tlslink/sslcon/releases/download/continuous/sslcon-windows10-amd64.7z
+          7z x -y sslcon-*.7z
+          cp vpnagent.exe sslcon.exe wintun.dll out/bin
           7z a installer/packages/root/data/anylink.7z ./out/bin/*
           cd installer
           curl -k -O -L https://download.qt.io/official_releases/qt-installer-framework/4.5.2/QtInstallerFramework-windows-x64-4.5.2.exe --http1.1
@@ -160,7 +159,7 @@ jobs:
         files: archive/${{ env.ARCHIVE_NAME }}
         name: Release build (${{ github.ref_name }})
         token: ${{ secrets.CI_TOKEN }}
-        body: 'See [README](https://github.com/tlslink/anylink-client) for more details.'
+        body: 'See [README](https://github.com/tlslink/sslcon) for more details.'
         generate_release_notes: true
     - if: startsWith(github.ref, 'refs/tags/') && (matrix.build != 'windows')
       name: Tagged release

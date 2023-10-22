@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QIcon>
 #include <QJsonObject>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -47,6 +48,7 @@ private:
     QMenu *trayIconMenu;
     QComboBox *iconComboBox;
     QAction *actionConnect, *actionDisconnect, *actionQuit, *actionConfig;
+    QTimer timer;
 
     QIcon iconConnected = QIcon(":/assets/connected.png");
     QIcon iconNotConnected = QIcon(":/assets/notconnected.png");
