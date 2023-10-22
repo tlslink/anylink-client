@@ -1,13 +1,15 @@
 ## AnyLink Secure Client
 
-This is an SSL VPN client that supports OpenConnect or Cisco's AnyConnect [SSL VPN Protocol](https://datatracker.ietf.org/doc/html/draft-mavrogiannopoulos-openconnect-03).  It use [vpnagent](https://github.com/tlslink/vpnagent) as the core to communicate with the server.
+This is an SSL VPN client that supports OpenConnect or Cisco's AnyConnect [SSL VPN Protocol](https://datatracker.ietf.org/doc/html/draft-mavrogiannopoulos-openconnect-03).  It use [sslcon](https://github.com/tlslink/sslcon) as the core to communicate with the server.
 
 Currently the following servers are supported,
 
-- [ocserv](https://gitlab.com/openconnect/ocserv)
-- [anylink](https://github.com/bjdgyc/anylink)
+- [AnyLink](https://github.com/bjdgyc/anylink)
+- [OpenConnect VPN server](https://gitlab.com/openconnect/ocserv)
 
-> This software can save passwords in the Keychain of the operating system to avoid plaintext passwords, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks.
+> This software can save passwords(optional) in the Keychain of the operating system, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks.
+>
+> This project serves as a demonstration of how to use [sslcon](https://github.com/tlslink/sslcon) and will remain open source for Windows and Linux. For other platforms, please refer to the download instructions below.
 
 ## Screenshot
 
@@ -15,32 +17,17 @@ Currently the following servers are supported,
 
 ## Download
 
-Go to [Releases](https://github.com/tlslink/anylink-client/releases) or at https://anylink.pro
-
-The [Continuous release](https://github.com/tlslink/anylink-client/releases/tag/continuous) may contain quick fixes for some bugs!
-
-## Security
-
-本软件开源，同任何其它开源软件一样，可能会被第三方修改并重新打包发布，建议采取如下措施避免安全隐患：
-
-- 自行下载 [项目源代码](https://github.com/tlslink/anylink-client) 编译使用
-- 在 [官网](https://anylink.pro) 而**不**是第三方网站（包括 CSDN、各种网盘、群共享）等渠道下载本软件的预编译版本
-- 服务端开启OTP（一次性密码验证）功能
-
-另外您可能还需要采取如下措施：
-
-- 在企业应用中不使用包括本软件在内的任何开源客户端，因为它们都存在被第三方滥用的风险
-- 在企业应用中不使用破解版、绿色版等盗版软件，因为它们都有可能被第三方植入木马病毒而造成财产损失
+- Windows and Linux:  [Releases](https://github.com/tlslink/anylink-client/releases) or at https://anylink.pro
 
 ## Install
 
 ### Windows
 
-Please use Windows 10 or above!
+Please use Windows 10 or newer.
 
 ### Linux
 
-You should use `anylink-linux_openssl1-amd64.tar.gz` with Ubuntu 20.04 or above.
+You should use `anylink-linux_openssl1-amd64.tar.gz` with Ubuntu 20.04 or newer.
 
 ```bash
 tar -zxvf anylink-*.tar.gz

@@ -191,6 +191,17 @@ void AnyLink::afterShowOneTime()
 
     ui->labelVersion->setText(appVersion);
 
+    // 每隔 60 秒获取 DTLS 状态
+    connect(&timer, &QTimer::timeout, this, [this]() {
+        rpc->callAsync("status", STATUS, [this](const QJsonValue & result) {
+            const QJsonObject &status = result.toObject();
+            if(!status.contains("code")) {
+                ui->labelChannelType->setText(status["DtlsConnected"].toBool() ? "DTLS" : "TLS");
+                ui->labelDtlsCipherSuite->setText(status["DTLSCipherSuite"].toString());
+            }
+        });
+    });
+
     connect(this, &AnyLink::vpnConnected, this, [this]() {
         getVPNStatus();
         m_vpnConnected = true;
@@ -209,11 +220,6 @@ void AnyLink::afterShowOneTime()
             trayIcon->setToolTip(tr("Connected to: ") + currentProfile.value("host").toString());
         }
         configManager->config["lastProfile"] = ui->comboBoxHost->currentText();
-
-        // 每隔 60 秒获取状态信息（主要是 DTLS 状态）
-        connect(&timer, &QTimer::timeout, this, [this]() {
-            getVPNStatus();
-        });
 
         timer.start(60 * 1000);
     });
@@ -394,8 +400,10 @@ void AnyLink::getVPNStatus()
             ui->labelMTU->setText(QString::number(status["MTU"].toInt()));
             ui->labelDNS->setText(status["DNS"].toVariant().toStringList().join(","));
 
-            ui->buttonDetails->setEnabled(true);
-            detailDialog->setRoutes(status["SplitExclude"].toArray(), status["SplitInclude"].toArray());
+            if (!ui->buttonDetails->isEnabled()) {
+                ui->buttonDetails->setEnabled(true);
+                detailDialog->setRoutes(status["SplitExclude"].toArray(), status["SplitInclude"].toArray());
+            }
         }
     });
 }
