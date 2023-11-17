@@ -138,11 +138,6 @@ jobs:
           editbin /subsystem:windows ${{ matrix.installer-name }}
           7z a -tzip -r "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} ${{ matrix.installer-name }}
         fi
-    - name: Upload archive
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ env.ARCHIVE_NAME }}
-        path: archive/${{ env.ARCHIVE_NAME }}
         
     - if: startsWith(github.ref, 'refs/heads/')
       name: Continuous release
