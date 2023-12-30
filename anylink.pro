@@ -43,7 +43,7 @@ defineTest(copyIcon) {
     export(QMAKE_POST_LINK)
 }
 
-VERSION = 0.9.0
+VERSION = 0.9.1
 
 macx {
     HEADERS += src/macdockiconhandler.h
