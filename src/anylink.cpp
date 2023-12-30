@@ -10,29 +10,35 @@
 #include <QJsonValue>
 #include <QFile>
 
+#if defined(Q_OS_MACOS)
+#include "macdockiconhandler.h"
+#endif
+
 AnyLink::AnyLink(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::AnyLink), m_vpnConnected(false)
 {
     ui->setupUi(this);
+#ifndef Q_OS_MACOS
+    layout()->removeItem(ui->topSpacer);
+#endif
     setWindowTitle(tr("AnyLink Secure Client") + " v" + appVersion);
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
-    loadStyleSheet(":/resource/style.qss");
-#endif
 #if defined(Q_OS_LINUX)
+    loadStyleSheet(":/resource/style.qss");
     setWindowIcon(QIcon(":/images/anylink64.png"));
 #endif
-//    qDebug() << screen()->devicePixelRatio() << geometry().width() << geometry().height() << QSysInfo::kernelType();
+    // qDebug() << screen()->devicePixelRatio() << geometry().width() << geometry().height() << QSysInfo::kernelType();
     // 需要联合使用 QSysInfo::kernelType() 和  QSysInfo::productType()
-    if (screen()->devicePixelRatio() > 1.0 && QSysInfo::kernelType() == "linux") {
+    const QString kernelType = QSysInfo::kernelType();
+    if (screen()->devicePixelRatio() > 1.0 && (kernelType == "linux" || kernelType == "darwin")) {
         setFixedSize(geometry().width(), geometry().height());
     } else {
         setFixedSize(480, 320);
     }
 
     setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
-//    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint /*| Qt::WindowMinimizeButtonHint*/ | Qt::WindowCloseButtonHint | Qt::WindowStaysOnTopHint);
+    // setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint | Qt::WindowStaysOnTopHint);
 
     center();
     ui->lineEditOTP->setFocus();
@@ -119,7 +125,10 @@ void AnyLink::createTrayActions()
     connect(actionDisconnect, &QAction::triggered, this, &AnyLink::disconnectVPN);
 
     actionConfig = new QAction(tr("Show Panel"), this);
-    connect(actionConfig, &QAction::triggered, this, &AnyLink::show);
+    connect(actionConfig, &QAction::triggered, this, [this](){
+        // 有最小化按钮并最小化时 show 不起作用
+        showNormal();
+    });
 
     actionQuit = new QAction(tr("Quit"), this);
     connect(actionQuit, &QAction::triggered, qApp, &QApplication::quit, Qt::QueuedConnection);
@@ -139,14 +148,12 @@ void AnyLink::createTrayIcon()
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->setIcon(iconNotConnected);
 
-    connect(trayIcon,
-            &QSystemTrayIcon::activated,
-            this,
-            [this](QSystemTrayIcon::ActivationReason reason) {
-                if (reason == QSystemTrayIcon::Trigger) {
-                    show();
-                }
-            });
+#if defined(Q_OS_MACOS)
+    // Note: On macOS, the Dock icon is used to provide the tray's functionality.
+    MacDockIconHandler* dockIconHandler = MacDockIconHandler::instance();
+    connect(dockIconHandler, &MacDockIconHandler::dockIconClicked, this, [this]() { showNormal(); });
+    trayIconMenu->setAsDockMenu();
+#endif
 }
 
 void AnyLink::initConfig()

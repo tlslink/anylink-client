@@ -5,7 +5,11 @@ out
 *.tar.gz
 *.run
 *.exe
+*.app
+*.dmg
 FLGupr.json
 installer/config/*.png
 installer/config/*.ico
 installer/config/*.icns
+
+.DS_Store

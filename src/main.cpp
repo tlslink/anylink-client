@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
 #else
     QApplication app(argc, argv);
 #endif
-
     configManager = new ConfigManager();
     // Multiple translation files can be installed.
     // Translations are searched for in the reverse order in which they were installed
@@ -55,7 +54,7 @@ int main(int argc, char *argv[])
     w.show();
 
     QApplication::setQuitOnLastWindowClosed(false);
-    QObject::connect(&app, &SingleApplication::instanceStarted, &w, &AnyLink::show);
+    QObject::connect(&app, &SingleApplication::instanceStarted, &w, &AnyLink::showNormal);
 
     return app.exec();
 }

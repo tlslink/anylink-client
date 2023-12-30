@@ -17,5 +17,6 @@
     <PersistentLocalCache>false</PersistentLocalCache>
     <ControlScript>controller.js</ControlScript>
     <DisableCommandLineInterface>true</DisableCommandLineInterface>
+    <DisableAuthorizationFallback>true</DisableAuthorizationFallback>
     <SaveDefaultRepositories>false</SaveDefaultRepositories>
 </Installer>

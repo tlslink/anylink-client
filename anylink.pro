@@ -43,15 +43,24 @@ defineTest(copyIcon) {
     export(QMAKE_POST_LINK)
 }
 
+VERSION = 0.9.0
+
 macx {
-    #ICON = images/logo.png
+    HEADERS += src/macdockiconhandler.h
+    SOURCES += src/macdockiconhandler.mm
+
+    TARGET = AnyLink
+    # QMAKE_APPLE_DEVICE_ARCHS = x86_64
+    ICON = resource/mac/anylink.icns
+    QMAKE_INFO_PLIST = resource/mac/Info.plist
     DESTDIR = $$PWD/out/bin
+
+    copyIcon(resource/mac/anylink.icns)
 }
 
 win32 {
     # https://doc.qt.io/qt-6/qmake-variable-reference.html#version
     #RC_FILE = resource.rc
-    VERSION = 0.9.0
     RC_ICONS = resource\windows\anylink.ico
     QMAKE_TARGET_PRODUCT = "AnyLink Secure Client"
     QMAKE_TARGET_COMPANY = "https://anylink.pro"

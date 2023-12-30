@@ -27,20 +27,21 @@ Controller.prototype.TargetDirectoryPageCallback = function()
 
 Controller.prototype.onInstallationFinished = function ()
 {
-    try {
-        if (installer.isInstaller() && installer.status === QInstaller.Success) {
-            if (systemInfo.kernelType === "linux") {
-                installer.executeDetached("@TargetDir@/bin/anylink");
-            } else if (systemInfo.kernelType === "winnt") {
-                installer.executeDetached("@TargetDir@/anylink.exe");
-            }
-//            if (installer.value("UILanguage") === "zh_CN") {
-//                QDesktopServices.openUrl("file:///" + installer.value("TargetDir") + "/README.html");
-//            }
+
+    if (installer.isInstaller() && installer.status === QInstaller.Success) {
+        if (systemInfo.kernelType === "linux") {
+            installer.executeDetached("@TargetDir@/bin/anylink");
+        } else if (systemInfo.kernelType === "winnt") {
+            installer.executeDetached("@TargetDir@/anylink.exe");
+        } else if (systemInfo.kernelType === "darwin") {
+            installer.executeDetached("@TargetDir@/AnyLink.app/Contents/MacOS/AnyLink");
         }
-    } catch(e) {
-        console.log(e);
+
+       // if (installer.value("UILanguage") === "zh_CN") {
+       //     QDesktopServices.openUrl("file:///" + installer.value("TargetDir") + "/README.html");
+       // }
     }
+
 }
 
 //Controller.prototype.onUninstallationFinished = function ()

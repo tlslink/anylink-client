@@ -17,7 +17,7 @@ Currently the following servers are supported,
 
 ## Download
 
-- Windows and Linux:  [Releases](https://github.com/tlslink/anylink-client/releases) or at https://anylink.pro
+- Windows、macOS and Linux:  [Releases](https://github.com/tlslink/anylink-client/releases) or at https://anylink.pro
 
 ## Install
 
@@ -25,9 +25,27 @@ Currently the following servers are supported,
 
 Please use Windows 10 or newer.
 
+### macOS
+
+- No App Store version
+- Not digitally signed or notarized by Apple
+
+Due to the above reasons, it is only recommended for users with certain macOS system experience.
+
+You can use the `wget` or `curl` command to download the dmg file. If you use a browser to download the file, please execute the following command,
+
+
+```bash
+xattr -r -d com.apple.quarantine anylink-*.dmg
+```
+
+Then mount the dmg file and double-click the installer to install it. During the installation process, you need to grant root permissions to the software.
+
+> For the arm64 version, the current installer requires Rosetta to run, but the installed program is native on the Apple silicon platform.
+
 ### Linux
 
-You should use `anylink-linux_openssl1-amd64.tar.gz` with Ubuntu 20.04 or newer.
+You should use `anylink-linux-amd64.tar.gz` with Ubuntu 20.04 or newer.
 
 ```bash
 tar -zxvf anylink-*.tar.gz
@@ -35,6 +53,10 @@ tar -zxvf anylink-*.tar.gz
 ```
 
 The `.run` package is supposed to support other Linux distributions like RedHat, but you should check the `install.sh` file and install some dependencies.
+
+## UnInstall
+
+Enter the installation directory and execute the uninstall program.
 
 ## Help
 
