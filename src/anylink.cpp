@@ -28,7 +28,7 @@ AnyLink::AnyLink(QWidget *parent)
 #endif
     setWindowTitle(tr("AnyLink Secure Client") + " v" + appVersion);
 
-#if defined(Q_OS_LINUX)
+#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
     loadStyleSheet(":/resource/style.qss");
     setWindowIcon(QIcon(":/images/anylink64.png"));
 #endif
@@ -39,7 +39,7 @@ AnyLink::AnyLink(QWidget *parent)
         setFixedSize(geometry().width(), geometry().height());
         // setFixedSize(560, 390);
     } else {
-        setFixedSize(480, 320);
+        setFixedSize(490, 330);
     }
 
     center();
