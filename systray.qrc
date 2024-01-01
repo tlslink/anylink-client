@@ -4,5 +4,6 @@
         <file>assets/connecting.png</file>
         <file>assets/notconnected.png</file>
         <file>assets/anylink64.png</file>
+        <file>assets/donate.JPG</file>
     </qresource>
 </RCC>

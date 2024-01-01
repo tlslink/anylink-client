@@ -1,14 +1,14 @@
 #include "anylink.h"
-#include "ui_anylink.h"
-#include "jsonrpcwebsocketclient.h"
+#include <QCloseEvent>
+#include <QFile>
+#include <QJsonValue>
+#include <QtWidgets>
 #include "configmanager.h"
+#include "detaildialog.h"
+#include "jsonrpcwebsocketclient.h"
 #include "profilemanager.h"
 #include "textbrowser.h"
-#include "detaildialog.h"
-#include <QtWidgets>
-#include <QCloseEvent>
-#include <QJsonValue>
-#include <QFile>
+#include "ui_anylink.h"
 
 #if defined(Q_OS_MACOS)
 #include "macdockiconhandler.h"
@@ -21,6 +21,10 @@ AnyLink::AnyLink(QWidget *parent)
     ui->setupUi(this);
 #ifndef Q_OS_MACOS
     layout()->removeItem(ui->topSpacer);
+    setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
+#else
+    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint
+                   | Qt::WindowCloseButtonHint | Qt::WindowStaysOnTopHint);
 #endif
     setWindowTitle(tr("AnyLink Secure Client") + " v" + appVersion);
 
@@ -33,12 +37,10 @@ AnyLink::AnyLink(QWidget *parent)
     const QString kernelType = QSysInfo::kernelType();
     if (screen()->devicePixelRatio() > 1.0 && (kernelType == "linux" || kernelType == "darwin")) {
         setFixedSize(geometry().width(), geometry().height());
+        // setFixedSize(560, 390);
     } else {
         setFixedSize(480, 320);
     }
-
-    setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
-    // setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint | Qt::WindowStaysOnTopHint);
 
     center();
     ui->lineEditOTP->setFocus();
@@ -164,6 +166,7 @@ void AnyLink::initConfig()
     ui->checkBoxDebug->setChecked(configManager->config["debug"].toBool());
     ui->checkBoxLang->setChecked(configManager->config["local"].toBool());
     ui->checkBoxCiscoCompat->setChecked(configManager->config["cisco_compat"].toBool());
+    ui->checkBoxDtls->setChecked(configManager->config["no_dtls"].toBool());
 
     connect(ui->checkBoxAutoLogin, &QCheckBox::toggled, this, [](bool checked) {
         configManager->config["autoLogin"] = checked;
@@ -186,6 +189,10 @@ void AnyLink::initConfig()
         configManager->config["cisco_compat"] = checked;
         configVPN();
     });
+    connect(ui->checkBoxDtls, &QCheckBox::toggled, this, [this](bool checked) {
+        configManager->config["no_dtls"] = checked;
+        configVPN();
+    });
 }
 
 void AnyLink::afterShowOneTime()
@@ -195,8 +202,6 @@ void AnyLink::afterShowOneTime()
     initConfig();
     profileManager->afterShowOneTime();
     detailDialog = new DetailDialog(this);
-
-    ui->labelVersion->setText(appVersion);
 
     // 每隔 60 秒获取 DTLS 状态
     connect(&timer, &QTimer::timeout, this, [this]() {
@@ -320,14 +325,13 @@ void AnyLink::resetVPNStatus()
 void AnyLink::configVPN()
 {
     if(rpc->isConnected()) {
-        QJsonObject args {
-            { "log_level", ui->checkBoxDebug->isChecked() ? "Debug" : "Info" },
-            { "log_path", tempLocation},
-            { "skip_verify", !ui->checkBoxBlock->isChecked() },
-            {"cisco_compat", ui->checkBoxCiscoCompat->isChecked()},
-            {"agent_name", agentName},
-            {"agent_version", appVersion}
-        };
+        QJsonObject args{{"log_level", ui->checkBoxDebug->isChecked() ? "Debug" : "Info"},
+                         {"log_path", tempLocation},
+                         {"skip_verify", !ui->checkBoxBlock->isChecked()},
+                         {"cisco_compat", ui->checkBoxCiscoCompat->isChecked()},
+                         {"no_dtls", ui->checkBoxDtls->isChecked()},
+                         {"agent_name", agentName},
+                         {"agent_version", appVersion}};
         rpc->callAsync("config", CONFIG, args, [this](const QJsonValue & result) {
             ui->statusBar->setText(result.toString());
         });
@@ -396,6 +400,7 @@ void AnyLink::getVPNStatus()
 {
     rpc->callAsync("status", STATUS, [this](const QJsonValue & result) {
         const QJsonObject &status = result.toObject();
+        // qDebug() << status;
         if(!status.contains("code")) {
             ui->labelChannelType->setText(status["DtlsConnected"].toBool() ? "DTLS" : "TLS");
             ui->labelTlsCipherSuite->setText(status["TLSCipherSuite"].toString());

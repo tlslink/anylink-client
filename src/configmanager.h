@@ -17,8 +17,8 @@ public:
                        {"block", true},
                        {"debug", false},
                        {"local", true},
-                       {"cisco_compat", false}
-                      };
+                       {"no_dtls", false},
+                       {"cisco_compat", false}};
     bool loadConfig(SaveFormat saveFormat);
     void saveConfig(SaveFormat saveFormat);
     void saveConfig();
