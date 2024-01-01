@@ -156,6 +156,17 @@ void AnyLink::createTrayIcon()
     connect(dockIconHandler, &MacDockIconHandler::dockIconClicked, this, [this]() { showNormal(); });
     trayIconMenu->setAsDockMenu();
 #endif
+
+#if defined(Q_OS_WIN)
+    connect(trayIcon,
+            &QSystemTrayIcon::activated,
+            this,
+            [this](QSystemTrayIcon::ActivationReason reason) {
+                if (reason == QSystemTrayIcon::Trigger) {
+                    showNormal();
+                }
+            });
+#endif
 }
 
 void AnyLink::initConfig()
