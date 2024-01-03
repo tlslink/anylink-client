@@ -9,7 +9,7 @@ Currently the following servers are supported,
 
 > This software can save passwords(optional) in the Keychain of the operating system, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks.
 >
-> This project serves as a demonstration of how to use [sslcon](https://github.com/tlslink/sslcon) and will remain open source for Windows and Linux. For other platforms, please refer to the download instructions below.
+> This project serves as a demonstration of how to use [sslcon](https://github.com/tlslink/sslcon).
 
 ## Screenshot
 
@@ -62,4 +62,4 @@ Enter the installation directory and execute the uninstall program.
 
 | You may want to join in the QQ Group(66899589) to get some help. |
 | :----------------------------------------------------------: |
-|                  ![](./images/qqgroup.png)                   |
+| <img src="./assets/donate.JPG" width="150px" height="150px" />      ![](./images/qqgroup.png) |
