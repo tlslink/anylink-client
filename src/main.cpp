@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    outdateCheck();
+//    outdateCheck();
 
     AnyLink w;
     w.show();
