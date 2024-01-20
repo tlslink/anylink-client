@@ -28,7 +28,7 @@ jobs:
           installer-name: anylink-linux-amd64.run
         - build: windows
           os: windows-2019
-          qt: 6.6.0
+          qt: 6.6.1
           qt-modules: 'qtwebsockets'
           qt-tools: 'tools_qtcreator'
           installer-name: anylink-windows10-amd64.exe
@@ -189,7 +189,7 @@ jobs:
           "${IQTA_TOOLS}/QtInstallerFramework/4.6/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           hdiutil create -fs HFS+ -srcfolder ${{ matrix.installer-name }}.app -format UDZO "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }}
         fi
-        
+
     - if: startsWith(github.ref, 'refs/heads/')
       name: Continuous release
       uses: softprops/action-gh-release@v1
@@ -202,15 +202,13 @@ jobs:
       name: Tagged release
       uses: softprops/action-gh-release@v1
       with:
-        files: archive/${{ env.ARCHIVE_NAME }}
         name: Release build (${{ github.ref_name }})
-        token: ${{ secrets.CI_TOKEN }}
-        body: 'See [README](https://github.com/tlslink/sslcon) for more details.'
+        body: 'See [README](https://github.com/tlslink/anylink-client) for more details.'
+        files: archive/${{ env.ARCHIVE_NAME }}
         generate_release_notes: true
     - if: startsWith(github.ref, 'refs/tags/') && (matrix.build != 'windows')
       name: Tagged release
       uses: softprops/action-gh-release@v1
       with:
-        files: archive/${{ env.ARCHIVE_NAME }}
         name: Release build (${{ github.ref_name }})
-        token: ${{ secrets.CI_TOKEN }}
+        files: archive/${{ env.ARCHIVE_NAME }}

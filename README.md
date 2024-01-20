@@ -9,7 +9,6 @@ Currently the following servers are supported,
 
 > This software can save passwords(optional) in the Keychain of the operating system, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks.
 >
-> This project serves as a demonstration of how to use [sslcon](https://github.com/tlslink/sslcon).
 
 ## Screenshot
 
@@ -17,7 +16,8 @@ Currently the following servers are supported,
 
 ## Download
 
-- Windows、macOS and Linux:  [Releases](https://github.com/tlslink/anylink-client/releases) or at https://anylink.pro
+1. https://anylink.pro
+2. Fork this project and compile it using github action
 
 ## Install
 
