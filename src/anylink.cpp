@@ -64,6 +64,19 @@ AnyLink::AnyLink(QWidget *parent)
         } else {
             ui->comboBoxHost->setCurrentIndex(0);
         }
+
+        // 每个 profile 的密码被读取后都会发送 keyRestored
+        connect(profileManager, &ProfileManager::keyRestored, this, [this](const QString &profile) {
+            // keychain 中的密码是异步获取的
+            QTimer::singleShot(500, this, [this, profile]() {
+                if (configManager->config["autoLogin"].toBool()) {
+                    const QString lastProfile = configManager->config["lastProfile"].toString();
+                    if (lastProfile == profile) {
+                        connectVPN();
+                    }
+                }
+            });
+        });
     }
     // exit
 }
@@ -214,15 +227,17 @@ void AnyLink::afterShowOneTime()
     profileManager->afterShowOneTime();
     detailDialog = new DetailDialog(this);
 
-    // 每隔 60 秒获取 DTLS 状态
+    // 每隔 60 秒获取 DTLS 状态，因为是 afterShowOneTime，不能关闭定时器
     connect(&timer, &QTimer::timeout, this, [this]() {
-        rpc->callAsync("status", STATUS, [this](const QJsonValue & result) {
-            const QJsonObject &status = result.toObject();
-            if(!status.contains("code")) {
-                ui->labelChannelType->setText(status["DtlsConnected"].toBool() ? "DTLS" : "TLS");
-                ui->labelDtlsCipherSuite->setText(status["DTLSCipherSuite"].toString());
-            }
-        });
+        if (!configManager->config["no_dtls"].toBool()) {
+            rpc->callAsync("status", STATUS, [this](const QJsonValue &result) {
+                const QJsonObject &status = result.toObject();
+                if (!status.contains("code")) {
+                    ui->labelChannelType->setText(status["DtlsConnected"].toBool() ? "DTLS" : "TLS");
+                    ui->labelDtlsCipherSuite->setText(status["DTLSCipherSuite"].toString());
+                }
+            });
+        }
     });
 
     connect(this, &AnyLink::vpnConnected, this, [this]() {
@@ -284,12 +299,6 @@ void AnyLink::afterShowOneTime()
     });
     connect(rpc, &JsonRpcWebSocketClient::connected, this, [this]() {
         configVPN();
-        if(configManager->config["autoLogin"].toBool()) {
-            QString lastProfile = configManager->config["lastProfile"].toString();
-            if(!lastProfile.isEmpty() && profileManager->model->stringList().contains(lastProfile)) {
-                connectVPN();
-            }
-        }
     });
     // may be exited normally by other clients, do not automatically reconnect
     rpc->registerCallback(DISCONNECT, [this](const QJsonValue & result) {

@@ -21,19 +21,24 @@ ProfileManager::ProfileManager(QWidget *parent) :
 
     setFixedSize(geometry().width(), geometry().height());
 
-    connect(&keyChain,&KeyChainClass::keyRestored,[this](const QString& key, const QString& password){
-        QJsonObject value = profiles.value(key).toObject();
-        value.insert("password",password);
-        profiles.insert(key, value);
+    connect(&keyChain,
+            &KeyChainClass::keyRestored,
+            this,
+            [this](const QString &key, const QString &password) {
+                QJsonObject value = profiles.value(key).toObject();
+                value.insert("password", password);
+                profiles.insert(key, value);
 
-//        qDebug() << "keyRestored" << key << password << profiles;
-    });
-//    connect(&keyChain,&KeyChainClass::error,[](const QString& error){
-//        qDebug() << error;
-//    });
-//    connect(&keyChain,&KeyChainClass::keyStored,[](const QString& key){
-//        qDebug() << "keyStored" << key;
-//    });
+                emit keyRestored(key);
+
+                //        qDebug() << "keyRestored" << key << password << profiles;
+            });
+    //    connect(&keyChain,&KeyChainClass::error,[](const QString& error){
+    //        qDebug() << error;
+    //    });
+    //    connect(&keyChain,&KeyChainClass::keyStored,[](const QString& key){
+    //        qDebug() << "keyStored" << key;
+    //    });
 }
 
 ProfileManager::~ProfileManager()
@@ -105,29 +110,32 @@ void ProfileManager::afterShowOneTime()
 {
     ui->listProfile->setCurrentIndex(model->index(-1));
 
-    connect(ui->listProfile->selectionModel(), &QItemSelectionModel::currentRowChanged, [this](const QModelIndex & current, const QModelIndex & previous) {
-        Q_UNUSED(previous)
-        const QString currentName = current.data().toString();
-        if(!currentName.isEmpty()) {
-            ui->buttonNew->setEnabled(true);
-            ui->buttonDelete->setEnabled(true);
-            ui->lineEditName->setEnabled(false);
-            ui->lineEditName->setClearButtonEnabled(false);
-            // selection changed
-            if(currentName != ui->lineEditName->text()) {
-                QJsonObject selectedProfile = profiles[currentName].toObject();
+    connect(ui->listProfile->selectionModel(),
+            &QItemSelectionModel::currentRowChanged,
+            this,
+            [this](const QModelIndex &current, const QModelIndex &previous) {
+                Q_UNUSED(previous)
+                const QString currentName = current.data().toString();
+                if (!currentName.isEmpty()) {
+                    ui->buttonNew->setEnabled(true);
+                    ui->buttonDelete->setEnabled(true);
+                    ui->lineEditName->setEnabled(false);
+                    ui->lineEditName->setClearButtonEnabled(false);
+                    // selection changed
+                    if (currentName != ui->lineEditName->text()) {
+                        QJsonObject selectedProfile = profiles[currentName].toObject();
 
-                ui->lineEditName->setText(currentName);
-                ui->lineEditHost->setText(selectedProfile["host"].toString());
-                ui->lineEditUsername->setText(selectedProfile["username"].toString());
-                ui->lineEditPassword->setText(selectedProfile["password"].toString());
-                ui->lineEditGroup->setText(selectedProfile["group"].toString());
-                ui->lineEditSecretkey->setText(selectedProfile["secret"].toString());
-            }
-        }
-        // only new not delete all will go here
-    });
-    connect(ui->buttonSave, &QPushButton::clicked, [this]() {
+                        ui->lineEditName->setText(currentName);
+                        ui->lineEditHost->setText(selectedProfile["host"].toString());
+                        ui->lineEditUsername->setText(selectedProfile["username"].toString());
+                        ui->lineEditPassword->setText(selectedProfile["password"].toString());
+                        ui->lineEditGroup->setText(selectedProfile["group"].toString());
+                        ui->lineEditSecretkey->setText(selectedProfile["secret"].toString());
+                    }
+                }
+                // only new not delete all will go here
+            });
+    connect(ui->buttonSave, &QPushButton::clicked, this, [this]() {
         const QString name = ui->lineEditName->text().trimmed();
         const QString host = ui->lineEditHost->text().trimmed();
         const QString username = ui->lineEditUsername->text().trimmed();
@@ -155,10 +163,8 @@ void ProfileManager::afterShowOneTime()
 
         saveProfile(Json);
     });
-    connect(ui->buttonNew, &QPushButton::clicked, [this]() {
-        resetForm();
-    });
-    connect(ui->buttonDelete, &QPushButton::clicked, [this]() {
+    connect(ui->buttonNew, &QPushButton::clicked, this, [this]() { resetForm(); });
+    connect(ui->buttonDelete, &QPushButton::clicked, this, [this]() {
         const QString name = ui->lineEditName->text();
         profiles.remove(name);
         updateModel();

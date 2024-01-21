@@ -29,6 +29,9 @@ public:
 
     void afterShowOneTime();
 
+signals:
+    void keyRestored(const QString &profile);
+
 private:
     Ui::ProfileManager *ui;
     bool m_modified = false;
