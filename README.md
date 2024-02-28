@@ -1,4 +1,4 @@
-> 本项目当前开源，不保证永久开源，智商不足慎用
+> 动态拆分隧道使用[说明](./DynamicSplitTunneling.md)
 
 ## AnyLink Secure Client
 
@@ -34,7 +34,7 @@ Please use Windows 10 or newer.
 
 Due to the above reasons, it is only recommended for users with certain macOS system experience.
 
-You can use the `wget` or `curl` command to download the dmg file. If you use a browser to download the file, please execute the following command,
+You can use the `wget` or `curl` command to download the dmg file. If you use a web browser to download the file, please execute the following command,
 
 
 ```bash
@@ -51,10 +51,9 @@ You should use `anylink-linux-amd64.tar.gz` with Ubuntu 20.04 or newer.
 
 ```bash
 tar -zxvf anylink-*.tar.gz
-./install.sh
 ```
 
-The `.run` package is supposed to support other Linux distributions like RedHat, but you should check the `install.sh` file and install some dependencies.
+Double-click the `.run` file to install the software. The `.run` package is supposed to support other Linux distributions like RedHat, however, you may need to follow the prompts to install some dependencies.
 
 ## UnInstall
 
