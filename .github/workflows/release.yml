@@ -16,7 +16,7 @@ jobs:
         include:
         - build: linux-latest
           os: ubuntu-22.04
-          qt: 6.6.1
+          qt: 6.6.2
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
           installer-name: anylink-linux-amd64.run
@@ -28,19 +28,19 @@ jobs:
           installer-name: anylink-linux-amd64.run
         - build: windows
           os: windows-2019
-          qt: 6.6.1
+          qt: 6.6.2
           qt-modules: 'qtwebsockets'
           qt-tools: 'tools_qtcreator'
           installer-name: anylink-windows10-amd64.exe
         - build: macos
           os: macos-12
-          qt: 6.6.1
+          qt: 6.6.2
           qt-modules: 'qtwebsockets'
           qt-tools: 'tools_ifw'
           installer-name: anylink-installer
         - build: macos-arm64
           os: macos-12
-          qt: 6.6.1
+          qt: 6.6.2
           qt-modules: 'qtwebsockets'
           qt-tools: 'tools_ifw'
           installer-name: anylink-installer
@@ -100,9 +100,10 @@ jobs:
         modules: ${{ matrix.qt-modules }}
         tools: ${{ matrix.qt-tools }}
         install-deps: false
-        cache: true
+        cache: false
         cache-key-prefix: 'cache-qt'
         aqtversion: '==3.1.*'
+        extra: '--base https://mirrors.ustc.edu.cn/qtproject'  # https://download.qt.io/static/mirrorlist/
     - uses: actions/checkout@v3
       with:
         submodules: recursive
@@ -148,9 +149,9 @@ jobs:
           cp vpnagent sslcon out/opt/anylink/bin
           7z a installer/packages/root/data/anylink.7z ./out/opt/anylink/*
           cd installer
-          wget -c -nv https://download.qt.io/official_releases/qt-installer-framework/4.5.2/QtInstallerFramework-linux-x64-4.5.2.run
+          wget -c -nv https://mirrors.ustc.edu.cn/qtproject/official_releases/qt-installer-framework/4.7.0/QtInstallerFramework-linux-x64-4.7.0.run
           chmod +x ./*.run
-          ./QtInstallerFramework-linux-x64-4.5.2.run --al --da -c -t `pwd`/ifw in
+          ./QtInstallerFramework-linux-x64-4.7.0.run --al --da -c -t `pwd`/ifw in
           ./ifw/bin/binarycreator --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           tar -zcvf "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} install.sh ${{ matrix.installer-name }}
         elif [ "${{ matrix.build }}" = "windows" ]; then
@@ -160,8 +161,8 @@ jobs:
           cp vpnagent.exe sslcon.exe wintun.dll out/bin
           7z a installer/packages/root/data/anylink.7z ./out/bin/*
           cd installer
-          curl -k -O -L https://download.qt.io/official_releases/qt-installer-framework/4.5.2/QtInstallerFramework-windows-x64-4.5.2.exe --http1.1
-          ./QtInstallerFramework-windows-x64-4.5.2.exe --al --da -c -t `pwd`/ifw in
+          curl -k -O -L https://mirrors.ustc.edu.cn/qtproject/official_releases/qt-installer-framework/4.7.0/QtInstallerFramework-windows-x64-4.7.0.exe
+          ./QtInstallerFramework-windows-x64-4.7.0.exe --al --da -c -t `pwd`/ifw in
           ./ifw/bin/binarycreator --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           # https://bugreports.qt.io/browse/QTIFW-2295
           editbin /subsystem:windows ${{ matrix.installer-name }}
@@ -173,9 +174,9 @@ jobs:
           cp vpnagent sslcon AnyLink.app/Contents/MacOS
           macdeployqt AnyLink.app
           mkdir -p ../../installer/packages/root/data
-          "${IQTA_TOOLS}/QtInstallerFramework/4.6/bin/archivegen" ../../installer/packages/root/data/anylink.7z ./AnyLink.app
+          "${IQTA_TOOLS}/QtInstallerFramework/4.7/bin/archivegen" ../../installer/packages/root/data/anylink.7z ./AnyLink.app
           cd ../../installer
-          "${IQTA_TOOLS}/QtInstallerFramework/4.6/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
+          "${IQTA_TOOLS}/QtInstallerFramework/4.7/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           hdiutil create -fs HFS+ -srcfolder ${{ matrix.installer-name }}.app -format UDZO "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }}
         elif [ "${{ matrix.build }}" = "macos-arm64" ]; then
           cd out/bin
@@ -184,9 +185,9 @@ jobs:
           cp vpnagent sslcon AnyLink.app/Contents/MacOS
           macdeployqt AnyLink.app
           mkdir -p ../../installer/packages/root/data
-          "${IQTA_TOOLS}/QtInstallerFramework/4.6/bin/archivegen" ../../installer/packages/root/data/anylink.7z ./AnyLink.app
+          "${IQTA_TOOLS}/QtInstallerFramework/4.7/bin/archivegen" ../../installer/packages/root/data/anylink.7z ./AnyLink.app
           cd ../../installer
-          "${IQTA_TOOLS}/QtInstallerFramework/4.6/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
+          "${IQTA_TOOLS}/QtInstallerFramework/4.7/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           hdiutil create -fs HFS+ -srcfolder ${{ matrix.installer-name }}.app -format UDZO "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }}
         fi
 
