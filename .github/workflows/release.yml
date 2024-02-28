@@ -153,6 +153,7 @@ jobs:
           chmod +x ./*.run
           ./QtInstallerFramework-linux-x64-4.7.0.run --al --da -c -t `pwd`/ifw in
           ./ifw/bin/binarycreator --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
+          chmod +x ./*.run
           tar -zcvf "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} ${{ matrix.installer-name }}
         elif [ "${{ matrix.build }}" = "windows" ]; then
           windeployqt out/bin/anylink.exe --no-translations --no-system-d3d-compiler --no-opengl-sw --no-svg
