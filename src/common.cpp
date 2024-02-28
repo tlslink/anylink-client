@@ -4,7 +4,7 @@
 
 QString agentName = "AnyLink Secure Client";
 
-QString appVersion = "0.9.4";
+QString appVersion = "0.9.5";
 
 QString configLocation = "";
 QString tempLocation = "";
