@@ -46,6 +46,9 @@ defineTest(copyIcon) {
 VERSION = 0.9.5
 
 macx {
+    QMAKE_TARGET_BUNDLE_PREFIX = pro.anylink
+    QMAKE_BUNDLE = macos
+
     HEADERS += src/macdockiconhandler.h
     SOURCES += src/macdockiconhandler.mm
 

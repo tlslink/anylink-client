@@ -36,13 +36,13 @@ jobs:
           os: macos-12
           qt: 6.6.2
           qt-modules: 'qtwebsockets'
-          qt-tools: 'tools_ifw'
+          # qt-tools: 'tools_ifw'
           installer-name: anylink-installer
         - build: macos-arm64
           os: macos-12
           qt: 6.6.2
           qt-modules: 'qtwebsockets'
-          qt-tools: 'tools_ifw'
+          # qt-tools: 'tools_ifw'
           installer-name: anylink-installer
     steps:
     - if: startsWith(github.ref, 'refs/heads/')
@@ -162,33 +162,41 @@ jobs:
           cp vpnagent.exe sslcon.exe wintun.dll out/bin
           7z a installer/packages/root/data/anylink.7z ./out/bin/*
           cd installer
-          curl -k -O -L https://mirrors.ustc.edu.cn/qtproject/official_releases/qt-installer-framework/4.7.0/QtInstallerFramework-windows-x64-4.7.0.exe
-          ./QtInstallerFramework-windows-x64-4.7.0.exe --al --da -c -t `pwd`/ifw in
+          curl -k -O -L https://mirrors.ustc.edu.cn/qtproject/archive/qt-installer-framework/4.5.2/QtInstallerFramework-windows-x64-4.5.2.exe
+          ./QtInstallerFramework-windows-x64-4.5.2.exe --al --da -c -t `pwd`/ifw in
           ./ifw/bin/binarycreator --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           # https://bugreports.qt.io/browse/QTIFW-2295
           editbin /subsystem:windows ${{ matrix.installer-name }}
           7z a -tzip -r "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} ${{ matrix.installer-name }}
         elif [ "${{ matrix.build }}" = "macos" ]; then
-          cd out/bin
+          cd installer
+          curl -k -O -L https://mirrors.ustc.edu.cn/qtproject/archive/qt-installer-framework/4.6.1/QtInstallerFramework-macOS-x64-4.6.1.dmg
+          hdiutil attach ./QtInstallerFramework-macOS-x64-4.6.1.dmg
+          /Volumes/QtInstallerFramework-macOS-x64-4.6.1/QtInstallerFramework-macOS-x64-4.6.1.app/Contents/MacOS/QtInstallerFramework-macOS-x64-4.6.1 --al --da -c -t `pwd`/ifw in
+          cd ../out/bin
           curl -k -L -O https://github.com/tlslink/sslcon/releases/download/continuous/sslcon-macOS-amd64.tar.gz
           tar -zxvf sslcon-*.tar.gz
           cp vpnagent sslcon AnyLink.app/Contents/MacOS
           macdeployqt AnyLink.app
           mkdir -p ../../installer/packages/root/data
-          "${IQTA_TOOLS}/QtInstallerFramework/4.7/bin/archivegen" ../../installer/packages/root/data/anylink.7z ./AnyLink.app
+          ../../installer/ifw/bin/archivegen ../../installer/packages/root/data/anylink.7z ./AnyLink.app
           cd ../../installer
-          "${IQTA_TOOLS}/QtInstallerFramework/4.7/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
+          ./ifw/bin/binarycreator --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           hdiutil create -fs HFS+ -srcfolder ${{ matrix.installer-name }}.app -format UDZO "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }}
         elif [ "${{ matrix.build }}" = "macos-arm64" ]; then
-          cd out/bin
+          cd installer
+          curl -k -O -L https://mirrors.ustc.edu.cn/qtproject/archive/qt-installer-framework/4.6.1/QtInstallerFramework-macOS-x64-4.6.1.dmg
+          hdiutil attach ./QtInstallerFramework-macOS-x64-4.6.1.dmg
+          /Volumes/QtInstallerFramework-macOS-x64-4.6.1/QtInstallerFramework-macOS-x64-4.6.1.app/Contents/MacOS/QtInstallerFramework-macOS-x64-4.6.1 --al --da -c -t `pwd`/ifw in
+          cd ../out/bin
           curl -k -L -O https://github.com/tlslink/sslcon/releases/download/continuous/sslcon-macOS-arm64.tar.gz
           tar -zxvf sslcon-*.tar.gz
           cp vpnagent sslcon AnyLink.app/Contents/MacOS
           macdeployqt AnyLink.app
           mkdir -p ../../installer/packages/root/data
-          "${IQTA_TOOLS}/QtInstallerFramework/4.7/bin/archivegen" ../../installer/packages/root/data/anylink.7z ./AnyLink.app
+          ../../installer/ifw/bin/archivegen ../../installer/packages/root/data/anylink.7z ./AnyLink.app
           cd ../../installer
-          "${IQTA_TOOLS}/QtInstallerFramework/4.7/bin/binarycreator" --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
+          ./ifw/bin/binarycreator --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           hdiutil create -fs HFS+ -srcfolder ${{ matrix.installer-name }}.app -format UDZO "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }}
         fi
 
