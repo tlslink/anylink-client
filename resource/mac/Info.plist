@@ -11,7 +11,7 @@
 	<key>CFBundleIconFile</key>
 	<string>@ICON@</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.anylink</string>
+        <string>${PRODUCT_BUNDLE_IDENTIFIER}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
