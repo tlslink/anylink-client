@@ -39,7 +39,7 @@ jobs:
           # qt-tools: 'tools_ifw'
           installer-name: anylink-installer
         - build: macos-arm64
-          os: macos-12
+          os: macos-14
           qt: 6.6.2
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
@@ -126,10 +126,10 @@ jobs:
           "${IQTA_TOOLS}/QtCreator/bin/jom/jom.exe" -j $(nproc) -f Makefile.Release
         elif [ "${{ matrix.build }}" = "macos" ]; then
           qmake
-          make -j $(nproc)
+          make -j $(sysctl -n hw.logicalcpu)
         elif [ "${{ matrix.build }}" = "macos-arm64" ]; then
-          qmake QMAKE_APPLE_DEVICE_ARCHS="arm64"
-          make -j $(nproc)
+          qmake
+          make -j $(sysctl -n hw.logicalcpu)
         fi
 
     - name: Build archive
