@@ -17,30 +17,35 @@ jobs:
         - build: linux-latest
           os: ubuntu-22.04
           qt: 6.6.2
+          arch: gcc_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
           installer-name: anylink-linux-amd64.run
         - build: linux
           os: ubuntu-20.04
           qt: 6.4.3
+          arch: gcc_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
           installer-name: anylink-linux-amd64.run
         - build: windows
           os: windows-2019
           qt: 6.6.2
+          arch: win64_msvc2019_64
           qt-modules: 'qtwebsockets'
           qt-tools: 'tools_qtcreator'
           installer-name: anylink-windows10-amd64.exe
         - build: macos
           os: macos-12
           qt: 6.6.2
+          arch: clang_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
           installer-name: anylink-installer
         - build: macos-arm64
           os: macos-14
           qt: 6.6.2
+          arch: clang_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
           installer-name: anylink-installer
@@ -88,14 +93,15 @@ jobs:
           libxcb-screensaver0 libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-util1 \
           libxkbcommon-x11-dev extra-cmake-modules fcitx-libs-dev
         fi
+    # https://github.com/ilammy/msvc-dev-cmd
     - if: matrix.build == 'windows'
       name: Setup msvc
       uses: ilammy/msvc-dev-cmd@v1
-      
     - name: Install Qt
       # v3，aqtversion 为 2.11，不支持将工具添加到 $PATH，https://github.com/jurplel/install-qt-action
       uses: jurplel/install-qt-action@v3
       with:
+        arch: ${{ matrix.arch }}
         version: ${{ matrix.qt }} # https://download.qt.io/online/qtsdkrepository/
         modules: ${{ matrix.qt-modules }}
         tools: ${{ matrix.qt-tools }}
