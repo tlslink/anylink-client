@@ -19,7 +19,7 @@ Currently the following servers are supported,
 ## Download
 
 - Fork this project and compile it using github action
-- Join the QQ group by donating to this project
+- Join the QQ group by donating to the project
 - You may be able to find releases from other forks
 
 ### Windows
