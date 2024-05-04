@@ -116,7 +116,7 @@ FORMS += \
 RESOURCES += \
     i18n.qrc \
     resource.qrc \
-    systray.qrc
+    icons.qrc
 
 DISTFILES += \
     style.qss

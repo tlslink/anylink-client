@@ -1,4 +1,4 @@
-> 动态拆分隧道使用[说明](./DynamicSplitTunneling.md)
+> 动态域名分流使用[说明](./DynamicSplitTunneling.md)
 
 ## AnyLink Secure Client
 
@@ -18,10 +18,9 @@ Currently the following servers are supported,
 
 ## Download
 
-1. https://anylink.pro
-2. Fork this project and compile it using github action
-
-## Install
+- Fork this project and compile it using github action
+- Join the QQ group by donating to this project
+- You may be able to find releases from other forks
 
 ### Windows
 

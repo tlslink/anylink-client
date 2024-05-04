@@ -1,4 +1,5 @@
 out
+build
 *.user
 .autosave
 *.7z

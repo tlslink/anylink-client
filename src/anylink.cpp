@@ -140,7 +140,7 @@ void AnyLink::createTrayActions()
     connect(actionDisconnect, &QAction::triggered, this, &AnyLink::disconnectVPN);
 
     actionConfig = new QAction(tr("Show Panel"), this);
-    connect(actionConfig, &QAction::triggered, this, [this](){
+    connect(actionConfig, &QAction::triggered, this, [this]() {
         // 有最小化按钮并最小化时 show 不起作用
         showNormal();
     });
@@ -192,30 +192,37 @@ void AnyLink::initConfig()
     ui->checkBoxCiscoCompat->setChecked(configManager->config["cisco_compat"].toBool());
     ui->checkBoxDtls->setChecked(configManager->config["no_dtls"].toBool());
 
-    connect(ui->checkBoxAutoLogin, &QCheckBox::toggled, this, [](bool checked) {
+    connect(ui->checkBoxAutoLogin, &QCheckBox::toggled, this, [this](bool checked) {
         configManager->config["autoLogin"] = checked;
+        saveConfig();
     });
-    connect(ui->checkBoxMinimize, &QCheckBox::toggled, this, [](bool checked) {
+    connect(ui->checkBoxMinimize, &QCheckBox::toggled, this, [this](bool checked) {
         configManager->config["minimize"] = checked;
+        saveConfig();
     });
     connect(ui->checkBoxBlock, &QCheckBox::toggled, this, [this](bool checked) {
         configManager->config["block"] = checked;
         configVPN();
+        saveConfig();
     });
     connect(ui->checkBoxDebug, &QCheckBox::toggled, this, [this](bool checked) {
         configManager->config["debug"] = checked;
         configVPN();
+        saveConfig();
     });
-    connect(ui->checkBoxLang, &QCheckBox::toggled, this, [](bool checked) {
+    connect(ui->checkBoxLang, &QCheckBox::toggled, this, [this](bool checked) {
         configManager->config["local"] = checked;
+        saveConfig();
     });
     connect(ui->checkBoxCiscoCompat, &QCheckBox::toggled, this, [this](bool checked) {
         configManager->config["cisco_compat"] = checked;
         configVPN();
+        saveConfig();
     });
     connect(ui->checkBoxDtls, &QCheckBox::toggled, this, [this](bool checked) {
         configManager->config["no_dtls"] = checked;
         configVPN();
+        saveConfig();
     });
 }
 
@@ -284,7 +291,6 @@ void AnyLink::afterShowOneTime()
         if(m_vpnConnected) {
             disconnectVPN();
         }
-        configManager->saveConfig();
     });
 
     rpc = new JsonRpcWebSocketClient(this);
@@ -337,6 +343,11 @@ void AnyLink::resetVPNStatus()
     detailDialog->clear();
 
     ui->lineEditOTP->clear();
+}
+
+void AnyLink::saveConfig()
+{
+    configManager->saveConfig();
 }
 
 /**

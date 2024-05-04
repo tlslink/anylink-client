@@ -25,14 +25,19 @@ bool ConfigManager::loadConfig(SaveFormat saveFormat)
     }
 
     QByteArray data = loadFile.readAll();
-    QJsonDocument loadDoc;
 
-    if(data.length()) {
-        loadDoc = (saveFormat == Json
-                   ? QJsonDocument::fromJson(data)
-                   : QJsonDocument(QCborValue::fromCbor(data).toMap().toJsonObject()));
+    if (data.length()) {
+        QJsonDocument loadDoc = (saveFormat == Json
+                                     ? QJsonDocument::fromJson(data)
+                                     : QJsonDocument(
+                                         QCborValue::fromCbor(data).toMap().toJsonObject()));
         // Returns an empty object if the document contains an array
-        config = loadDoc.object();
+        const QJsonObject obj = loadDoc.object();
+        for (auto it = config.begin(); it != config.end(); it++) {
+            if (obj.contains(it.key())) {
+                config[it.key()] = obj.value(it.key());
+            }
+        }
     }
     return true;
 }

@@ -34,8 +34,6 @@ public:
 signals:
     void vpnConnected();
     void vpnClosed();
-    void callEnd();
-
 
     // QWidget interface
 protected:
@@ -69,6 +67,8 @@ private:
     void afterShowOneTime();
 
     void resetVPNStatus();
+
+    void saveConfig();
 
 private slots:
     void configVPN();
