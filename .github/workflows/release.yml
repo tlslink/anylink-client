@@ -6,7 +6,7 @@ on:
 jobs:
   setup:
     name: Setup
-    uses: tlslink/vpnagent/.github/workflows/release-setup.yml@main
+    uses: tlslink/sslcon/.github/workflows/release-setup.yml@main
   build:
     name: Build
     runs-on: ${{ matrix.os }}
