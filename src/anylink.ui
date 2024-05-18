@@ -769,7 +769,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="../systray.qrc">:/assets/donate.JPG</pixmap>
+            <pixmap resource="../icons.qrc">:/assets/donate.JPG</pixmap>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -833,7 +833,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../systray.qrc"/>
+  <include location="../icons.qrc"/>
  </resources>
  <connections/>
 </ui>
