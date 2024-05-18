@@ -19,6 +19,7 @@ AnyLink::AnyLink(QWidget *parent)
     , ui(new Ui::AnyLink), m_vpnConnected(false)
 {
     ui->setupUi(this);
+    ui->tabWidget->setTabVisible(3, false);
 #ifndef Q_OS_MACOS
     layout()->removeItem(ui->topSpacer);
     setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
