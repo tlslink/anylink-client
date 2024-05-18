@@ -65,7 +65,7 @@ Component.prototype.createOperations = function()
 
         // https://forum.qt.io/topic/87431/how-could-we-detect-users-vcredist-installed-when-using-qt-installer-framework/4
         // https://doc.qt.io/qtinstallerframework/scripting-systeminfo.html#buildCpuArchitecture-prop
-        if (systemInfo.buildCpuArchitecture === "x86_64") {
+        if (systemInfo.currentCpuArchitecture === "x86_64") {
             component.addElevatedOperation("Execute", "{0,3010,1638,5100}", "@TargetDir@/vc_redist.x64.exe", "/norestart", "/q");
         } else {
             component.addElevatedOperation("Execute", "{0,3010,1638,5100}", "@TargetDir@/vc_redist.arm64.exe", "/norestart", "/q"); 
