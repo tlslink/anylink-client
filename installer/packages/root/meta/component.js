@@ -53,7 +53,7 @@ Component.prototype.createOperations = function()
         component.createOperations();
 
         // will be auto removed on uninstall
-        component.addOperation("Copy", "@TargetDir@/anylink.desktop", "/usr/share/applications/anylink.desktop");
+        component.addOperation("Copy", "@TargetDir@/anylink.desktop", "/usr/share/applications/斯坦星球安全客户端.desktop");
 
         // install and start the service or stop and remove the service
         component.addElevatedOperation("Execute", "@TargetDir@/bin/vpnagent","install",
@@ -74,13 +74,13 @@ Component.prototype.createOperations = function()
         //开始菜单快捷方式
         component.addOperation("CreateShortcut",
                                "@TargetDir@/anylink.exe",
-                               "@StartMenuDir@/AnyLink Secure Client.lnk",
+                               "@StartMenuDir@/斯坦星球安全客户端.lnk",
                                "workingDirectory=@TargetDir@");
 
         //桌面快捷方式
         component.addOperation("CreateShortcut",
                                "@TargetDir@/anylink.exe",
-                               "@DesktopDir@/AnyLink Secure Client.lnk",
+                               "@DesktopDir@/斯坦星球安全客户端.lnk",
                                "workingDirectory=@TargetDir@");
 
 
@@ -88,7 +88,7 @@ Component.prototype.createOperations = function()
                                 "UNDOEXECUTE","@TargetDir@/vpnagent.exe","uninstall");
     } else if (systemInfo.kernelType === "darwin") {
         component.createOperations();
-        component.addOperation("CreateLink", "@ApplicationsDir@/AnyLink.app", "@TargetDir@/AnyLink.app");
+        component.addOperation("CreateLink", "@ApplicationsDir@/斯坦星球安全客户端.app", "@TargetDir@/AnyLink.app");
 
         if (installer.gainAdminRights()) {
             // install and start the service or stop and remove the service

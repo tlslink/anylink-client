@@ -6,7 +6,7 @@
     <message>
         <location filename="../src/anylink.cpp" line="+29"/>
         <source>AnyLink Secure Client</source>
-        <translation>AnyLink 安全客户端</translation>
+        <translation>斯坦星球安全客户端</translation>
     </message>
     <message>
         <location filename="../src/anylink.ui" line="+58"/>
