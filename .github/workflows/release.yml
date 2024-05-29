@@ -20,63 +20,63 @@ jobs:
           arch: gcc_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
-          installer-name: anylink-linux-amd64.run
+          installer-name: stemstar-linux-amd64.run
         - build: linux
           os: ubuntu-20.04
           qt: 6.4.3
           arch: gcc_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
-          installer-name: anylink-linux-amd64.run
+          installer-name: stemstar-linux-amd64.run
         - build: windows
           os: windows-2019
           qt: 6.6.2
           arch: win64_msvc2019_64
           qt-modules: 'qtwebsockets'
           qt-tools: 'tools_qtcreator'
-          installer-name: anylink-windows10-amd64.exe
+          installer-name: stemstar-windows10-amd64.exe
         - build: macos
           os: macos-12
           qt: 6.6.2
           arch: clang_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
-          installer-name: anylink-installer
+          installer-name: stemstar-installer
         - build: macos-arm64
           os: macos-14
           qt: 6.6.2
           arch: clang_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
-          installer-name: anylink-installer
+          installer-name: stemstar-installer
     steps:
     - if: startsWith(github.ref, 'refs/heads/')
       shell: bash
       run: |
         if [ "${{ matrix.build }}" = "linux-latest" ]; then
-          echo "ARCHIVE_NAME=anylink-linux_openssl3-amd64.tar.gz" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=stemstar-linux_openssl3-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "linux" ]; then
-          echo "ARCHIVE_NAME=anylink-linux-amd64.tar.gz" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=stemstar-linux-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "windows" ]; then
-          echo "ARCHIVE_NAME=anylink-windows10-amd64.zip" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=stemstar-windows10-amd64.zip" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "macos" ]; then
-          echo "ARCHIVE_NAME=anylink-macOS-amd64.dmg" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=stemstar-macOS-amd64.dmg" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "macos-arm64" ]; then
-          echo "ARCHIVE_NAME=anylink-macOS-arm64.dmg" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=stemstar-macOS-arm64.dmg" >> $GITHUB_ENV
         fi
     - if: startsWith(github.ref, 'refs/tags/')
       shell: bash
       run: |
         if [ "${{ matrix.build }}" = "linux-latest" ]; then
-          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-linux_openssl3-amd64.tar.gz" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=stemstar-${{ github.ref_name }}-linux_openssl3-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "linux" ]; then
-          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-linux-amd64.tar.gz" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=stemstar-${{ github.ref_name }}-linux-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "windows" ]; then
-          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-windows10-amd64.zip" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=stemstar-${{ github.ref_name }}-windows10-amd64.zip" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "macos" ]; then
-          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-macOS-amd64.dmg" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=stemstar-${{ github.ref_name }}-macOS-amd64.dmg" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "macos-arm64" ]; then
-          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-macOS-arm64.dmg" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=stemstar-${{ github.ref_name }}-macOS-arm64.dmg" >> $GITHUB_ENV
         fi
     - name: Install dependencies
       shell: bash

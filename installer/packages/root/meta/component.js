@@ -10,16 +10,16 @@ function Component()
     var uninstaller = installer.value("MaintenanceToolName");
 
     if (systemInfo.kernelType === "linux") {
-        installer.setValue("TargetDir", targetDir + "anylink");
+        installer.setValue("TargetDir", targetDir + "stemstar");
 
         uninstaller = installer.value("TargetDir") + "/" + uninstaller;
 
     } else if (systemInfo.kernelType === "winnt") {
-        installer.setValue("TargetDir", targetDir + "AnyLink");
+        installer.setValue("TargetDir", targetDir + "StemStar");
 
         uninstaller = installer.value("TargetDir") + "/" + uninstaller + ".exe";
     } else if (systemInfo.kernelType === "darwin") {
-        installer.setValue("TargetDir", targetDir + "AnyLink");
+        installer.setValue("TargetDir", targetDir + "StemStar");
 
         uninstaller = installer.value("TargetDir") + "/" + uninstaller + ".app/Contents/MacOS/uninstall";
     }
