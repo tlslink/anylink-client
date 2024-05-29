@@ -109,7 +109,7 @@ jobs:
         cache: false
         cache-key-prefix: 'cache-qt'
         aqtversion: '==3.1.*'
-        extra: '--base https://mirrors.ustc.edu.cn/qtproject'  # https://download.qt.io/static/mirrorlist/
+        extra: '--base https://mirrors.ocf.berkeley.edu/qt'  # https://download.qt.io/static/mirrorlist/
     - uses: actions/checkout@v3
       with:
         submodules: recursive
