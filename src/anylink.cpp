@@ -20,6 +20,8 @@ AnyLink::AnyLink(QWidget *parent)
 {
     ui->setupUi(this);
     ui->tabWidget->setTabVisible(3, false);
+    ui->labelOTP->setHidden(true);
+    ui->lineEditOTP->setHidden(true);
 #ifndef Q_OS_MACOS
     layout()->removeItem(ui->topSpacer);
     setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
@@ -27,7 +29,7 @@ AnyLink::AnyLink(QWidget *parent)
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint
                    | Qt::WindowCloseButtonHint | Qt::WindowStaysOnTopHint);
 #endif
-    setWindowTitle(tr("AnyLink Secure Client") + " v" + appVersion);
+    setWindowTitle(tr("AnyLink Secure Client"));
 
 #if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
     loadStyleSheet(":/resource/style.qss");
