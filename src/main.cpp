@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     qSetMessagePattern("%{type}:[%{file}:%{line}]  %{message}");
     //    qDebug() << QStyleFactory::keys();
     //    QApplication::setStyle("fusion");
-    QApplication::setApplicationName("AnyLink");
+    QApplication::setApplicationName("Stemstar");
     configLocation = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 //    qDebug() << configLocation;
     tempLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation);

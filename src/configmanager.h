@@ -12,13 +12,13 @@ public:
     explicit ConfigManager(QObject *parent = nullptr);
 
     QJsonObject config{{"lastProfile", ""},
-                       {"autoLogin", false},
+                       {"autoLogin", true},
                        {"minimize", true},
-                       {"block", true},
+                       {"block", false},
                        {"debug", false},
                        {"local", true},
                        {"no_dtls", false},
-                       {"cisco_compat", false}};
+                       {"cisco_compat", true}};
     bool loadConfig(SaveFormat saveFormat);
     void saveConfig(SaveFormat saveFormat);
     void saveConfig();
