@@ -17,6 +17,9 @@ ProfileManager::ProfileManager(QWidget *parent) :
     model(new QStringListModel()), ui(new Ui::ProfileManager)
 {
     ui->setupUi(this);
+    ui->labelSecretkey->setHidden(true);
+    ui->lineEditSecretkey->setHidden(true);
+
     ui->listProfile->setModel(model);
 
     setFixedSize(geometry().width(), geometry().height());
