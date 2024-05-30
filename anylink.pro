@@ -65,10 +65,10 @@ win32 {
     # https://doc.qt.io/qt-6/qmake-variable-reference.html#version
     #RC_FILE = resource.rc
     RC_ICONS = resource\windows\anylink.ico
-    QMAKE_TARGET_PRODUCT = "AnyLink Secure Client"
-    QMAKE_TARGET_COMPANY = "https://anylink.pro"
-    QMAKE_TARGET_DESCRIPTION = "AnyLink Secure Client"
-    QMAKE_TARGET_COPYRIGHT = "Copyright 2022-2023 https://anylink.pro. All rights reserved."
+    QMAKE_TARGET_PRODUCT = "StemStar Secure Client"
+    QMAKE_TARGET_COMPANY = "https://www.stemstar.com"
+    QMAKE_TARGET_DESCRIPTION = "StemStar Secure Client"
+    QMAKE_TARGET_COPYRIGHT = "Copyright 2022-2023 https://www.stemstar.com. All rights reserved."
 
     DESTDIR = $$PWD/out/bin
     copyIcon(assets/anylink64.png resource/windows/anylink.ico)

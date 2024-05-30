@@ -27,6 +27,6 @@
 	<key>CFBundleShortVersionString</key>
 	<string>@FULL_VERSION@</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright 2022-2023 https://anylink.pro. All rights reserved.</string>
+        <string>Copyright 2022-2023 https://www.stemstar.com. All rights reserved.</string>
 </dict>
 </plist>

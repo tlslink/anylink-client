@@ -146,9 +146,9 @@ void ProfileManager::afterShowOneTime()
             return;
         }
         const QString password = ui->lineEditPassword->text().trimmed();
-        if (profiles.isEmpty()) {
-            info(tr("This software can save passwords in the Keychain of the operating system to avoid plaintext passwords, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks."),this);
-        }
+        //        if (profiles.isEmpty()) {
+        //            info(tr("This software can save passwords in the Keychain of the operating system to avoid plaintext passwords, but you should evaluate whether your usage scenarios allow saving passwords and avoid potential security risks."),this);
+        //        }
 
         QJsonObject newProfile {
             { "host", host },
