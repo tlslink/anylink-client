@@ -16,7 +16,7 @@ jobs:
         include:
         - build: linux-latest
           os: ubuntu-22.04
-          qt: 6.6.2
+          qt: 6.8.1
           arch: gcc_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
@@ -54,7 +54,7 @@ jobs:
       shell: bash
       run: |
         if [ "${{ matrix.build }}" = "linux-latest" ]; then
-          echo "ARCHIVE_NAME=anylink-linux_openssl3-amd64.tar.gz" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=anylink-linux_latest-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "linux" ]; then
           echo "ARCHIVE_NAME=anylink-linux-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "windows" ]; then
@@ -68,7 +68,7 @@ jobs:
       shell: bash
       run: |
         if [ "${{ matrix.build }}" = "linux-latest" ]; then
-          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-linux_openssl3-amd64.tar.gz" >> $GITHUB_ENV
+          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-linux_latest-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "linux" ]; then
           echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-linux-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "windows" ]; then
@@ -144,7 +144,7 @@ jobs:
         echo $PATH
         mkdir archive
         # ls -lR
-        if [ "${{ matrix.build }}" = "linux" ]; then
+        if [ "${{ matrix.build }}" = "linux" -o "${{ matrix.build }}" = "linux-latest"  ]; then
           # probonopd
           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
