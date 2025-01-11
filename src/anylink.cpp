@@ -264,7 +264,10 @@ void AnyLink::afterShowOneTime()
             close();
             trayIcon->setToolTip(tr("Connected to: ") + currentProfile.value("host").toString());
         }
-        configManager->config["lastProfile"] = ui->comboBoxHost->currentText();
+        if (configManager->config["lastProfile"].toString() != ui->comboBoxHost->currentText()) {
+            configManager->config["lastProfile"] = ui->comboBoxHost->currentText();
+            saveConfig();
+        }
 
         timer.start(60 * 1000);
     });
