@@ -36,15 +36,15 @@ jobs:
           qt-tools: 'tools_qtcreator'
           installer-name: anylink-windows10-amd64.exe
         - build: macos
-          os: macos-12
-          qt: 6.6.2
+          os: macos-latest
+          qt: 6.8.1
           arch: clang_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
           installer-name: anylink-installer
         - build: macos-arm64
-          os: macos-14
-          qt: 6.6.2
+          os: macos-latest
+          qt: 6.8.1
           arch: clang_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
