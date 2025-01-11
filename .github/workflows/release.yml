@@ -17,7 +17,7 @@ jobs:
         - build: linux-latest
           os: ubuntu-22.04
           qt: 6.8.1
-          arch: gcc_64
+          arch: linux_gcc_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
           installer-name: anylink-linux-amd64.run
@@ -98,8 +98,8 @@ jobs:
       name: Setup msvc
       uses: ilammy/msvc-dev-cmd@v1
     - name: Install Qt
-      # v3，aqtversion 为 2.11，不支持将工具添加到 $PATH，https://github.com/jurplel/install-qt-action
-      uses: jurplel/install-qt-action@v3
+      # https://github.com/jurplel/install-qt-action
+      uses: jurplel/install-qt-action@v4
       with:
         arch: ${{ matrix.arch }}
         version: ${{ matrix.qt }} # https://download.qt.io/online/qtsdkrepository/
@@ -108,7 +108,6 @@ jobs:
         install-deps: false
         cache: false
         cache-key-prefix: 'cache-qt'
-        aqtversion: '==3.1.*'
         extra: '--base https://mirrors.ocf.berkeley.edu/qt'  # https://download.qt.io/static/mirrorlist/
     - uses: actions/checkout@v3
       with:
