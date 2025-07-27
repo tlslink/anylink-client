@@ -15,21 +15,21 @@ jobs:
         build: [linux, linux-latest, windows, macos, macos-arm64]
         include:
         - build: linux-latest
-          os: ubuntu-22.04
+          os: ubuntu-24.04
           qt: 6.8.1
           arch: linux_gcc_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
           installer-name: anylink-linux-amd64.run
         - build: linux
-          os: ubuntu-20.04
+          os: ubuntu-22.04
           qt: 6.4.3
           arch: gcc_64
           qt-modules: 'qtwebsockets'
           # qt-tools: 'tools_ifw'
           installer-name: anylink-linux-amd64.run
         - build: windows
-          os: windows-2019
+          os: windows-2022
           qt: 6.6.2
           arch: win64_msvc2019_64
           qt-modules: 'qtwebsockets'
