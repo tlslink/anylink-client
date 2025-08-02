@@ -12,42 +12,38 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        build: [linux, linux-latest, windows, macos, macos-arm64]
+        build: [linux-latest, linux, linux-arm64, windows, macos-arm64]
         include:
         - build: linux-latest
           os: ubuntu-24.04
-          qt: 6.8.1
+          qt: 6.9.1
           arch: linux_gcc_64
           qt-modules: 'qtwebsockets'
-          # qt-tools: 'tools_ifw'
           installer-name: anylink-linux-amd64.run
         - build: linux
           os: ubuntu-22.04
-          qt: 6.4.3
-          arch: gcc_64
+          qt: 6.9.1
+          arch: linux_gcc_64
           qt-modules: 'qtwebsockets'
-          # qt-tools: 'tools_ifw'
           installer-name: anylink-linux-amd64.run
+        - build: linux-arm64
+          os: ubuntu-24.04-arm
+          qt: 6.9.1
+          arch: linux_gcc_arm64
+          qt-modules: 'qtwebsockets'
+          installer-name: anylink-linux-arm64.run
         - build: windows
           os: windows-2022
-          qt: 6.6.2
-          arch: win64_msvc2019_64
+          qt: 6.10.0
+          arch: win64_msvc2022_64
           qt-modules: 'qtwebsockets'
-          qt-tools: 'tools_qtcreator'
+          qt-tools: 'tools_qtcreator_gui'
           installer-name: anylink-windows10-amd64.exe
-        - build: macos
-          os: macos-latest
-          qt: 6.8.1
-          arch: clang_64
-          qt-modules: 'qtwebsockets'
-          # qt-tools: 'tools_ifw'
-          installer-name: anylink-installer
         - build: macos-arm64
-          os: macos-latest
-          qt: 6.8.1
+          os: macos-14
+          qt: 6.9.1
           arch: clang_64
           qt-modules: 'qtwebsockets'
-          # qt-tools: 'tools_ifw'
           installer-name: anylink-installer
     steps:
     - if: startsWith(github.ref, 'refs/heads/')
@@ -57,6 +53,8 @@ jobs:
           echo "ARCHIVE_NAME=anylink-linux_latest-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "linux" ]; then
           echo "ARCHIVE_NAME=anylink-linux-amd64.tar.gz" >> $GITHUB_ENV
+        elif [ "${{ matrix.build }}" = "linux-arm64" ]; then
+          echo "ARCHIVE_NAME=anylink-linux-arm64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "windows" ]; then
           echo "ARCHIVE_NAME=anylink-windows10-amd64.zip" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "macos" ]; then
@@ -71,6 +69,8 @@ jobs:
           echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-linux_latest-amd64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "linux" ]; then
           echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-linux-amd64.tar.gz" >> $GITHUB_ENV
+        elif [ "${{ matrix.build }}" = "linux-arm64" ]; then
+          echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-linux-arm64.tar.gz" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "windows" ]; then
           echo "ARCHIVE_NAME=anylink-${{ github.ref_name }}-windows10-amd64.zip" >> $GITHUB_ENV
         elif [ "${{ matrix.build }}" = "macos" ]; then
@@ -81,7 +81,7 @@ jobs:
     - name: Install dependencies
       shell: bash
       run: |
-        if [ "${{ matrix.build }}" = "linux" -o "${{ matrix.build }}" = "linux-latest" ]; then
+        if [[ "${{ matrix.os }}" == ubuntu* ]]; then
           sudo apt-get update
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -y -q --force-yes \
           automake cmake git wget libfuse2 desktop-file-utils tree \
@@ -116,7 +116,7 @@ jobs:
     - name: Build
       shell: bash
       run: |
-        if [ "${{ matrix.build }}" = "linux" -o "${{ matrix.build }}" = "linux-latest" ]; then
+        if [[ "${{ matrix.build }}" == linux* ]]; then
           qmake
           make -j $(nproc)
           wget -c -nv https://github.com/fcitx/fcitx-qt5/archive/refs/heads/master.zip
@@ -125,14 +125,11 @@ jobs:
           cmake -DENABLE_QT5=Off -DENABLE_QT6=On .
           make -j $(nproc)
           cd ..
-        elif [ "${{ matrix.build }}" = "windows" ]; then
+        elif [[ "${{ matrix.build }}" == "windows" ]]; then
           rm "C:\Program Files\Git\usr\bin\link.exe"
           qmake
           "${IQTA_TOOLS}/QtCreator/bin/jom/jom.exe" -j $(nproc) -f Makefile.Release
-        elif [ "${{ matrix.build }}" = "macos" ]; then
-          qmake
-          make -j $(sysctl -n hw.logicalcpu)
-        elif [ "${{ matrix.build }}" = "macos-arm64" ]; then
+        elif [[ "${{ matrix.build }}" == "macos-arm64" ]]; then
           qmake
           make -j $(sysctl -n hw.logicalcpu)
         fi
@@ -154,10 +151,25 @@ jobs:
           cp vpnagent sslcon out/opt/anylink/bin
           7z a installer/packages/root/data/anylink.7z ./out/opt/anylink/*
           cd installer
-          wget -c -nv https://mirrors.ustc.edu.cn/qtproject/official_releases/qt-installer-framework/4.7.0/QtInstallerFramework-linux-x64-4.7.0.run
+          wget -c -nv https://download.qt.io/online/qtsdkrepository/linux_x64/ifw/tools_ifw_410/qt.tools.ifw.410/4.10.0-0-202506090530ifw-linux-x64.7z
+          7z x -y 4.10.0-*.7z
+          ./bin/binarycreator --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           chmod +x ./*.run
-          ./QtInstallerFramework-linux-x64-4.7.0.run --al --da -c -t `pwd`/ifw in
-          ./ifw/bin/binarycreator --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
+          tar -zcvf "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} ${{ matrix.installer-name }}
+        elif [ "${{ matrix.build }}" = "linux-arm64" ]; then
+          # probonopd
+          wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-aarch64.AppImage"
+          chmod a+x linuxdeployqt-continuous-aarch64.AppImage
+          ./linuxdeployqt-continuous-aarch64.AppImage out/opt/anylink/bin/anylink -extra-plugins=platformthemes/libqgtk3.so -no-copy-copyright-files -no-translations -unsupported-allow-new-glibc
+          cp fcitx-qt5-master/qt6/platforminputcontext/libfcitxplatforminputcontextplugin-qt6.so out/opt/anylink/plugins/platforminputcontexts/
+          wget -c -nv https://github.com/tlslink/sslcon/releases/download/continuous/sslcon-linux-arm64.tar.gz
+          tar -zxvf sslcon-*.tar.gz
+          cp vpnagent sslcon out/opt/anylink/bin
+          7z a installer/packages/root/data/anylink.7z ./out/opt/anylink/*
+          cd installer
+          wget -c -nv https://download.qt.io/online/qtsdkrepository/linux_arm64/ifw/tools_ifw_410/qt.tools.ifw.410/4.10.0-0-202506090530ifw-linux-arm64.7z
+          7z x -y 4.10.0-*.7z
+          ./bin/binarycreator --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
           chmod +x ./*.run
           tar -zcvf "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} ${{ matrix.installer-name }}
         elif [ "${{ matrix.build }}" = "windows" ]; then
@@ -173,21 +185,6 @@ jobs:
           # https://bugreports.qt.io/browse/QTIFW-2295
           editbin /subsystem:windows ${{ matrix.installer-name }}
           7z a -tzip -r "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }} ${{ matrix.installer-name }}
-        elif [ "${{ matrix.build }}" = "macos" ]; then
-          cd installer
-          curl -k -O -L https://mirrors.ustc.edu.cn/qtproject/archive/qt-installer-framework/4.6.1/QtInstallerFramework-macOS-x64-4.6.1.dmg
-          hdiutil attach ./QtInstallerFramework-macOS-x64-4.6.1.dmg
-          /Volumes/QtInstallerFramework-macOS-x64-4.6.1/QtInstallerFramework-macOS-x64-4.6.1.app/Contents/MacOS/QtInstallerFramework-macOS-x64-4.6.1 --al --da -c -t `pwd`/ifw in
-          cd ../out/bin
-          curl -k -L -O https://github.com/tlslink/sslcon/releases/download/continuous/sslcon-macOS-amd64.tar.gz
-          tar -zxvf sslcon-*.tar.gz
-          cp vpnagent sslcon AnyLink.app/Contents/MacOS
-          macdeployqt AnyLink.app
-          mkdir -p ../../installer/packages/root/data
-          ../../installer/ifw/bin/archivegen ../../installer/packages/root/data/anylink.7z ./AnyLink.app
-          cd ../../installer
-          ./ifw/bin/binarycreator --offline-only -c config/config.xml -p packages ${{ matrix.installer-name }}
-          hdiutil create -fs HFS+ -srcfolder ${{ matrix.installer-name }}.app -format UDZO "${{ github.workspace }}"/archive/${{ env.ARCHIVE_NAME }}
         elif [ "${{ matrix.build }}" = "macos-arm64" ]; then
           cd installer
           curl -k -O -L https://mirrors.ustc.edu.cn/qtproject/archive/qt-installer-framework/4.6.1/QtInstallerFramework-macOS-x64-4.6.1.dmg
