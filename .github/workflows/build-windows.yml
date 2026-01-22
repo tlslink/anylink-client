@@ -23,20 +23,23 @@ jobs:
         target: 'desktop'
         arch: 'win64_msvc2019_64'
         
-    - name: 3. 检查文件
+    -name: 3. 检查文件
+      shell: cmd  # 指定使用CMD而不是PowerShell
       run: |
-        echo "=== 文件检查 ==="
-        echo "当前目录:"
+        echo === 文件检查 ===
+        echo 当前目录:
         cd
-        echo "文件列表:"
+        echo 文件列表:
         dir
-        echo "anylink.pro 是否存在:"
+        echo anylink.pro 是否存在:
         if exist anylink.pro (
-          echo "✅ 找到anylink.pro"
+          echo ✅ 找到anylink.pro
           type anylink.pro | head -5
         ) else (
-          echo "❌ 未找到anylink.pro"
-        )
+          echo ❌ 未找到anylink.pro
+          echo 所有文件:
+          dir /s /b *.pro 2>nul || echo 无.pro文件
+  )
         
     - name: 4. 运行qmake
       run: |
