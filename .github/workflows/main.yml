@@ -1,52 +1,95 @@
-name: Build AnyLink Client with MinGW
+name: Build AnyLink Windows Client
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
 
 jobs:
-  build:
-    runs-on: windows-latest
+  build-windows:
+    runs-on: ubuntu-latest  # 使用Linux环境运行Docker
     
     steps:
-    - name: 1. 检出代码和子模块
+    - name: 1. 检出代码
       uses: actions/checkout@v4
       with:
         submodules: recursive
+        fetch-depth: 0
         
-    - name: 2. 安装Qt (MinGW版)
-      uses: jurplel/install-qt-action@v3
+    - name: 2. 使用预配置的Qt Docker环境
+      run: |
+        echo "=== 开始Windows交叉编译 ==="
+        
+        # 使用专门的Qt交叉编译镜像
+        docker run --rm -v $(pwd):/workspace \
+          -w /workspace \
+          therecipe/qt:windows_64_shared \
+          bash -c "
+            echo '环境信息:'
+            qmake --version
+            which g++
+            which windres
+            
+            echo ''
+            echo '项目结构:'
+            ls -la
+            echo ''
+            echo '检查anylink.pro...'
+            if [ -f anylink.pro ]; then
+              echo '✅ 找到项目文件'
+              echo '前几行内容:'
+              head -20 anylink.pro
+            else
+              echo '❌ 找不到anylink.pro'
+              exit 1
+            fi
+            
+            echo ''
+            echo '检查依赖...'
+            if [ -d 3rdparty ]; then
+              echo '3rdparty目录:'
+              ls -la 3rdparty/
+            fi
+            
+            echo ''
+            echo '=== 开始编译 ==='
+            echo '1. 配置项目...'
+            qtdeploy build windows .
+            
+            echo ''
+            echo '2. 检查输出...'
+            if [ -d deploy/windows ]; then
+              echo '编译输出目录:'
+              ls -la deploy/windows/
+              echo ''
+              echo '查找exe文件:'
+              find deploy/windows -name '*.exe' -type f
+            else
+              echo '未找到输出目录'
+            fi
+          "
+        
+    - name: 3. 收集编译结果
+      run: |
+        echo "=== 收集编译产物 ==="
+        # 查找所有可能的exe文件
+        if [ -d deploy ]; then
+          echo "在deploy目录找到:"
+          find deploy -name "*.exe" -type f | while read file; do
+            echo "找到: $file"
+            cp "$file" ./
+          done
+        fi
+        
+        echo "当前目录exe文件:"
+        ls -la *.exe 2>/dev/null || echo "未找到exe文件"
+        
+    - name: 4. 上传产物
+      if: success()
+      uses: actions/upload-artifact@v4
       with:
-        version: '5.15.2'
-        arch: 'win64_mingw81'
-        
-    - name: 3. 检查环境
-      shell: cmd
-      run: |
-        echo 环境检查...
-        where g++ 2>nul || echo "g++未找到"
-        where mingw32-make 2>nul || echo "mingw32-make未找到"
-        qmake --version
-        
-    - name: 4. 配置项目
-      shell: cmd
-      run: |
-        echo 配置项目...
-        qmake anylink.pro -spec win32-g++ CONFIG+=release
-        
-    - name: 5. 编译
-      shell: cmd
-      run: |
-        echo 开始编译...
-        mingw32-make
-        
-    - name: 6. 检查结果
-      shell: cmd
-      run: |
-        if exist release\*.exe (
-          echo ✅ MinGW编译成功！
-          dir release\*.exe
-        ) else (
-          echo ❌ 编译失败
-          dir
-          exit 1
-        )
+        name: anylink-windows-client
+        path: |
+          *.exe
+          deploy/
+        retention-days: 7
