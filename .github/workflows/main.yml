@@ -1,0 +1,69 @@
+name: Build AnyLink Client for Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: 1. 检出代码和子模块
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        
+    - name: 2. 安装Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '5.15.2'
+        arch: 'win64_msvc2019_64'
+        
+    - name: 3. 检查文件
+      shell: cmd
+      run: |
+        echo 检查文件...
+        dir
+        if exist anylink.pro (
+          echo 找到anylink.pro文件
+        ) else (
+          echo 错误：未找到anylink.pro
+          exit 1
+        )
+        
+    - name: 4. 设置Qt环境
+      shell: cmd
+      run: |
+        echo 设置Qt路径...
+        set PATH=C:\Qt\5.15.2\msvc2019_64\bin;%PATH%
+        qmake --version
+        
+    - name: 5. 生成Makefile
+      shell: cmd
+      run: |
+        echo 运行qmake...
+        qmake anylink.pro CONFIG+=release
+        
+    - name: 6. 编译
+      shell: cmd
+      run: |
+        echo 开始编译...
+        nmake
+        
+    - name: 7. 检查结果
+      shell: cmd
+      run: |
+        echo 检查编译结果...
+        if exist release\*.exe (
+          echo 编译成功！
+          dir release\*.exe
+        ) else (
+          echo 编译失败，未生成exe文件
+          exit 1
+        )
+        
+    - name: 8. 上传产物
+      uses: actions/upload-artifact@v4
+      with:
+        name: anylink-client-windows
+        path: release\*.exe
