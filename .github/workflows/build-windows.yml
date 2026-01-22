@@ -2,73 +2,68 @@ name: Build AnyLink Client for Windows
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
 
 jobs:
   build:
     runs-on: windows-latest
     
     steps:
-    - name: 1. 检出代码
+    - name: 1. 检出代码和子模块
       uses: actions/checkout@v4
       with:
         submodules: recursive
         
-    - name: 2. 安装Qt 5.15.2
+    - name: 2. 安装Qt
       uses: jurplel/install-qt-action@v3
       with:
         version: '5.15.2'
-        host: 'windows'
-        target: 'desktop'
         arch: 'win64_msvc2019_64'
         
-    -name: 3. 检查文件
-      shell: cmd  # 指定使用CMD而不是PowerShell
+    - name: 3. 检查文件 (CMD语法)
+      shell: cmd
       run: |
-        echo === 文件检查 ===
-        echo 当前目录:
-        cd
-        echo 文件列表:
+        echo 检查文件...
         dir
-        echo anylink.pro 是否存在:
         if exist anylink.pro (
-          echo ✅ 找到anylink.pro
-          type anylink.pro | head -5
+          echo 找到anylink.pro文件
         ) else (
-          echo ❌ 未找到anylink.pro
-          echo 所有文件:
-          dir /s /b *.pro 2>nul || echo 无.pro文件
-  )
-        
-    - name: 4. 运行qmake
-      run: |
-        echo "=== 运行qmake ==="
-        set PATH=C:\Qt\5.15.2\msvc2019_64\bin;%PATH%
-        qmake --version
-        qmake anylink.pro CONFIG+=release
-        echo "qmake完成"
-        
-    - name: 5. 编译
-      run: |
-        echo "=== 开始编译 ==="
-        nmake || echo "编译失败"
-        
-    - name: 6. 检查结果
-      run: |
-        echo "=== 检查结果 ==="
-        if exist release\*.exe (
-          echo "✅ 编译成功！找到exe文件:"
-          dir release\*.exe
-        ) else (
-          echo "❌ 未找到exe文件"
-          echo "release目录:"
-          dir release 2>nul || echo "无release目录"
+          echo 错误：未找到anylink.pro
+          exit 1
         )
         
-    - name: 7. 上传产物
-      if: success()
+    - name: 4. 设置Qt环境
+      shell: cmd
+      run: |
+        echo 设置Qt路径...
+        set PATH=C:\Qt\5.15.2\msvc2019_64\bin;%PATH%
+        qmake --version
+        
+    - name: 5. 生成Makefile
+      shell: cmd
+      run: |
+        echo 运行qmake...
+        qmake anylink.pro CONFIG+=release
+        
+    - name: 6. 编译
+      shell: cmd
+      run: |
+        echo 开始编译...
+        nmake
+        
+    - name: 7. 检查结果
+      shell: cmd
+      run: |
+        echo 检查编译结果...
+        if exist release\*.exe (
+          echo 编译成功！
+          dir release\*.exe
+        ) else (
+          echo 编译失败，未生成exe文件
+          exit 1
+        )
+        
+    - name: 8. 上传产物
       uses: actions/upload-artifact@v4
       with:
-        name: anylink-windows
-        path: release/
+        name: anylink-client-windows
+        path: release\*.exe
