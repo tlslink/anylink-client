@@ -1,4 +1,4 @@
-name: Build AnyLink Client for Windows
+name: Build AnyLink Client with MinGW
 
 on:
   workflow_dispatch:
@@ -13,57 +13,40 @@ jobs:
       with:
         submodules: recursive
         
-    - name: 2. 安装Qt
+    - name: 2. 安装Qt (MinGW版)
       uses: jurplel/install-qt-action@v3
       with:
         version: '5.15.2'
-        arch: 'win64_msvc2019_64'
+        arch: 'win64_mingw81'
         
-    - name: 3. 检查文件
+    - name: 3. 检查环境
       shell: cmd
       run: |
-        echo 检查文件...
-        dir
-        if exist anylink.pro (
-          echo 找到anylink.pro文件
-        ) else (
-          echo 错误：未找到anylink.pro
-          exit 1
-        )
-        
-    - name: 4. 设置Qt环境
-      shell: cmd
-      run: |
-        echo 设置Qt路径...
-        set PATH=C:\Qt\5.15.2\msvc2019_64\bin;%PATH%
+        echo 环境检查...
+        where g++ 2>nul || echo "g++未找到"
+        where mingw32-make 2>nul || echo "mingw32-make未找到"
         qmake --version
         
-    - name: 5. 生成Makefile
+    - name: 4. 配置项目
       shell: cmd
       run: |
-        echo 运行qmake...
-        qmake anylink.pro CONFIG+=release
+        echo 配置项目...
+        qmake anylink.pro -spec win32-g++ CONFIG+=release
         
-    - name: 6. 编译
+    - name: 5. 编译
       shell: cmd
       run: |
         echo 开始编译...
-        nmake
+        mingw32-make
         
-    - name: 7. 检查结果
+    - name: 6. 检查结果
       shell: cmd
       run: |
-        echo 检查编译结果...
         if exist release\*.exe (
-          echo 编译成功！
+          echo ✅ MinGW编译成功！
           dir release\*.exe
         ) else (
-          echo 编译失败，未生成exe文件
+          echo ❌ 编译失败
+          dir
           exit 1
         )
-        
-    - name: 8. 上传产物
-      uses: actions/upload-artifact@v4
-      with:
-        name: anylink-client-windows
-        path: release\*.exe
