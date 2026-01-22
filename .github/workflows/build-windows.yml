@@ -1,131 +1,71 @@
 name: Build AnyLink Client for Windows
 
 on:
-  workflow_dispatch:  # 仅手动触发
+  workflow_dispatch:
   push:
     branches: [main]
 
 jobs:
-  build-windows:
+  build:
     runs-on: windows-latest
     
-    strategy:
-      matrix:
-        config:
-          - { qt: '5.15.2', arch: 'win64_msvc2019_64', spec: 'win32-msvc' }
-    
     steps:
-    - name: 1. 检出代码和子模块
+    - name: 1. 检出代码
       uses: actions/checkout@v4
       with:
         submodules: recursive
-        fetch-depth: 0
-    
-    - name: 2. 安装Qt ${{ matrix.config.qt }}
+        
+    - name: 2. 安装Qt 5.15.2
       uses: jurplel/install-qt-action@v3
-      id: install-qt
       with:
-        version: ${{ matrix.config.qt }}
+        version: '5.15.2'
         host: 'windows'
         target: 'desktop'
-        arch: ${{ matrix.config.arch }}
-        cache: true
-    
-    - name: 3. 显示环境信息
+        arch: 'win64_msvc2019_64'
+        
+    - name: 3. 检查文件
       run: |
-        echo "=== 环境信息 ==="
-        echo "工作目录:"
-        pwd
-        echo "目录结构:"
-        ls -la
-        echo "Qt信息:"
-        qmake --version 2>&1 || echo "qmake不在PATH中"
-        echo "3rdparty目录:"
-        ls -la 3rdparty/ 2>/dev/null || echo "3rdparty目录不存在"
-    
-    - name: 4. 设置Qt到PATH
-      run: |
-        $QtPath = "${{ steps.install-qt.outputs.qt-path }}"
-        echo "Qt安装路径: $QtPath"
-        echo "QT_PATH=$QtPath" >> $env:GITHUB_ENV
-        echo "PATH=$QtPath\bin;$env:PATH" >> $env:GITHUB_ENV
-        echo "更新后的PATH:"
-        echo $env:PATH
-    
-    - name: 5. 配置项目 (qmake)
+        echo "=== 文件检查 ==="
+        echo "当前目录:"
+        cd
+        echo "文件列表:"
+        dir
+        echo "anylink.pro 是否存在:"
+        if exist anylink.pro (
+          echo "✅ 找到anylink.pro"
+          type anylink.pro | head -5
+        ) else (
+          echo "❌ 未找到anylink.pro"
+        )
+        
+    - name: 4. 运行qmake
       run: |
         echo "=== 运行qmake ==="
+        set PATH=C:\Qt\5.15.2\msvc2019_64\bin;%PATH%
         qmake --version
-        echo "运行命令: qmake anylink.pro -spec ${{ matrix.config.spec }} CONFIG+=release"
-        qmake anylink.pro -spec ${{ matrix.config.spec }} CONFIG+=release
+        qmake anylink.pro CONFIG+=release
+        echo "qmake完成"
         
-        echo "=== 生成的文件 ==="
-        dir *.mak *.vcxproj Makefile* 2>nul || echo "未找到项目文件"
-    
-    - name: 6. 编译项目
+    - name: 5. 编译
       run: |
         echo "=== 开始编译 ==="
+        nmake || echo "编译失败"
         
-        # 检查生成的文件类型
-        if (Test-Path "Makefile") {
-          echo "找到Makefile，使用nmake编译..."
-          nmake 2>&1
-        } elseif (Test-Path "*.vcxproj") {
-          echo "找到.vcxproj文件，使用MSBuild编译..."
-          msbuild anylink.vcxproj /p:Configuration=Release /verbosity:minimal
-        } elseif (Test-Path "anylink.sln") {
-          echo "找到.sln文件，使用MSBuild编译..."
-          msbuild anylink.sln /p:Configuration=Release /verbosity:minimal
-        } else {
-          echo "未找到标准项目文件，尝试直接运行nmake..."
-          nmake 2>&1 || echo "编译失败"
-        }
-        
-        echo "=== 编译完成 ==="
-    
-    - name: 7. 检查输出文件
+    - name: 6. 检查结果
       run: |
-        echo "=== 检查编译结果 ==="
+        echo "=== 检查结果 ==="
+        if exist release\*.exe (
+          echo "✅ 编译成功！找到exe文件:"
+          dir release\*.exe
+        ) else (
+          echo "❌ 未找到exe文件"
+          echo "release目录:"
+          dir release 2>nul || echo "无release目录"
+        )
         
-        $foundExe = $false
-        
-        if (Test-Path "release") {
-          echo "release目录内容:"
-          dir release
-          if (Test-Path "release\*.exe") {
-            echo "✅ 在release目录找到exe文件"
-            $foundExe = $true
-          }
-        } else {
-          echo "release目录不存在"
-        }
-        
-        if (Test-Path "debug") {
-          echo "debug目录内容:"
-          dir debug
-          if (Test-Path "debug\*.exe") {
-            echo "✅ 在debug目录找到exe文件"
-            $foundExe = $true
-          }
-        }
-        
-        # 检查当前目录
-        echo "当前目录exe文件:"
-        dir *.exe 2>nul || echo "当前目录无exe文件"
-        
-        if (-not $foundExe) {
-          echo "❌ 警告：未找到任何exe文件"
-          echo "完整目录树:"
-          tree /f 2>nul || dir /s
-        }
-    
-    - name: 8. 上传编译产物 (使用v4)
+    - name: 7. 上传产物
       if: success()
       uses: actions/upload-artifact@v4
       with:
-        name: anylink-windows-${{ matrix.config.qt }}
-        path: |
-          release/
-          debug/
-        retention-days: 7
-        include-hidden-files: true
+        name: anylink-windows
+        path: release/
