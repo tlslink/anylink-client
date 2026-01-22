@@ -61,23 +61,15 @@ jobs:
       run: |
         echo 检查编译结果...
         if exist release\*.exe (
-          echo ✅ 编译成功！
-          echo 生成的文件：
-          dir release\*.exe /b
-          echo 文件大小：
-          for %%f in (release\*.exe) do echo %%f - %%~zf bytes
+          echo 编译成功！
+          dir release\*.exe
         ) else (
-          echo ❌ 编译失败，未生成exe文件
-          echo 当前目录内容：
-          dir
-          echo release目录内容：
-          dir release 2>nul || echo 无release目录
+          echo 编译失败，未生成exe文件
           exit 1
         )
-    
-    # 暂时注释掉上传步骤，先确保编译成功
-    # - name: 9. 上传产物
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: anylink-client-windows
-    #     path: release\*.exe
+        
+    - name: 9. 上传产物
+      uses: actions/upload-artifact@v4
+      with:
+        name: anylink-client-windows
+        path: release\*.exe
