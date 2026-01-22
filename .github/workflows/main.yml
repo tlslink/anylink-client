@@ -1,4 +1,4 @@
-name: Build AnyLink Windows Client
+name: Build Complete AnyLink Windows Package
 
 on:
   workflow_dispatch:
@@ -7,89 +7,234 @@ on:
 
 jobs:
   build-windows:
-    runs-on: ubuntu-latest  # 使用Linux环境运行Docker
+    runs-on: ubuntu-latest
     
     steps:
-    - name: 1. 检出代码
+    - name: 1. 检出代码和子模块
       uses: actions/checkout@v4
       with:
         submodules: recursive
         fetch-depth: 0
         
-    - name: 2. 使用预配置的Qt Docker环境
+    - name: 2. 使用Mxe交叉编译环境（更稳定）
       run: |
-        echo "=== 开始Windows交叉编译 ==="
+        echo "=== 使用MXE交叉编译环境 ==="
         
-        # 使用专门的Qt交叉编译镜像
-        docker run --rm -v $(pwd):/workspace \
-          -w /workspace \
-          therecipe/qt:windows_64_shared \
-          bash -c "
-            echo '环境信息:'
-            qmake --version
-            which g++
-            which windres
+        # 创建Docker编译环境
+        cat > Dockerfile.mxe << 'EOF'
+        FROM dockcross/windows-shared-x64
+        
+        # 安装Qt5 for Windows
+        RUN apt-get update && apt-get install -y \
+            wget git cmake make \
+            qt5-qmake qtbase5-dev \
+            g++-mingw-w64-x86-64 \
+            mingw-w64 \
+            libqt5core5a libqt5gui5 libqt5network5 \
+            && rm -rf /var/lib/apt/lists/*
             
-            echo ''
-            echo '项目结构:'
+        # 设置Qt交叉编译环境
+        ENV MXE_PATH=/usr/lib/mxe
+        ENV PATH=$MXE_PATH/usr/bin:$PATH
+        EOF
+        
+        docker build -f Dockerfile.mxe -t mxe-qt-builder .
+        
+        echo "=== 开始编译 ==="
+        docker run --rm -v $(pwd):/workdir \
+          -w /workdir \
+          mxe-qt-builder \
+          bash -c "
+            echo '设置交叉编译环境...'
+            export CC=x86_64-w64-mingw32.shared-gcc
+            export CXX=x86_64-w64-mingw32.shared-g++
+            export AR=x86_64-w64-mingw32.shared-ar
+            export PKG_CONFIG_PATH=/usr/x86_64-w64-mingw32/lib/pkgconfig
+            
+            echo '检查项目...'
             ls -la
-            echo ''
-            echo '检查anylink.pro...'
-            if [ -f anylink.pro ]; then
-              echo '✅ 找到项目文件'
-              echo '前几行内容:'
-              head -20 anylink.pro
-            else
-              echo '❌ 找不到anylink.pro'
+            if [ ! -f anylink.pro ]; then
+              echo '错误：找不到anylink.pro'
               exit 1
             fi
             
-            echo ''
-            echo '检查依赖...'
-            if [ -d 3rdparty ]; then
-              echo '3rdparty目录:'
-              ls -la 3rdparty/
-            fi
+            echo '=== 第一步：生成Makefile ==='
+            # 使用交叉编译的qmake
+            x86_64-w64-mingw32.shared-qmake-qt5 anylink.pro \
+              -spec win32-g++ \
+              CONFIG+=release \
+              CONFIG+=static
             
-            echo ''
-            echo '=== 开始编译 ==='
-            echo '1. 配置项目...'
-            qtdeploy build windows .
+            echo '=== 第二步：编译项目 ==='
+            make -j4
             
-            echo ''
-            echo '2. 检查输出...'
-            if [ -d deploy/windows ]; then
-              echo '编译输出目录:'
-              ls -la deploy/windows/
-              echo ''
-              echo '查找exe文件:'
-              find deploy/windows -name '*.exe' -type f
+            echo '=== 第三步：检查输出 ==='
+            if [ -f release/anylink.exe ]; then
+              echo '✅ 编译成功！'
+              echo '文件信息：'
+              file release/anylink.exe
+              ls -lh release/anylink.exe
             else
-              echo '未找到输出目录'
+              echo '查找exe文件...'
+              find . -name '*.exe' -type f
+              exit 1
             fi
           "
         
-    - name: 3. 收集编译结果
+    - name: 3. 收集运行时依赖（关键步骤）
       run: |
-        echo "=== 收集编译产物 ==="
-        # 查找所有可能的exe文件
-        if [ -d deploy ]; then
-          echo "在deploy目录找到:"
-          find deploy -name "*.exe" -type f | while read file; do
-            echo "找到: $file"
-            cp "$file" ./
-          done
+        echo "=== 收集运行时DLL ==="
+        
+        # 创建部署目录
+        mkdir -p AnyLinkDeploy
+        
+        # 查找exe文件
+        EXE_FILE=$(find . -name "*.exe" -type f | grep -i anylink | head -1)
+        
+        if [ -z "$EXE_FILE" ]; then
+          EXE_FILE=$(find . -name "*.exe" -type f | head -1)
         fi
         
-        echo "当前目录exe文件:"
-        ls -la *.exe 2>/dev/null || echo "未找到exe文件"
+        if [ -n "$EXE_FILE" ]; then
+          echo "找到EXE: $EXE_FILE"
+          cp "$EXE_FILE" AnyLinkDeploy/
+          
+          # 使用objdump查找依赖
+          echo "分析依赖..."
+          docker run --rm -v $(pwd):/workdir \
+            dockcross/windows-shared-x64 \
+            bash -c "
+              cd /workdir
+              echo '分析$EXE_FILE的依赖...'
+              x86_64-w64-mingw32.shared-objdump -p AnyLinkDeploy/*.exe | grep 'DLL Name:' | sort -u
+              
+              # 常见Qt依赖
+              QT_DLLS='libgcc_s_seh-1 libstdc++-6 libwinpthread-1 Qt5Core Qt5Gui Qt5Widgets Qt5Network'
+              
+              echo '复制必需的DLL...'
+              for dll in \$QT_DLLS; do
+                echo '查找: '\$dll.dll'
+                find /usr -name \"\${dll}.dll\" 2>/dev/null | head -1 | xargs -I {} cp {} AnyLinkDeploy/ 2>/dev/null || true
+              done
+            "
+          
+          echo "部署目录内容:"
+          ls -la AnyLinkDeploy/
+        else
+          echo "❌ 未找到exe文件"
+          exit 1
+        fi
         
-    - name: 4. 上传产物
-      if: success()
+    - name: 4. 创建Windows运行环境
+      run: |
+        echo "=== 创建完整运行包 ==="
+        
+        # 创建必要的Windows目录结构
+        mkdir -p AnyLinkComplete
+        
+        # 复制所有文件
+        cp -r AnyLinkDeploy/* AnyLinkComplete/ 2>/dev/null || true
+        
+        # 创建运行脚本
+        cat > AnyLinkComplete/运行说明.txt << 'EOF'
+        AnyLink客户端使用说明
+        ====================
+        
+        使用方法：
+        1. 解压此文件夹到任意位置（不要只提取exe文件！）
+        2. 双击 anylink.exe 运行
+        
+        如果无法运行，请尝试：
+        1. 安装 Visual C++ 运行时：
+           https://aka.ms/vs/17/release/vc_redist.x64.exe
+        2. 以管理员身份运行
+        3. 检查是否被防火墙/杀毒软件拦截
+        
+        文件说明：
+        - anylink.exe：主程序
+        - Qt5*.dll：Qt运行库
+        - lib*.dll：MinGW运行库
+        
+        联系支持：
+        - 项目地址：https://github.com/hnqychen2008/anylink-client
+        EOF
+        
+        # 创建批处理测试脚本
+        cat > AnyLinkComplete/测试运行.bat << 'EOF'
+        @echo off
+        chcp 65001 >nul
+        echo ================================
+        echo AnyLink客户端环境测试
+        echo ================================
+        echo.
+        
+        if exist anylink.exe (
+            echo ✅ 找到主程序: anylink.exe
+            echo 文件大小: %~z0 bytes
+        ) else (
+            echo ❌ 错误：找不到anylink.exe
+            goto :error
+        )
+        
+        echo.
+        echo 检查依赖DLL:
+        set DLL_COUNT=0
+        for %%d in (Qt5Core Qt5Gui Qt5Widgets Qt5Network) do (
+            if exist %%d.dll (
+                echo ✅ %%d.dll 存在
+                set /a DLL_COUNT+=1
+            ) else (
+                echo ❌ %%d.dll 缺失
+            )
+        )
+        
+        echo.
+        if %DLL_COUNT% == 4 (
+            echo ✅ 所有必需DLL都存在
+            echo.
+            echo 运行测试...（按Ctrl+C取消）
+            timeout /t 3
+            echo.
+            echo 正在启动AnyLink...
+            start anylink.exe
+        ) else (
+            echo ⚠️ 部分DLL缺失，程序可能无法运行
+        )
+        
+        :error
+        echo.
+        pause
+        exit /b
+        EOF
+        
+        # 创建压缩包
+        zip -r AnyLink_Client_Complete_Windows.zip AnyLinkComplete/
+        
+        echo "✅ 打包完成！"
+        ls -lh AnyLink_Client_Complete_Windows.zip
+        
+    - name: 5. 上传完整包
       uses: actions/upload-artifact@v4
       with:
-        name: anylink-windows-client
+        name: AnyLink-Windows-Complete-Package
         path: |
-          *.exe
-          deploy/
-        retention-days: 7
+          AnyLink_Client_Complete_Windows.zip
+          AnyLinkComplete/
+        retention-days: 30
+        
+    - name: 6. 生成下载链接
+      run: |
+        echo "=== 编译完成 ==="
+        echo "✅ AnyLink Windows客户端已成功构建！"
+        echo ""
+        echo "📦 下载链接将在工作流完成后出现在右侧Artifacts区域"
+        echo ""
+        echo "使用方法："
+        echo "1. 下载 AnyLink_Client_Complete_Windows.zip"
+        echo "2. 解压整个文件夹（不要只提取exe）"
+        echo "3. 双击 测试运行.bat 或 anylink.exe"
+        echo ""
+        echo "如果仍有问题，请检查："
+        echo "- 是否安装了 Visual C++ 运行时"
+        echo "- 是否以管理员身份运行"
+        echo "- Windows版本是否为Windows 10/11"
