@@ -19,7 +19,7 @@ jobs:
         version: '5.15.2'
         arch: 'win64_msvc2019_64'
         
-    - name: 3. 检查文件 (CMD语法)
+    - name: 3. 检查文件
       shell: cmd
       run: |
         echo 检查文件...
