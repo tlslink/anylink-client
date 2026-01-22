@@ -1,59 +1,107 @@
 name: Build AnyLink Client for Windows
 
 on:
+  workflow_dispatch:  # 仅手动触发，便于调试
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-  workflow_dispatch:  # 允许手动触发
+    branches: [main]
 
 jobs:
-  build:
+  build-windows:
+    runs-on: windows-latest
+    
     strategy:
       matrix:
-        qt-version: ['5.15.2', '6.2.4']  # 测试不同Qt版本
-        compiler: [msvc2019, mingw73]    # 不同编译器
-        include:
-          - qt-version: '5.15.2'
-            compiler: msvc2019
-          - qt-version: '6.2.4'
-            compiler: mingw73
-    
-    runs-on: windows-latest  # 使用Windows运行器
+        config:
+          - { qt: '5.15.2', arch: 'win64_msvc2019_64', spec: 'win32-msvc' }
+          # 先只保留一个配置，调试成功后再添加其他
     
     steps:
-    - name: Checkout repository
+    - name: 检出代码和子模块
       uses: actions/checkout@v3
       with:
-        submodules: recursive  # 关键：递归获取子模块
+        submodules: recursive
+        fetch-depth: 0
     
-    - name: Setup Qt
+    - name: 安装Qt ${{ matrix.config.qt }}
       uses: jurplel/install-qt-action@v3
+      id: install-qt
       with:
-        version: ${{ matrix.qt-version }}
-        target: desktop
-        arch: win64_${{ matrix.compiler }}
-        install-deps: true  # 安装系统依赖
+        version: ${{ matrix.config.qt }}
+        host: 'windows'
+        target: 'desktop'
+        arch: ${{ matrix.config.arch }}
+        cache: true
+        tools: 'tools_cmake,tools_ninja'
     
-    - name: Configure and Build
-      shell: cmd
+    - name: 显示Qt安装信息
       run: |
-        echo "配置编译环境..."
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        qmake anylink.pro -spec win32-msvc
-        jom || nmake  # jom比nmake更快，支持并行编译
-        
-    - name: Create Release Package
-      shell: bash
+        echo "Qt路径: ${{ steps.install-qt.outputs.qt-path }}"
+        echo "Qt版本: ${{ steps.install-qt.outputs.qt-version }}"
+        dir "${{ steps.install-qt.outputs.qt-path }}\bin"
+    
+    - name: 设置MSVC环境 (仅MSVC需要)
+      if: contains(matrix.config.arch, 'msvc')
+      uses: microsoft/setup-msbuild@v1.1
+    
+    - name: 检查项目结构
       run: |
-        mkdir -p anylink_package
-        cp release/anylink.exe anylink_package/
-        cp -r installer/windows/* anylink_package/ 2>/dev/null || true
-        cd anylink_package
-        7z a anylink-windows-${{ matrix.qt-version }}-${{ matrix.compiler }}.zip *
+        echo "当前目录内容:"
+        dir
+        echo "3rdparty目录:"
+        dir 3rdparty 2>nul || echo "3rdparty目录不存在或为空"
+        echo "项目文件:"
+        dir *.pro
+    
+    - name: 配置项目 (qmake)
+      run: |
+        echo "设置PATH..."
+        set PATH=${{ steps.install-qt.outputs.qt-path }}\bin;%PATH%
+        echo "运行qmake..."
+        qmake --version
+        qmake anylink.pro -spec ${{ matrix.config.spec }} CONFIG+=release
+        echo "生成的文件:"
+        dir *.mak *.vcxproj 2>nul || echo "未找到项目文件"
+    
+    - name: 编译项目
+      run: |
+        echo "开始编译..."
+        if exist Makefile (
+          echo "使用make编译..."
+          make || nmake || echo "编译失败"
+        ) else if exist *.sln (
+          echo "使用MSBuild编译..."
+          msbuild anylink.sln /p:Configuration=Release
+        ) else (
+          echo "未找到编译文件，尝试直接运行nmake..."
+          nmake 2>&1 || echo "nmake失败"
+        )
+    
+    - name: 检查编译结果
+      run: |
+        echo "检查输出文件..."
+        if exist release (
+          echo "release目录内容:"
+          dir release
+          if exist release\*.exe (
+            echo "✅ 成功生成exe文件!"
+          ) else (
+            echo "❌ 未找到exe文件"
+          )
+        ) else (
+          echo "release目录不存在"
+        )
         
-    - name: Upload Artifact
+        if exist debug (
+          echo "debug目录内容:"
+          dir debug
+        )
+    
+    - name: 上传编译产物
+      if: success()
       uses: actions/upload-artifact@v3
       with:
-        name: anylink-windows-${{ matrix.qt-version }}-${{ matrix.compiler }}
-        path: anylink_package/*.zip
+        name: anylink-windows-${{ matrix.config.qt }}-${{ matrix.config.arch }}
+        path: |
+          release/*.exe
+          debug/*.exe
+        retention-days: 7
