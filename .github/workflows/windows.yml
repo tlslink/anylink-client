@@ -1,0 +1,64 @@
+name: Simple Build Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 1. 只检查代码
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+        
+    - name: 2. 分析项目
+      run: |
+        echo "=== 项目分析报告 ==="
+        echo "1. 主要文件:"
+        ls -la *.pro *.pri *.cpp *.h 2>/dev/null | head -10
+        
+        echo "2. 项目类型:"
+        if [ -f anylink.pro ]; then
+          echo "Qt项目 (qmake)"
+          echo "主要模块:"
+          grep -i "QT +=" anylink.pro || echo "未指定QT模块"
+        elif [ -f CMakeLists.txt ]; then
+          echo "CMake项目"
+        elif [ -f Makefile ]; then
+          echo "Makefile项目"
+        else
+          echo "未知项目类型"
+        fi
+        
+        echo "3. 依赖检查:"
+        if [ -d 3rdparty ]; then
+          echo "有第三方依赖:"
+          ls -la 3rdparty/
+        fi
+        
+        echo "4. 编译建议:"
+        echo "这是一个Qt C++项目，需要:"
+        echo "- Qt 5.15+ 开发环境"
+        echo "- MSVC或MinGW编译器"
+        echo "- Windows SDK (如果包含Windows特性)"
+        
+    - name: 3. 生成编译指导
+      run: |
+        echo "=== 本地编译指南 ==="
+        echo ""
+        echo "由于GitHub Actions环境配置复杂，建议在本地Windows电脑编译:"
+        echo ""
+        echo "1. 安装软件:"
+        echo "   - Qt 5.15.2 (https://www.qt.io/download)"
+        echo "   - Visual Studio 2019 Community (免费)"
+        echo ""
+        echo "2. 克隆代码:"
+        echo "   git clone --recursive https://github.com/hnqychen2008/anylink-client"
+        echo ""
+        echo "3. 用Qt Creator打开 anylink.pro 编译"
+        echo ""
+        echo "或者找现成版本:"
+        echo "访问 https://github.com/tlslink/anylink-client/network/members"
+        echo "查看其他Fork是否有Releases提供exe文件"
