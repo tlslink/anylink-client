@@ -19,7 +19,12 @@ jobs:
         version: '5.15.2'
         arch: 'win64_msvc2019_64'
         
-    - name: 3. 检查文件
+    - name: 3. 设置MSVC编译环境
+      uses: microsoft/setup-msbuild@v1.3
+      with:
+        vs-version: '2022'
+        
+    - name: 4. 检查文件
       shell: cmd
       run: |
         echo 检查文件...
@@ -31,26 +36,27 @@ jobs:
           exit 1
         )
         
-    - name: 4. 设置Qt环境
+    - name: 5. 测试编译器
       shell: cmd
       run: |
-        echo 设置Qt路径...
-        set PATH=C:\Qt\5.15.2\msvc2019_64\bin;%PATH%
+        echo 测试cl编译器...
+        cl 2>&1 | head -5
+        echo 测试qmake...
         qmake --version
         
-    - name: 5. 生成Makefile
+    - name: 6. 生成Makefile
       shell: cmd
       run: |
         echo 运行qmake...
         qmake anylink.pro CONFIG+=release
         
-    - name: 6. 编译
+    - name: 7. 编译
       shell: cmd
       run: |
         echo 开始编译...
         nmake
         
-    - name: 7. 检查结果
+    - name: 8. 检查结果
       shell: cmd
       run: |
         echo 检查编译结果...
@@ -62,7 +68,7 @@ jobs:
           exit 1
         )
         
-    - name: 8. 上传产物
+    - name: 9. 上传产物
       uses: actions/upload-artifact@v4
       with:
         name: anylink-client-windows
