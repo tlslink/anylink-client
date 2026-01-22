@@ -19,57 +19,40 @@ jobs:
         version: '5.15.2'
         arch: 'win64_msvc2019_64'
         
-    - name: 3. 设置MSVC编译环境
+    - name: 3. 设置MSVC编译环境 (VS2019)
       uses: microsoft/setup-msbuild@v1.3
       with:
-        vs-version: '2022'
+        vs-version: '2019'  # 改为2019
         
-    - name: 4. 检查文件
+    - name: 4. 快速测试
       shell: cmd
       run: |
-        echo 检查文件...
-        dir
-        if exist anylink.pro (
-          echo 找到anylink.pro文件
-        ) else (
-          echo 错误：未找到anylink.pro
-          exit 1
-        )
+        echo 快速测试编译环境...
+        cl 2>&1 | head -2 || echo "cl测试失败"
+        qmake --version || echo "qmake测试失败"
         
-    - name: 5. 测试编译器
-      shell: cmd
-      run: |
-        echo 测试cl编译器...
-        cl 2>&1 | head -5
-        echo 测试qmake...
-        qmake --version
-        
-    - name: 6. 生成Makefile
+    - name: 5. 生成Makefile
       shell: cmd
       run: |
         echo 运行qmake...
         qmake anylink.pro CONFIG+=release
         
-    - name: 7. 编译
+    - name: 6. 编译
       shell: cmd
       run: |
         echo 开始编译...
         nmake
         
-    - name: 8. 检查结果
+    - name: 7. 检查结果
       shell: cmd
       run: |
-        echo 检查编译结果...
         if exist release\*.exe (
-          echo 编译成功！
-          dir release\*.exe
+          echo ✅ 编译成功！
+          for %%f in (release\*.exe) do (
+            echo 文件: %%f
+          )
         ) else (
-          echo 编译失败，未生成exe文件
+          echo ❌ 编译失败
+          dir
           exit 1
         )
-        
-    - name: 9. 上传产物
-      uses: actions/upload-artifact@v4
-      with:
-        name: anylink-client-windows
-        path: release\*.exe
