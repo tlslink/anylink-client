@@ -1,0 +1,59 @@
+name: Build AnyLink Client for Windows
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qt-version: ['5.15.2', '6.2.4']  # 测试不同Qt版本
+        compiler: [msvc2019, mingw73]    # 不同编译器
+        include:
+          - qt-version: '5.15.2'
+            compiler: msvc2019
+          - qt-version: '6.2.4'
+            compiler: mingw73
+    
+    runs-on: windows-latest  # 使用Windows运行器
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive  # 关键：递归获取子模块
+    
+    - name: Setup Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: ${{ matrix.qt-version }}
+        target: desktop
+        arch: win64_${{ matrix.compiler }}
+        install-deps: true  # 安装系统依赖
+    
+    - name: Configure and Build
+      shell: cmd
+      run: |
+        echo "配置编译环境..."
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        qmake anylink.pro -spec win32-msvc
+        jom || nmake  # jom比nmake更快，支持并行编译
+        
+    - name: Create Release Package
+      shell: bash
+      run: |
+        mkdir -p anylink_package
+        cp release/anylink.exe anylink_package/
+        cp -r installer/windows/* anylink_package/ 2>/dev/null || true
+        cd anylink_package
+        7z a anylink-windows-${{ matrix.qt-version }}-${{ matrix.compiler }}.zip *
+        
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: anylink-windows-${{ matrix.qt-version }}-${{ matrix.compiler }}
+        path: anylink_package/*.zip
